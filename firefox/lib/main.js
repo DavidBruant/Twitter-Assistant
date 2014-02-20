@@ -9,6 +9,8 @@
 var tabs = require('tabs');
 var isTwitterProfileURL = require('isTwitterProfileURL.js');
 
+var timeline = require('twitter-timeline');
+
 exports.main = function() {
     "use strict";
     
@@ -20,6 +22,8 @@ exports.main = function() {
             //addTwitterMetrics(t, "ekfjzmof", 78)
         }
     });
+    
+    timeline('DavidBruant').then( function(t){ console.log(t) });
 };
 
 
