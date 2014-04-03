@@ -1,44 +1,30 @@
+"use strict";
 
-/**
- * When a tab opens with Twitter with a user account besides the current user,
- * 1) figure out if the user is followed
- * 2) compute metrics over the last x months
- * 
- */
+var Widget =  require("sdk/widget").Widget;
+var Panel =  require("sdk/panel").Panel;
+var data =  require("sdk/self").data;
 
-var tabs = require('tabs');
-var isTwitterProfileURL = require('isTwitterProfileURL.js');
+var getusertimeline = require('getusertimeline.js'); 
 
-var timeline = require('twitter-timeline');
-
-exports.main = function() {
-    "use strict";
+exports.main = function(){
     
-    tabs.on('ready', function(t){
-        if(isTwitterProfileURL(t.url) && t === tabs.activeTab){
-            // go ahead and fetch shit  make computations, display metrics
-            //addTwitterMetrics(t, "Timeline contribution", 1235)
-            addTwitterMetrics(t, "grrr", '54%')
-            //addTwitterMetrics(t, "ekfjzmof", 78)
-        }
+    var tokenPanel = Panel({
+        width: 650,
+        height: 150, 
+        contentURL:data.url('token.html')
     });
     
-    timeline('DavidBruant').then( function(t){ console.log(t) });
+    var twitterWidget = Widget({
+        id:"glovesmore",
+        label:"enter oauth Twitter tokens",
+        contentURL:"https://twitter.com/favicon.ico",
+        panel: tokenPanel
+    });
+    
+    getusertimeline('KinoSan').then(function(timeline){
+        console.log(timeline); 
+    });
+    
+    
 };
 
-
-
-function addTwitterMetrics(tab, name, value){
-    tab.attach({
-        contentScript:
-            'var target = document.querySelector("ul.js-mini-profile-stats");\n'+
-            'target.innerHTML += "'+
-                '<li>'+
-                    '<a class=\\"js-nav\\" data-nav=\\"profile\\">'+
-                        '<strong>'+value+'</strong>'+
-                        name+
-                    '</a>'+
-                '</li>";'
-    })
-    
-}
