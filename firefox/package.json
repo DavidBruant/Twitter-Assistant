@@ -1,14 +1,9 @@
 {
-    "license": "",
-    "description": "",
-    "contributors": [],
-    "author": "bruantd",
-    "url": "",
-    "dependencies": ["api-utils", "addon-kit"],
-    "version": "initial.rev28",
-    "lib": "lib",
-    "fullName": "TMetrics",
-    "main": "main",
-    "id": "jid0-axn3UFLlaPh906VAzo9PXBthudY",
-    "name": "tmetrics"
+  "name": "tmetrics",
+  "title": "TMetrics",
+  "id": "jid1-BbLB1WcU09jwfA",
+  "description": "a basic add-on",
+  "author": "",
+  "license": "MIT",
+  "version": "0.1"
 }
