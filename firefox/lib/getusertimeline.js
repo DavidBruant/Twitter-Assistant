@@ -10,7 +10,7 @@ module.exports = function(twittername){
     accessTokenP.then(function(accessToken){
     
         Request({
-            url: 'https://api.twitter.com/1.1/statuses/user_timeline.json?count=100&screen_name='+twittername,
+            url: 'https://api.twitter.com/1.1/statuses/user_timeline.json?count=200&screen_name='+twittername,
             headers: {
                 'Authorization': 'Bearer '+accessToken
             },

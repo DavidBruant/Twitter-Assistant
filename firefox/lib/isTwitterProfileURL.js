@@ -4,7 +4,7 @@
 var SINGLE_QUOTE = "'";
 
 function isTwitterProfileURL(u){
-    return u.match(/^https?:\/\/twitter\.com\/([^\/])+\/?$/);
+    return u.match(/^https?:\/\/twitter\.com\/([^\/]+)\/?$/);
 };
 
 var truthy = [
