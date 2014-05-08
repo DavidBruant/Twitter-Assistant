@@ -1,6 +1,6 @@
 "use strict";
 
-var Widget =  require("sdk/widget").Widget;
+var ui =  require("sdk/ui");
 var Panel =  require("sdk/panel").Panel;
 var data =  require("sdk/self").data;
 
@@ -14,15 +14,17 @@ exports.main = function(){
         contentURL:data.url('token.html')
     });
     
-    var twitterWidget = Widget({
-        id:"glovesmore",
-        label:"enter oauth Twitter tokens",
-        contentURL:"https://twitter.com/favicon.ico",
-        panel: tokenPanel
-    });
+var action_button = ui.ActionButton({
+  id: "glovesmore",
+  label: "enter oauth Twitter tokens",
+  icon:data.url('images/Twitter_logo_blue.png'),
+  onClick: function(state) {
+    tokenPanel.show({position:action_button});
+  }
+});
     
     getusertimeline('KinoSan').then(function(timeline){
-        console.log(timeline); 
+        //console.log(timeline); 
     });
     
     
