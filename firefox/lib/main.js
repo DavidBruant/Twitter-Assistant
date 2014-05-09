@@ -26,13 +26,12 @@ exports.main = function(){
     
     var pm = pageMod.PageMod({
         include: /^https?:\/\/twitter\.com\/([^\/]+)\/?$/,
-        contentScript: ''
+        contentScriptFile: data.url("metrics-integration.js")
     });
     
     pm.on('attach',function(worker){
         var matches = worker.url.match(/^https?:\/\/twitter\.com\/([^\/]+)\/?$/);
         var user;
-        
         
         if(!Array.isArray(matches) || matches.length < 2)
             return;
@@ -44,10 +43,12 @@ exports.main = function(){
             
             var RTs = timeline.filter(function(tweet){
                 return 'retweeted_status' in tweet;
-                
             });
             
-            console.log(user, timeline.length, RTs.length);
+            worker.port.emit('twitter-user-stats', {
+                tweetsConsidered: timeline.length,
+                retweetsCount: RTs.length
+            });
             
         });
         
