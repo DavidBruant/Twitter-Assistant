@@ -4,10 +4,14 @@ const { defer } = require('sdk/core/promise');
 var Request = require("sdk/request").Request;
 var accessTokenP = require('accesstoken.js');
 
+
+var CONSUMER_KEY = 'mx8hM4RrxyVlrgzBJRA';
+var CONSUMER_SECRET = 'Oqcts8SJaBRDfxnlwaefiMSQNVidMmR4gLthkS6c';
+
 module.exports = function(twittername){
     var deferred = defer();
     
-    accessTokenP.then(function(accessToken){
+    accessTokenP(CONSUMER_KEY, CONSUMER_SECRET).then(function(accessToken){
     
         Request({
             url: 'https://api.twitter.com/1.1/statuses/user_timeline.json?count=200&screen_name='+twittername,

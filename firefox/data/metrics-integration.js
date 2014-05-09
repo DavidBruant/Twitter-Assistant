@@ -1,6 +1,6 @@
 'use strict';
 
-//var ISSUES_LI_SELECTOR = 'ul.sunken-menu-group li[aria-label="Issues"]';
+var RIGHT_PROFILE_SIDEBAR_SELECTOR = '.ProfileSidebar .ProfileWTFAndTrends';
 
 var documentReadyP = new Promise( resolve => {
     document.addEventListener('DOMContentLoaded', function listener(){
@@ -11,6 +11,28 @@ var documentReadyP = new Promise( resolve => {
 
 //var ONE_DAY = 24*60*60*1000; // ms
 
+// put the div ASAP so the user knows Twitter Assistant exists
+var twitterAssistantMetricsDivP = documentReadyP.then(document => {
+    console.log('ready to integrate metrics')
+    var rightProfileSidebar = document.body.querySelector(RIGHT_PROFILE_SIDEBAR_SELECTOR);
+    if(!rightProfileSidebar){
+        var msg = ['No element matching (', RIGHT_PROFILE_SIDEBAR_SELECTOR ,'). No idea where to put the results :-('].join('');
+        throw new Error(msg);
+    }
+
+    var twitterAssistantMetricsDiv = document.createElement('div');
+    twitterAssistantMetricsDiv.classList.add('twitter-assistant');
+    twitterAssistantMetricsDiv.innerHTML = '<h1>Twitter Assistant</h1>';
+
+    rightProfileSidebar.insertBefore(twitterAssistantMetricsDiv, rightProfileSidebar.firstChild);
+    
+    return twitterAssistantMetricsDiv;
+});
+
+twitterAssistantMetricsDivP.catch(err => {
+    console.error('twitterAssistantMetricsDivP error', String(err));
+});
+
 self.port.on('twitter-user-stats', stats => {
     /*
     {
@@ -20,26 +42,19 @@ self.port.on('twitter-user-stats', stats => {
     */
     console.log('received stats from addon', stats);
     
-    documentReadyP.then(document => {
-        console.log('ready to integrate metrics')
-        /*var issuesLi = document.body.querySelector(ISSUES_LI_SELECTOR);
-        if(!issuesLi)
-            throw new Error('No element matching ('+ISSUES_LI_SELECTOR+'). No idea where to put the results :-(');
+    twitterAssistantMetricsDivP.then(twitterAssistantMetricsDiv => {
+        console.log('ready to integrate metrics');
 
-        var responseTimeStatsDiv = document.createElement('div');
-        responseTimeStatsDiv.classList.add('response-time-stats');
-
-        var commentLessIssuesPercent = (stats.commentlessIssues/stats.issuesConsidered)*100;
-        var averageResponseTime = responseTimes.reduce( (acc, curr) => {return acc+curr}, 0 )/responseTimes.length;
-        var averageResponseDays = averageResponseTime/ONE_DAY;
-
-        responseTimeStatsDiv.innerHTML =
-            '<h1>Over the latest '+stats.issuesConsidered+' open issues</h1>' +
-            '<span>Commentless: '+commentLessIssuesPercent.toFixed(1)+'%</span>'+
-            '<span>Average response time: '+ averageResponseDays.toFixed(1) + ' days</span>';
-
-        issuesLi.appendChild(responseTimeStatsDiv);*/  
-    })
+        var retweetPercent = (stats.retweetsCount/stats.tweetsConsidered)*100;
+        
+        var metricsHTML = '<h2>Over the last '+stats.tweetsConsidered+' tweets</h2>' +
+            '<span>% RT: '+retweetPercent.toFixed(1)+'%</span>';
+        
+        twitterAssistantMetricsDiv.insertAdjacentHTML('beforeend', metricsHTML);
+        
+    }).catch(function(err){
+        console.error('metrics integration error', String(err));
+    });
     
     
 })

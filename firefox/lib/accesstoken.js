@@ -5,31 +5,44 @@ var Request = require("sdk/request").Request;
 var base64 = require("sdk/base64");
 const { defer } = require('sdk/core/promise');
 
-var CONSUMER_KEY = 'mx8hM4RrxyVlrgzBJRA';
-var CONSUMER_SECRET = 'Oqcts8SJaBRDfxnlwaefiMSQNVidMmR4gLthkS6c';
+// cache key is bearerTokenCredentails
+var tokenCache = new Map();
 
-var encodedConsumerKey = encodeURIComponent(CONSUMER_KEY);
-var encodedConsumerSecret = encodeURIComponent(CONSUMER_SECRET);
+module.exports = function getAccessToken(CONSUMER_KEY, CONSUMER_SECRET){
+    var accessTokenDef = defer();
 
-var bearerTokenCredentails = encodedConsumerKey + ':' + encodedConsumerSecret;
+    var encodedConsumerKey = encodeURIComponent(CONSUMER_KEY);
+    var encodedConsumerSecret = encodeURIComponent(CONSUMER_SECRET);
 
-var b64bearerToken = base64.encode(bearerTokenCredentails);
+    var bearerTokenCredentails = encodedConsumerKey + ':' + encodedConsumerSecret;
 
-var accessTokenDef = defer();
-
-Request({
-    url: "https://api.twitter.com/oauth2/token",
-    headers: {
-        'Authorization': 'Basic '+b64bearerToken,
-        'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
-    },
-    onComplete: function (response) {
-        //console.log('/oauth2/token status', response.status);
+    var b64bearerToken = base64.encode(bearerTokenCredentails);
+    
+    if(tokenCache.has(bearerTokenCredentails)){
+        accessTokenDef.resolve(tokenCache.get(bearerTokenCredentails));
+    }
+    else{
         
-        accessTokenDef.resolve(response.json.access_token);
-        //console.log('accessToken', response.json.access_token);
-    },
-    content: 'grant_type=client_credentials'
-}).post();
+        Request({
+            url: "https://api.twitter.com/oauth2/token",
+            headers: {
+                'Authorization': 'Basic '+b64bearerToken,
+                'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8',
+                'Cookie': ''
+            },
+            onComplete: function (response) {
+                console.log('/oauth2/token status', response.status);
 
-module.exports = accessTokenDef.promise;
+                var token = response.json.access_token;
+                
+                tokenCache.set(bearerTokenCredentails, token);
+                
+                accessTokenDef.resolve(token);
+                //console.log('accessToken', token);
+            },
+            content: 'grant_type=client_credentials'
+        }).post();
+    }
+    
+    return accessTokenDef.promise;
+};

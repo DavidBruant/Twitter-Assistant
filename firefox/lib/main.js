@@ -7,7 +7,14 @@ var pageMod = require("sdk/page-mod");
 
 var getusertimeline = require('getusertimeline.js'); 
 
+var prefs = require('sdk/simple-prefs').prefs
+
+var name = "sdk.console.logLevel";
+
+
 exports.main = function(){
+    
+    prefs["sdk.console.logLevel"] = 'all';
     
     var tokenPanel = Panel({
         width: 650,
@@ -26,7 +33,11 @@ exports.main = function(){
     
     var pm = pageMod.PageMod({
         include: /^https?:\/\/twitter\.com\/([^\/]+)\/?$/,
-        contentScriptFile: data.url("metrics-integration.js")
+        
+        contentScriptFile: data.url("metrics-integration.js"),
+        contentScriptWhen: "start", // mostly so the attach event happens as soon as possible
+        
+        contentStyleFile: data.url("metrics-integration.css")
     });
     
     pm.on('attach',function(worker){
@@ -50,6 +61,8 @@ exports.main = function(){
                 retweetsCount: RTs.length
             });
             
+        }).catch( err => {
+            console.error('error while getting the user timeline', user, err);
         });
         
     })
