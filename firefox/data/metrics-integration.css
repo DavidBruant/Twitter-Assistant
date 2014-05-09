@@ -1,0 +1,16 @@
+.twitter-assistant{
+    box-sizing: border-box;
+    
+    min-height: 200px;
+    width: 100%; /* hopefully, the parent isn't a douchebag */
+    
+    background-color: #efa2ef;
+    border-radius: 6px;
+    
+    margin-top: 10px;
+    padding: 1em;
+}
+
+.twitter-assistant h1{
+    text-align: center;
+}
