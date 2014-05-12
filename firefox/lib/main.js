@@ -16,31 +16,31 @@ exports.main = function(){
     
     prefs["sdk.console.logLevel"] = 'all';
     
-    // token panel
-    const tokenPanel = Panel({
+    // credentials panel
+    const credentialsPanel = Panel({
         width: 650,
         height: 170, 
-        contentURL: data.url('token.html'),
+        contentURL: data.url('credentialsPanel.html'),
         
-        contentScriptFile: data.url('token.js'),
+        contentScriptFile: data.url('credentialsPanel.js'),
         contentScriptWhen: "ready"
     });
     
-    tokenPanel.port.on('test-credentials', credentials => {
+    credentialsPanel.port.on('test-credentials', credentials => {
         console.log('test-credentials', credentials);
         
         getAccessToken(credentials.key, credentials.secret)
             .then(token => {
-                tokenPanel.port.emit('test-credentials-result', credentials);
+                credentialsPanel.port.emit('test-credentials-result', credentials);
             })
             .catch(err => {
-                tokenPanel.port.emit('test-credentials-result', err);
+                credentialsPanel.port.emit('test-credentials-result', err);
             });
     });
     
-    tokenPanel.port.on('persist-credentials', credentials => {
+    credentialsPanel.port.on('persist-credentials', credentials => {
         storage.credentials = JSON.stringify(credentials);
-        tokenPanel.hide();
+        credentialsPanel.hide();
         
         getAccessToken(credentials.key, credentials.secret)
             .then(TwitterAPI)
@@ -52,7 +52,7 @@ exports.main = function(){
         label: "Enter oauth Twitter tokens",
         icon: data.url('images/Twitter_logo_blue.png'),
         onClick: function(state) {
-            tokenPanel.show({position: twitterAssistantButton});
+            credentialsPanel.show({position: twitterAssistantButton});
             
             // TODO when there are stored credentials, send them over
         }
@@ -70,7 +70,7 @@ exports.main = function(){
             include: /^https?:\/\/twitter\.com\/([^\/]+)\/?$/,
 
             contentScriptFile: data.url("metrics-integration.js"),
-            contentScriptWhen: "start", // mostly so the attach event happens as soon as possible
+            contentScriptWhen: "start", // mostly so the 'attach' event happens as soon as possible
 
             contentStyleFile: data.url("metrics-integration.css")
         });
@@ -124,8 +124,9 @@ exports.main = function(){
             .then(TwitterAPI)
             .then(getReadyForTwitterProfilePages)
     }
-    else{ // no token stored. Ask one to user
-        tokenPanel.show({position: twitterAssistantButton});
+    else{ // no credentials stored. Ask some to the user
+        // TODO create the t
+        credentialsPanel.show({position: twitterAssistantButton});
     }
     
 };
