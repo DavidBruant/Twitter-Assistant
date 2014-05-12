@@ -1,16 +1,28 @@
 <!doctype html>
 <html>
-  <head>
-  	<meta charset="utf-8">
-    <title></title>
-  </head>
-  <body>
-  <h1>Personal Access Token</h1>
-      <div hidden class="error">FAIL</div>
-      <span>API key</span>
-      <input type="text" size="30">
-      <span>API secret</span>
-      <input type="text" size="30">
-      <button type="submit">OK</button>
-  </body>
+    <head>
+        <meta charset="utf-8">
+        <style>
+            form{
+                display: table;
+            }
+            form > label{
+                display: table-row;
+            }
+            form > label > *{
+                display: table-cell;
+            }
+        </style>
+
+        <title></title>
+    </head>
+    <body>
+        <h1>Personal Access Token</h1>
+        <div hidden class="error">FAIL</div>
+        <form>
+            <label><span>API key</span> <input class="key" type="text" size="30"></label>
+            <label><span>API secret</span> <input class="secret" type="text" size="30"></label>
+            <button type="submit">OK</button>
+        </form>
+    </body>
 </html>

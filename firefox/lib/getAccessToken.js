@@ -8,11 +8,11 @@ const { defer } = require('sdk/core/promise');
 // cache key is bearerTokenCredentails
 var tokenCache = new Map();
 
-module.exports = function getAccessToken(CONSUMER_KEY, CONSUMER_SECRET){
+module.exports = function getAccessToken(key, secret){
     var accessTokenDef = defer();
 
-    var encodedConsumerKey = encodeURIComponent(CONSUMER_KEY);
-    var encodedConsumerSecret = encodeURIComponent(CONSUMER_SECRET);
+    var encodedConsumerKey = encodeURIComponent(key);
+    var encodedConsumerSecret = encodeURIComponent(secret);
 
     var bearerTokenCredentails = encodedConsumerKey + ':' + encodedConsumerSecret;
 

@@ -37,7 +37,8 @@ self.port.on('twitter-user-stats', stats => {
     /*
     {
         tweetsConsidered: number,
-        retweetsCount: number
+        retweetsCount: number,
+        tweetsWithLinkCount: number
     }
     */
     console.log('received stats from addon', stats);
@@ -46,9 +47,11 @@ self.port.on('twitter-user-stats', stats => {
         console.log('ready to integrate metrics');
 
         var retweetPercent = (stats.retweetsCount/stats.tweetsConsidered)*100;
+        var tweetsWithLinkPercent = (stats.tweetsWithLinkCount/stats.tweetsConsidered)*100;
         
         var metricsHTML = '<h2>Over the last '+stats.tweetsConsidered+' tweets</h2>' +
-            '<span>% RT: '+retweetPercent.toFixed(1)+'%</span>';
+            '<span>Retweets: '+stats.retweetsCount+' ('+retweetPercent.toFixed(1)+'%)</span><br>' +
+            '<span>Tweets with link: '+stats.tweetsWithLinkCount+' ('+tweetsWithLinkPercent.toFixed(1)+'%)</span>';
         
         twitterAssistantMetricsDiv.insertAdjacentHTML('beforeend', metricsHTML);
         
