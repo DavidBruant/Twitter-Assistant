@@ -89,8 +89,10 @@ exports.main = function(){
             twitterAPI.getUserTimeline(user).then(function(timeline){
                 console.log(timeline); 
 
-
-                worker.port.emit('twitter-user-data', timeline);
+                worker.port.emit('twitter-user-data', {
+                    timeline: timeline,
+                    user: user
+                });
 
             }).catch( err => {
                 console.error('error while getting the user timeline', user, err);

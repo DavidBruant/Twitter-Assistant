@@ -33,16 +33,12 @@ twitterAssistantMetricsDivP.catch(err => {
     console.error('twitterAssistantMetricsDivP error', String(err));
 });
 
-self.port.on('twitter-user-data', timeline => {
-    /*
-    {
-        tweetsConsidered: number,
-        retweetsCount: number,
-        tweetsWithLinkCount: number
-    }
-    */
-    console.log('received data from addon', timeline);
+self.port.on('twitter-user-data', data => {
     
+    console.log('received data from addon', data);
+    
+    const username = data.user;
+    const timeline = data.timeline;
     
 
     var RTs = timeline.filter(function(tweet){
@@ -59,6 +55,23 @@ self.port.on('twitter-user-data', timeline => {
         }
     });
 
+    var conversations = timeline.filter(tweet => {
+        return tweet.user.screen_name === username &&
+            !tweet.retweeted_status &&
+            tweet.text.startsWith('@'); // a bit weak, but close enough. Would need to check if the user actually exists
+    });
+    
+    
+    var oldestTweet = timeline.reduce(function(oldestSoFar, curr){
+        var oldestSoFarTimestamp = (new Date(oldestSoFar.created_at)).getTime();
+        var currTimestamp = (new Date(curr.created_at)).getTime();
+        
+        return oldestSoFarTimestamp < currTimestamp ? oldestSoFar : curr;
+    });
+    
+    var daysSinceOldestTweet = Math.round( (Date.now() - new Date(oldestTweet.created_at))/(1000*60*60*24) );
+    
+    
     var stats = {
         tweetsConsidered: timeline.length,
         retweetsCount: RTs.length,
@@ -71,6 +84,8 @@ self.port.on('twitter-user-data', timeline => {
 
         var retweetPercent = (stats.retweetsCount/stats.tweetsConsidered)*100;
         var tweetsWithLinkPercent = (stats.tweetsWithLinkCount/stats.tweetsConsidered)*100;
+        
+        
         
         /*
         <h1>Twitter Assistant</h1>
@@ -132,9 +147,33 @@ self.port.on('twitter-user-data', timeline => {
         
         */
         
-        var metricsHTML = '<h2>Last '+stats.tweetsConsidered+' tweets</h2>' +
-            '<span>Retweets: '+stats.retweetsCount+' ('+retweetPercent.toFixed(1)+'%)</span><br>' +
-            '<span>Tweets with link: '+stats.tweetsWithLinkCount+' ('+tweetsWithLinkPercent.toFixed(1)+'%)</span>';
+        
+        var metricsHTML = '<h2>Last '+daysSinceOldestTweet+' days activity ('+stats.tweetsConsidered+' tweets)</h2>' +
+            '<h3>Timeline composition</h3>' +
+            '<div class="all-metrics">' +
+                '<div class="metrics">' +
+                    '<div class="name">Retweets</div>' +
+                    '<div class="fraction-container">' +
+                        '<div class="value" style="width: '+retweetPercent.toFixed(1)+'%;"></div>' +
+                    '</div>' +
+                '</div>' +
+                '<div class="metrics">' +
+                    '<div class="name" title="non-media links">With link</div>' +
+                    '<div class="fraction-container">' +
+                        '<div class="value" style="width: '+tweetsWithLinkPercent.toFixed(1)+'%;"></div>' +
+                    '</div>' +
+                '</div>' +
+                '<div class="metrics">' +
+                    '<div class="name">Conversations</div>' +
+                    '<div class="fraction-container">' +
+                        '<div class="value" style="width: '+(conversations.length*100/timeline.length).toFixed(1)+'%;"></div>' +
+                    '</div>' +
+                '</div>' +
+            '</div>';
+            
+            
+            /*'<span>Retweets: '+stats.retweetsCount+' ('+retweetPercent.toFixed(1)+'%)</span><br>' +
+            '<span>Tweets with link: '+stats.tweetsWithLinkCount+' ('+tweetsWithLinkPercent.toFixed(1)+'%)</span>';*/
         
         twitterAssistantMetricsDiv.insertAdjacentHTML('beforeend', metricsHTML);
         
