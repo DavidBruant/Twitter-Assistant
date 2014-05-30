@@ -33,7 +33,7 @@ twitterAssistantMetricsDivP.catch(err => {
     console.error('twitterAssistantMetricsDivP error', String(err));
 });
 
-self.port.on('twitter-user-stats', stats => {
+self.port.on('twitter-user-data', timeline => {
     /*
     {
         tweetsConsidered: number,
@@ -41,15 +41,98 @@ self.port.on('twitter-user-stats', stats => {
         tweetsWithLinkCount: number
     }
     */
-    console.log('received stats from addon', stats);
+    console.log('received data from addon', timeline);
     
+    
+
+    var RTs = timeline.filter(function(tweet){
+        return 'retweeted_status' in tweet;
+    });
+
+    var tweetsWithLink = timeline.filter(tweet => {
+        try{
+            return tweet.entities.urls.length >= 1;
+        }
+        catch(e){
+            // most likely a nested property doesn't exist
+            return false;
+        }
+    });
+
+    var stats = {
+        tweetsConsidered: timeline.length,
+        retweetsCount: RTs.length,
+        tweetsWithLinkCount: tweetsWithLink.length
+    };
+    
+
     twitterAssistantMetricsDivP.then(twitterAssistantMetricsDiv => {
         console.log('ready to integrate metrics');
 
         var retweetPercent = (stats.retweetsCount/stats.tweetsConsidered)*100;
         var tweetsWithLinkPercent = (stats.tweetsWithLinkCount/stats.tweetsConsidered)*100;
         
-        var metricsHTML = '<h2>Over the last '+stats.tweetsConsidered+' tweets</h2>' +
+        /*
+        <h1>Twitter Assistant</h1>
+            <h2>April 1st - May 1st 2014 activity</h2>
+            <div class="histo-range">
+                <div style="height: 40%;"></div>
+                <div style="height: 42%;"></div>
+                <div style="height: 39%;"></div>
+            </div>
+            <div class="legend">
+                <div>April 1st</div>
+                <div>May 1st</div>
+            </div>
+
+            <h3>Timeline composition</h3>
+            <div class="all-metrics">
+                <div class="metrics">
+                    <div class="name">Retweets</div>
+                    <div class="fraction-container">
+                        <div class="value" style="width: 55%;"></div>
+                    </div>
+                </div>
+                <div class="metrics">
+                    <div class="name">Links</div>
+                    <div class="fraction-container">
+                        <div class="value" style="width: 70%;"></div>
+                    </div>
+                </div>
+                <div class="metrics">
+                    <div class="name">Conversations</div>
+                    <div class="fraction-container">
+                        <div class="value" style="width: 4%;"></div>
+                    </div>
+                </div>
+            </div>
+            <h4>Most used words</h4>
+            <div class="most-used-words">
+                <span>Bordeaux</span>
+                <span>tour</span>
+                <span>vin</span>  
+                <span>tourisme</span>
+            </div>  
+
+            <h3>Generated Engagement</h3>
+            <div class="all-metrics">
+                <div class="metrics">
+                    <div class="name">Retweets</div>
+                    <div class="value">51</div>
+                </div>
+                <div class="metrics">
+                    <div class="name">Favorites</div>
+                    <div class="value">55</div>
+                </div>
+                <div class="metrics">
+                    <div class="name">Replies</div>
+                    <div class="value">12</div>
+                </div>
+            </div>
+        
+        */
+        
+        var metricsHTML = '<h2>Last '+stats.tweetsConsidered+' tweets</h2>' +
             '<span>Retweets: '+stats.retweetsCount+' ('+retweetPercent.toFixed(1)+'%)</span><br>' +
             '<span>Tweets with link: '+stats.tweetsWithLinkCount+' ('+tweetsWithLinkPercent.toFixed(1)+'%)</span>';
         

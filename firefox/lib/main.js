@@ -39,6 +39,8 @@ exports.main = function(){
     });
     
     credentialsPanel.port.on('persist-credentials', credentials => {
+        console.log('persist-credentials', credentials);
+        
         storage.credentials = JSON.stringify(credentials);
         credentialsPanel.hide();
         
@@ -87,26 +89,8 @@ exports.main = function(){
             twitterAPI.getUserTimeline(user).then(function(timeline){
                 console.log(timeline); 
 
-                var RTs = timeline.filter(function(tweet){
-                    return 'retweeted_status' in tweet;
-                });
 
-                var tweetsWithLink = timeline.filter(tweet => {
-                    try{
-                        return tweet.entities.urls.length >= 1;
-                    }
-                    catch(e){
-                        // most likely a nested property doesn't exist
-                        return false;
-                    }
-                });
-
-
-                worker.port.emit('twitter-user-stats', {
-                    tweetsConsidered: timeline.length,
-                    retweetsCount: RTs.length,
-                    tweetsWithLinkCount: tweetsWithLink.length
-                });
+                worker.port.emit('twitter-user-data', timeline);
 
             }).catch( err => {
                 console.error('error while getting the user timeline', user, err);
@@ -125,9 +109,10 @@ exports.main = function(){
             .then(getReadyForTwitterProfilePages)
     }
     else{ // no credentials stored. Ask some to the user
-        // TODO create the t
+        // TODO create the Panel lazily only in this branch
         credentialsPanel.show({position: twitterAssistantButton});
     }
     
 };
+
 

@@ -48,7 +48,7 @@ self.port.on('test-credentials-result', result => {
     
     // parent context sends back the token if it's valid and whatever else otherwise
     if(Object(result) === result && result.key === key && result.secret === secret){
-        self.port.emit('persist-token', result);
+        self.port.emit('persist-credentials', result);
     }
     else{
         // can happen either if the token is invalid or the user change the input field
