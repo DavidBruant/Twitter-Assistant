@@ -1,0 +1,398 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>votre superbe page web créée le lun. 26 mai 2014 15:41</title>
+
+        <style>
+            *{
+                box-sizing: border-box;
+            }
+
+            body{
+                margin: 0;
+                padding: 0;
+                display: flex;
+                height: 100vh;
+                width: 100vw;
+
+                justify-content: space-around;
+                
+            }
+        </style>
+        <link rel="stylesheet" href="https://raw.githubusercontent.com/DavidBruant/Better-CSS-defaults/master/better-defaults.css">
+
+
+    </head>
+    <body>
+        
+        
+        <!-- Guillaume Masson -->
+        <div class="twitter-assistant">
+            <style scoped>
+
+                .twitter-assistant{
+                    margin-bottom: auto;
+                    margin-top: 10px;
+                    
+                    min-height: 400px;
+                    width: 100%; /* hopefully, the parent isn't a douchebag */
+                    max-width: 300px;
+
+                    background-color: hsl(300, 45%, 78%);
+                    border-radius: 6px;
+
+                    /*margin-top: 10px;*/
+                    padding: 1em;
+                }
+
+                .twitter-assistant h1{
+                    text-align: center;
+                    margin: 0;
+
+                    font-size: 24px;
+                }
+
+                .twitter-assistant h2{
+                    margin: 0;
+
+                    color: hsl(205, 11%, 25%);
+                    font-size: 16px;
+                    font-weight: 300;
+                    line-height: 22px;
+                }
+
+                .twitter-assistant h3, .twitter-assistant h4{
+                    margin: 7px 0;
+                    margin-top: 20px;
+                }
+
+                .twitter-assistant .all-metrics{
+                    display: table;
+                    border-collapse: collapse;
+                    width: 100%;
+                }
+                .twitter-assistant .all-metrics .metrics{
+                    display: table-row;
+                    height: 20px;
+                }
+                .twitter-assistant .all-metrics .metrics > *{
+                    display: table-cell;
+                    padding: 0;
+                    vertical-align: middle;
+                }
+
+                .twitter-assistant .all-metrics .metrics > .name{
+                    padding-right: 4px;
+                }
+                .twitter-assistant .all-metrics .metrics > .value{
+                    text-align: right;
+                }
+
+                .twitter-assistant .fraction-container{
+                    width: 100%;
+                    border: 1px solid grey;
+                    height: 100%;
+                }
+
+                .twitter-assistant .fraction-container .value {
+                    background-color: rgba(255,255,255,0.5);
+                    height: 100%;
+                }
+
+                .twitter-assistant .histo-range{
+                    display : flex;
+                    align-items: flex-end;
+                    height: 100px;
+                    width: 100%;
+                }
+
+                .twitter-assistant .histo-range > *{
+                    height: 50%;
+                    flex-grow: 1;
+                    border: 1px solid grey;
+                    background-color: rgba(255,255,255,0.5);
+                }
+                .twitter-assistant .legend{
+                    display : flex;
+                    justify-content: space-between;
+                    margin-bottom: 10px;
+                }
+
+                .twitter-assistant .most-used-words > *{
+                    display: inline-block;
+                    padding: 2px;
+                    border-radius: 4px;
+                    border: 1px solid grey;
+                    background-color: rgba(255,255,255,0.5);
+                }
+            </style>
+
+
+            <h1>Twitter Assistant</h1>
+            <h2>Last 16 weeks activity</h2>
+            <div class="histo-range">
+                <div style="height: 40%;"></div>
+                <div style="height: 42%;"></div>
+                <div style="height: 39%;"></div>
+                <div style="height: 45%;"></div>
+                <div style="height: 47%;"></div>
+                <div style="height: 48%;"></div>
+                <div style="height: 50%;"></div>
+                <div style="height: 55%;"></div>
+                <div style="height: 52%;"></div>
+                <div style="height: 54%;"></div>
+                <div style="height: 58%;"></div>
+                <div style="height: 60%;"></div>
+                <div style="height: 65%;"></div>
+                <div style="height: 62%;"></div>
+                <div style="height: 63%;"></div>
+                <div style="height: 64%;"></div>
+            </div>
+            <div class="legend">
+                <div>16 weeks ago</div>
+                <div>now</div>
+            </div>
+
+            <h3>Timeline composition</h3>
+            <div class="all-metrics">
+                <div class="metrics">
+                    <div class="name">Retweets</div>
+                    <div class="fraction-container">
+                        <div class="value" style="width: 24.5%;"></div>
+                    </div>
+                </div>
+                <div class="metrics">
+                    <div class="name">Links</div>
+                    <div class="fraction-container">
+                        <div class="value" style="width: 32%;"></div>
+                    </div>
+                </div>
+                <div class="metrics">
+                    <div class="name">Conversations</div>
+                    <div class="fraction-container">
+                        <div class="value" style="width: 40%;"></div>
+                    </div>
+                </div>
+            </div>
+            <h4>Most used words</h4>
+            <div class="most-used-words">
+                <span>Twitter</span>
+                <span>#tc2014</span>
+                <span>Numérique</span>  
+                <span>Economie</span>
+            </div>  
+
+            <h3>Generated Engagement</h3>
+            <div class="all-metrics">
+                <div class="metrics">
+                    <div class="name">Retweets</div>
+                    <div class="value">51</div>
+                </div>
+                <div class="metrics">
+                    <div class="name">Favorites</div>
+                    <div class="value">14</div>
+                </div>
+                <div class="metrics">
+                    <div class="name">Replies</div>
+                    <div class="value">42</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- TourismBordeaux -->
+        
+        <div class="twitter-assistant">
+            <style scoped>
+
+                .twitter-assistant{
+                    margin-bottom: auto;
+                    margin-top: 10px;
+                    
+                    min-height: 400px;
+                    width: 100%; /* hopefully, the parent isn't a douchebag */
+                    max-width: 300px;
+
+                    background-color: hsl(300, 45%, 78%);
+                    border-radius: 6px;
+
+                    /*margin-top: 10px;*/
+                    padding: 1em;
+                }
+
+                .twitter-assistant h1{
+                    text-align: center;
+                    margin: 0;
+
+                    font-size: 24px;
+                }
+
+                .twitter-assistant h2{
+                    margin: 0;
+
+                    color: hsl(205, 11%, 25%);
+                    font-size: 16px;
+                    font-weight: 300;
+                    line-height: 22px;
+                }
+
+                .twitter-assistant h3, .twitter-assistant h4{
+                    margin: 7px 0;
+                    margin-top: 20px;
+                }
+
+                .twitter-assistant .all-metrics{
+                    display: table;
+                    border-collapse: collapse;
+                    width: 100%;
+                }
+                .twitter-assistant .all-metrics .metrics{
+                    display: table-row;
+                    height: 20px;
+                }
+                .twitter-assistant .all-metrics .metrics > *{
+                    display: table-cell;
+                    padding: 0;
+                    vertical-align: middle;
+                }
+
+                .twitter-assistant .all-metrics .metrics > .name{
+                    padding-right: 4px;
+                }
+                .twitter-assistant .all-metrics .metrics > .value{
+                    text-align: right;
+                }
+
+                .twitter-assistant .fraction-container{
+                    width: 100%;
+                    border: 1px solid grey;
+                    height: 100%;
+                }
+
+                .twitter-assistant .fraction-container .value {
+                    background-color: rgba(255,255,255,0.5);
+                    height: 100%;
+                }
+
+                .twitter-assistant .histo-range{
+                    display : flex;
+                    align-items: flex-end;
+                    height: 100px;
+                    width: 100%;
+                }
+
+                .twitter-assistant .histo-range > *{
+                    height: 50%;
+                    flex-grow: 1;
+                    border: 1px solid grey;
+                    background-color: rgba(255,255,255,0.5);
+                }
+                .twitter-assistant .legend{
+                    display : flex;
+                    justify-content: space-between;
+                    margin-bottom: 10px;
+                }
+
+                .twitter-assistant .most-used-words > *{
+                    display: inline-block;
+                    padding: 2px;
+                    border-radius: 4px;
+                    border: 1px solid grey;
+                    background-color: rgba(255,255,255,0.5);
+                }
+            </style>
+
+
+            <h1>Twitter Assistant</h1>
+            <h2>April 1st - May 1st 2014 activity</h2>
+            <div class="histo-range">
+                <div style="height: 40%;"></div>
+                <div style="height: 42%;"></div>
+                <div style="height: 39%;"></div>
+                <div style="height: 45%;"></div>
+                <div style="height: 0%;"></div>
+                
+                <div style="height: 0%;"></div>
+                <div style="height: 50%;"></div>
+                <div style="height: 55%;"></div>
+                <div style="height: 52%;"></div>
+                <div style="height: 54%;"></div>
+                
+                <div style="height: 58%;"></div>
+                <div style="height: 0%;"></div>
+                <div style="height: 0%;"></div>
+                <div style="height: 62%;"></div>
+                <div style="height: 63%;"></div>
+                
+                <div style="height: 40%;"></div>
+                <div style="height: 42%;"></div>
+                <div style="height: 39%;"></div>
+                <div style="height: 0%;"></div>
+                <div style="height: 0%;"></div>
+                
+                <div style="height: 48%;"></div>
+                <div style="height: 50%;"></div>
+                <div style="height: 55%;"></div>
+                <div style="height: 52%;"></div>
+                <div style="height: 54%;"></div>
+                
+                <div style="height: 0%;"></div>
+                <div style="height: 0%;"></div>
+                <div style="height: 65%;"></div>
+                <div style="height: 62%;"></div>
+                <div style="height: 63%;"></div>
+            </div>
+            <div class="legend">
+                <div>April 1st</div>
+                <div>May 1st</div>
+            </div>
+
+            <h3>Timeline composition</h3>
+            <div class="all-metrics">
+                <div class="metrics">
+                    <div class="name">Retweets</div>
+                    <div class="fraction-container">
+                        <div class="value" style="width: 55%;"></div>
+                    </div>
+                </div>
+                <div class="metrics">
+                    <div class="name">Links</div>
+                    <div class="fraction-container">
+                        <div class="value" style="width: 70%;"></div>
+                    </div>
+                </div>
+                <div class="metrics">
+                    <div class="name">Conversations</div>
+                    <div class="fraction-container">
+                        <div class="value" style="width: 4%;"></div>
+                    </div>
+                </div>
+            </div>
+            <h4>Most used words</h4>
+            <div class="most-used-words">
+                <span>Bordeaux</span>
+                <span>tour</span>
+                <span>vin</span>  
+                <span>tourisme</span>
+            </div>  
+
+            <h3>Generated Engagement</h3>
+            <div class="all-metrics">
+                <div class="metrics">
+                    <div class="name">Retweets</div>
+                    <div class="value">51</div>
+                </div>
+                <div class="metrics">
+                    <div class="name">Favorites</div>
+                    <div class="value">55</div>
+                </div>
+                <div class="metrics">
+                    <div class="name">Replies</div>
+                    <div class="value">12</div>
+                </div>
+            </div>
+        </div>
+        
+        
+    </body>
+</html>

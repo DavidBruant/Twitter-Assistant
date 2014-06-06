@@ -1,0 +1,95 @@
+.twitter-assistant{
+    margin-bottom: auto;
+    margin-top: 10px;
+
+    min-height: 400px;
+    width: 100%; /* hopefully, the parent isn't a douchebag */
+    max-width: 300px;
+
+    background-color: hsl(300, 45%, 78%);
+    border-radius: 6px;
+
+    /*margin-top: 10px;*/
+    padding: 1em;
+}
+
+.twitter-assistant h1{
+    text-align: center;
+    margin: 0;
+
+    font-size: 24px;
+}
+
+.twitter-assistant h2{
+    margin: 0;
+
+    color: hsl(205, 11%, 25%);
+    font-size: 16px;
+    font-weight: 300;
+    line-height: 22px;
+}
+
+.twitter-assistant h3, .twitter-assistant h4{
+    margin: 7px 0;
+    margin-top: 20px;
+}
+
+.twitter-assistant .all-metrics{
+    display: table;
+    border-collapse: collapse;
+    width: 100%;
+}
+.twitter-assistant .all-metrics .metrics{
+    display: table-row;
+    height: 20px;
+}
+.twitter-assistant .all-metrics .metrics > *{
+    display: table-cell;
+    padding: 0;
+    vertical-align: middle;
+}
+
+.twitter-assistant .all-metrics .metrics > .name{
+    padding-right: 4px;
+}
+.twitter-assistant .all-metrics .metrics > .value{
+    text-align: right;
+}
+
+.twitter-assistant .fraction-container{
+    width: 100%;
+    border: 1px solid grey;
+    height: 100%;
+}
+
+.twitter-assistant .fraction-container .value {
+    background-color: rgba(255,255,255,0.5);
+    height: 100%;
+}
+
+.twitter-assistant .histo-range{
+    display : flex;
+    align-items: flex-end;
+    height: 100px;
+    width: 100%;
+}
+
+.twitter-assistant .histo-range > *{
+    height: 50%;
+    flex-grow: 1;
+    border: 1px solid grey;
+    background-color: rgba(255,255,255,0.5);
+}
+.twitter-assistant .legend{
+    display : flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.twitter-assistant .most-used-words > *{
+    display: inline-block;
+    padding: 2px;
+    border-radius: 4px;
+    border: 1px solid grey;
+    background-color: rgba(255,255,255,0.5);
+}
