@@ -49,7 +49,7 @@ Twitter Assistant takes advantage of a Twitter app credentials you create. As su
 (sorry for this line. Will explain in more details later, hang tight :-) )
 
 
-# Acknoledgements
+# Acknowledgements
 
 Thanks to @clochix, @davidbk, @oncletom and a couple of others for the inspiration to make this addon an emancipating purely client-side piece of software.
 
