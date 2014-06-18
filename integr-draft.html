@@ -22,7 +22,15 @@
         </style>
         <link rel="stylesheet" href="https://raw.githubusercontent.com/DavidBruant/Better-CSS-defaults/master/better-defaults.css">
 
-
+        <!--<script src="data:text/javascript,console.log(performance.now() - (performance.timing.domInteractive - performance.timing.navigationStart))" defer></script> -->
+        
+        <script>
+        /*window.onload = function(){
+            var t = performance.timing;
+            console.log(t.domComplete - t.navigationStart);
+        }*/
+        </script>
+        
     </head>
     <body>
         
@@ -100,6 +108,20 @@
                     height: 100%;
                 }
 
+                .twitter-assistant .fraction-container.q0-1{
+                    background-color: rgba(255,255,255,0.5);
+                }
+                .twitter-assistant .fraction-container.q0-1 .value{
+                    background-color: yellow;
+                }
+                .twitter-assistant .fraction-container.q1-2{
+                    background-color: yellow;
+                }
+                .twitter-assistant .fraction-container.q1-2 .value{
+                    background-color: orange;
+                }
+                
+                
                 .twitter-assistant .histo-range{
                     display : flex;
                     align-items: flex-end;
@@ -187,15 +209,21 @@
             <div class="all-metrics">
                 <div class="metrics">
                     <div class="name">Retweets</div>
-                    <div class="value">51</div>
+                    <div class="fraction-container q0-1">
+                        <div class="value" style="width: 10%;"></div>
+                    </div>
                 </div>
                 <div class="metrics">
                     <div class="name">Favorites</div>
-                    <div class="value">14</div>
+                    <div class="fraction-container">
+                        <div class="value" style="width: 12%;"></div>
+                    </div>
                 </div>
                 <div class="metrics">
                     <div class="name">Replies</div>
-                    <div class="value">42</div>
+                    <div class="fraction-container q1-2">
+                        <div class="value" style="width: 43%;"></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -263,6 +291,7 @@
                     text-align: right;
                 }
 
+                
                 .twitter-assistant .fraction-container{
                     width: 100%;
                     border: 1px solid grey;
@@ -273,6 +302,21 @@
                     background-color: rgba(255,255,255,0.5);
                     height: 100%;
                 }
+                
+                .twitter-assistant .fraction-container.q0-1{
+                    background-color: rgba(255,255,255,0.5);
+                }
+                .twitter-assistant .fraction-container.q0-1 .value{
+                    background-color: yellow;
+                }
+                .twitter-assistant .fraction-container.q1-2{
+                    background-color: yellow;
+                }
+                .twitter-assistant .fraction-container.q1-2 .value{
+                    background-color: orange;
+                }
+                
+                
 
                 .twitter-assistant .histo-range{
                     display : flex;
@@ -380,15 +424,21 @@
             <div class="all-metrics">
                 <div class="metrics">
                     <div class="name">Retweets</div>
-                    <div class="value">51</div>
+                    <div class="fraction-container q0-1">
+                        <div class="value" style="width: 30%;"></div>
+                    </div>
                 </div>
                 <div class="metrics">
                     <div class="name">Favorites</div>
-                    <div class="value">55</div>
+                    <div class="fraction-container">
+                        <div class="value" style="width: 70%;"></div>
+                    </div>
                 </div>
                 <div class="metrics">
                     <div class="name">Replies</div>
-                    <div class="value">12</div>
+                    <div class="fraction-container q1-2">
+                        <div class="value" style="width: 10%;"></div>
+                    </div>
                 </div>
             </div>
         </div>
