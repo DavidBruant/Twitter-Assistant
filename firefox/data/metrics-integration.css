@@ -13,6 +13,10 @@
     padding: 1em;
 }
 
+.twitter-assistant, .twitter-assistant *{
+    box-sizing: border-box;
+}
+
 .twitter-assistant h1{
     text-align: center;
     margin: 0;
@@ -65,6 +69,20 @@
 .twitter-assistant .fraction-container .value {
     background-color: rgba(255,255,255,0.5);
     height: 100%;
+}
+
+/* definitely need variables here */
+.twitter-assistant .fraction-container.q0-1{
+    background-color: rgba(255,255,255,0.5);
+}
+.twitter-assistant .fraction-container.q0-1 .value{
+    background-color: yellow;
+}
+.twitter-assistant .fraction-container.q1-2{
+    background-color: yellow;
+}
+.twitter-assistant .fraction-container.q1-2 .value{
+    background-color: orange;
 }
 
 .twitter-assistant .histo-range{

@@ -71,7 +71,10 @@ exports.main = function(){
         twitterProfilePageMod = pageMod.PageMod({
             include: /^https?:\/\/twitter\.com\/([^\/]+)\/?$/,
 
-            contentScriptFile: data.url("metrics-integration.js"),
+            contentScriptFile: [
+                data.url("tweetsMine.js"),
+                data.url("metrics-integration.js")
+            ],
             contentScriptWhen: "start", // mostly so the 'attach' event happens as soon as possible
 
             contentStyleFile: data.url("metrics-integration.css")
