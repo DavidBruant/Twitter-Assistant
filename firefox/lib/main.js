@@ -4,17 +4,72 @@ const ui =  require("sdk/ui");
 const Panel =  require("sdk/panel").Panel;
 const data =  require("sdk/self").data;
 const pageMod = require("sdk/page-mod");
+const tabs = require("sdk/tabs");
+const system = require("sdk/system");
+const staticArgs = system.staticArgs;
+
+const prefs = require('sdk/simple-prefs').prefs;
+const lowLevelPrefs = require('sdk/preferences/service');
+const storage = require("sdk/simple-storage").storage;
 
 const getAccessToken = require('getAccessToken.js');
 const TwitterAPI = require('TwitterAPI.js'); 
 
-const prefs = require('sdk/simple-prefs').prefs;
-
-const storage = require("sdk/simple-storage").storage;
+const TWITTER_MAIN_PAGE = "https://twitter.com";
+const TWITTER_USER_PAGES = [
+    "https://twitter.com/DavidBruant",
+    "https://twitter.com/oncletom",
+    "https://twitter.com/supersole"
+];
 
 exports.main = function(){
     
+    // browser toolbox for debugging
+    if(staticArgs['browser-toolbox']){
+        lowLevelPrefs.set("devtools.chrome.enabled", true);
+        lowLevelPrefs.set("devtools.debugger.remote-enabled", true);
+    }
+    
+    // accelerate logging in
+    if(staticArgs['username'] && staticArgs['password']){
+        // open Twitter in a tab
+        tabs.open({
+            url: TWITTER_MAIN_PAGE,
+            onOpen: function(twitterLoginTab){
+                twitterLoginTab.once('ready', function(){
+                    const worker = twitterLoginTab.attach({
+                        contentScriptFile : data.url('dev/twitter-login.js')
+                    });
+                    worker.port.emit('twitter-credentials', {
+                        username: staticArgs['username'], 
+                        password: staticArgs['password']
+                    });
+                    
+                    // when we navigate away from the Twitter main page (hopefully because of being properly logged in)
+                    worker.once('detach', function(){
+                        twitterLoginTab.once('ready', function(){
+                            twitterLoginTab.close();
+                            
+                            // hopefully, we're properly logged in
+                            TWITTER_USER_PAGES.forEach(url => {
+                                tabs.open(url);
+                            })
+                        });
+                    })
+                    
+                });
+            }
+        });
+    }
+    
     prefs["sdk.console.logLevel"] = 'all';
+    
+    
+    const credentialPanelScripts = [data.url('credentialsPanel.js')];
+    
+    if(staticArgs['CONSUMER_KEY'] && staticArgs['CONSUMER_SECRET']){
+        credentialPanelScripts.push( data.url('dev/autofillAPICredentialsForm.js') );
+    }
     
     // credentials panel
     const credentialsPanel = Panel({
@@ -22,8 +77,12 @@ exports.main = function(){
         height: 170, 
         contentURL: data.url('credentialsPanel.html'),
         
-        contentScriptFile: data.url('credentialsPanel.js'),
-        contentScriptWhen: "ready"
+        contentScriptFile: credentialPanelScripts,
+        contentScriptWhen: "ready",
+        contentScriptOptions: staticArgs['CONSUMER_KEY'] && staticArgs['CONSUMER_SECRET'] ? { 
+            key: staticArgs['CONSUMER_KEY'],
+            secret: staticArgs['CONSUMER_SECRET']
+        } : undefined
     });
     
     credentialsPanel.port.on('test-credentials', credentials => {
@@ -50,7 +109,7 @@ exports.main = function(){
     });
     
     const twitterAssistantButton = ui.ActionButton({
-        id: "glovesmore",
+        id: "twitter-assistant-credentials-panel-button",
         label: "Enter oauth Twitter tokens",
         icon: data.url('images/Twitter_logo_blue.png'),
         onClick: function(state) {

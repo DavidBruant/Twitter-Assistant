@@ -2,9 +2,9 @@
 
 const credentialsForm = document.body.querySelector('form');
 
-const keyInput = document.body.querySelector('input.key');
+const keyInput = credentialsForm.querySelector('input.key');
 keyInput.focus();
-const secretInput = document.body.querySelector('input.secret');
+const secretInput = credentialsForm.querySelector('input.secret');
 
 const errorMessage = document.body.querySelector('.error')
 
@@ -24,6 +24,8 @@ function showError(){
 
 credentialsForm.addEventListener('submit', e => {
     e.preventDefault();
+    
+    console.log('submit event');
     
     var key = keyInput.value,
         secret = secretInput.value;
