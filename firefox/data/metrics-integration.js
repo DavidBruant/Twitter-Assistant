@@ -106,7 +106,7 @@ self.port.on('twitter-user-data', data => {
         */
         
         const HISTOGRAM_SIZE = 30;
-        const MAX_TWEETS_PER_DAY = 10;
+        const MAX_TWEETS_PER_DAY = 15;
         
         const twitterAssistantContent = '<h2>Last '+daysSinceOldestTweet+' days activity ('+stats.tweetsConsidered+' tweets)</h2>' +
             '<div class="histo-range">' +
@@ -119,7 +119,7 @@ self.port.on('twitter-user-data', data => {
                         
                         const height = Math.min(thisDayTweets.length/MAX_TWEETS_PER_DAY , 1)*100;
                         // TODO add a class when > 1
-                        return '<div style="height: '+ height +'%;"></div>'; // begging to be transformed into a React component
+                        return '<div style="height: '+ height +'%; title="'+thisDayTweets.length+'"></div>'; // begging to be transformed into a React component
                     }).reverse().join('')
                 ) +
             '</div>' + 
