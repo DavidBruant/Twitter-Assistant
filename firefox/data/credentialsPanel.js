@@ -56,4 +56,9 @@ self.port.on('test-credentials-result', result => {
         // can happen either if the token is invalid or the user change the input field
         showError();
     }
-})
+});
+
+if(self.options){
+    keyInput.value = self.options.key;
+    secretInput.value = self.options.secret;
+}

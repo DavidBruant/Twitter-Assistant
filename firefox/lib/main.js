@@ -64,25 +64,23 @@ exports.main = function(){
     
     prefs["sdk.console.logLevel"] = 'all';
     
+    const storedCredentials = storage.credentials ? JSON.parse(storage.credentials) : undefined;
     
-    const credentialPanelScripts = [data.url('credentialsPanel.js')];
-    
-    if(staticArgs['CONSUMER_KEY'] && staticArgs['CONSUMER_SECRET']){
-        credentialPanelScripts.push( data.url('dev/autofillAPICredentialsForm.js') );
-    }
+    // use the values passed as static args in priority;
+    const key = staticArgs['CONSUMER_KEY'] || storedCredentials.key;
+    const secret = staticArgs['CONSUMER_SECRET'] || storedCredentials.secret;
     
     // credentials panel
     const credentialsPanel = Panel({
         width: 650,
-        height: 170, 
+        height: 400, 
         contentURL: data.url('credentialsPanel.html'),
         
-        contentScriptFile: credentialPanelScripts,
+        contentScriptFile: data.url('credentialsPanel.js'),
         contentScriptWhen: "ready",
-        contentScriptOptions: staticArgs['CONSUMER_KEY'] && staticArgs['CONSUMER_SECRET'] ? { 
-            key: staticArgs['CONSUMER_KEY'],
-            secret: staticArgs['CONSUMER_SECRET']
-        } : undefined
+        contentScriptOptions: (key && secret) ? 
+            {key: key, secret: secret} : 
+            undefined
     });
     
     credentialsPanel.port.on('test-credentials', credentials => {
@@ -163,11 +161,7 @@ exports.main = function(){
         });
     }
     
-    if(storage.credentials){
-        const creds = JSON.parse(storage.credentials);
-        const key = creds.key,
-              secret = creds.secret;
-              
+    if(key && secret){
         getAccessToken(key, secret)
             .then(TwitterAPI)
             .then(getReadyForTwitterProfilePages)
