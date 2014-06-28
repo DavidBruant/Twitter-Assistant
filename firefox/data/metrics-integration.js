@@ -148,7 +148,8 @@ self.port.on('twitter-user-data', data => {
                         '<div class="value" style="width: '+tweetsWithLinkPercent.toFixed(1)+'%;"></div>' +
                     '</div>' +
                 '</div>' +
-            '</div>';
+            '</div>' + 
+            '<footer><p><strong>Warning</strong>: There is more to a person than the few metrics that are shown above</p></footer>';
             
             
             /*'<span>Retweets: '+stats.retweetsCount+' ('+retweetPercent.toFixed(1)+'%)</span><br>' +

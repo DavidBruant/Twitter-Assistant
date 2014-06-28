@@ -2,7 +2,7 @@
     margin-bottom: auto;
     margin-top: 10px;
 
-    min-height: 400px;
+    /*min-height: 400px;*/
     width: 100%; /* hopefully, the parent isn't a douchebag */
     max-width: 300px;
 
@@ -11,6 +11,13 @@
 
     /*margin-top: 10px;*/
     padding: 1em;
+}
+
+.twitter-assistant footer{
+    margin-top: 1em;
+    padding: 0.5em;
+    color: #8b6114;
+    background-color: hsla(210, 56%, 82%, 0.5);
 }
 
 .twitter-assistant, .twitter-assistant *{
