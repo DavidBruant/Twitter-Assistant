@@ -62,6 +62,7 @@
 
 .twitter-assistant .all-metrics .metrics > .name{
     padding-right: 4px;
+    white-space: nowrap;
 }
 .twitter-assistant .all-metrics .metrics > .value{
     text-align: right;
@@ -76,6 +77,13 @@
 .twitter-assistant .fraction-container .value {
     background-color: rgba(255,255,255,0.5);
     height: 100%;
+    display: inline-block;
+}
+.twitter-assistant .fraction-container .value.retweets {
+    background-color: hsl(97, 42%, 40%); /* handpicked from Twitter with devtools */
+}
+.twitter-assistant .fraction-container .value.conversations {
+    background-color: hsl(0, 100%, 30%); /* handpicked from Twitter with devtools */
 }
 
 /* definitely need variables here */

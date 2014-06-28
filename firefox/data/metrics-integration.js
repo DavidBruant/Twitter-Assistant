@@ -130,18 +130,19 @@ self.port.on('twitter-user-data', data => {
             '<h3>Timeline composition</h3>' +
             '<div class="all-metrics">' +
                 '<div class="metrics">' +
-                    '<div class="name">Retweets</div>' +
+                    '<div class="name">Tweet type</div>' +
                     '<div class="fraction-container">' +
-                        '<div class="value" style="width: '+retweetPercent.toFixed(1)+'%;"></div>' +
-                    '</div>' +
-                '</div>' +
-                '<div class="metrics">' +
-                    '<div class="name">Conversations</div>' +
-                    '<div class="fraction-container">' +
-                        '<div class="value" style="width: '+
+                        '<div class="value retweets" title="Retweets" style="width: '+retweetPercent.toFixed(1)+'%;"></div>' +
+                        '<div class="value conversations" title="Conversations" style="width: '+
                             (tweetMine.getConversations().length*100/tweetMine.length).toFixed(1)+'%;"></div>' +
                     '</div>' +
                 '</div>' +
+                /*'<div class="metrics">' +
+                    '<div class="name">Conversations</div>' +
+                    '<div class="fraction-container">' +
+                         +
+                    '</div>' +
+                '</div>' +*/
                 '<div class="metrics">' +
                     '<div class="name" title="non-media links">With link</div>' +
                     '<div class="fraction-container">' +
