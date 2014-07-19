@@ -14,6 +14,7 @@ const storage = require("sdk/simple-storage").storage;
 
 const getAccessToken = require('getAccessToken.js');
 const TwitterAPI = require('TwitterAPI.js'); 
+const createTwitterApp = require('createTwitterApp.js');
 
 const TWITTER_MAIN_PAGE = "https://twitter.com";
 const TWITTER_USER_PAGES = [
@@ -64,7 +65,7 @@ exports.main = function(){
     
     prefs["sdk.console.logLevel"] = 'all';
     
-    const storedCredentials = storage.credentials ? JSON.parse(storage.credentials) : undefined;
+    const storedCredentials = storage.credentials ? JSON.parse(storage.credentials) : {};
     
     // use the values passed as static args in priority;
     const key = staticArgs['CONSUMER_KEY'] || storedCredentials.key;
@@ -104,6 +105,10 @@ exports.main = function(){
         getAccessToken(credentials.key, credentials.secret)
             .then(TwitterAPI)
             .then(getReadyForTwitterProfilePages)
+    });
+    
+    credentialsPanel.port.on('automate-twitter-app-creation', () => {
+        createTwitterApp();
     });
     
     const twitterAssistantButton = ui.ActionButton({
@@ -162,6 +167,7 @@ exports.main = function(){
     }
     
     if(key && secret){
+        // if the getAccessToken call fails (as it does when computer not logged in at Firefox startup), there is no way to recover an access token
         getAccessToken(key, secret)
             .then(TwitterAPI)
             .then(getReadyForTwitterProfilePages)

@@ -1,9 +1,10 @@
 {
-  "name": "tmetrics",
-  "title": "TMetrics",
-  "id": "jid1-BbLB1WcU09jwfA",
-  "description": "a basic add-on",
-  "author": "",
-  "license": "MIT",
-  "version": "0.1"
+    "name": "twitter-assistant",
+    "title": "Twitter Assistant",
+    "id": "jid1-BbLB1WcU09jwfA@jetpack",
+    "description": "a basic add-on",
+    "author": "",
+    "license": "MIT",
+    "main": "lib/main.js",
+    "version": "0.1"
 }

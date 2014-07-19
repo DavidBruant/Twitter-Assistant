@@ -2,7 +2,7 @@
 
 self.port.on('twitter-credentials', function(credentials){
     const {username, password} = credentials;
-    console.log('credentials from inside', username);
+    //console.log('credentials from inside', username);
         
     const signinForm = document.querySelector('form.signin');
 

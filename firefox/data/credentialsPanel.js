@@ -8,6 +8,8 @@ const secretInput = credentialsForm.querySelector('input.secret');
 
 const errorMessage = document.body.querySelector('.error')
 
+const automationButton = document.body.querySelector('button.automatically');
+
 function hideError(){
     errorMessage.setAttribute('hidden', 'hidden');
     keyInput.removeEventListener('input', hideError);
@@ -57,6 +59,10 @@ self.port.on('test-credentials-result', result => {
         showError();
     }
 });
+
+automationButton.addEventListener('click', e => {
+    self.port.emit('automate-twitter-app-creation');
+})
 
 if(self.options){
     keyInput.value = self.options.key;
