@@ -15,39 +15,42 @@ function getPasswordsForUrl(url){
         passwords.search({
             url: url,
             onComplete: function(credentials){
-                if(Array.isArray(credentials) && credentials.length >= 1)
-                    resolve(credentials);
-                else
-                    reject(new Error('no password for '+url));
+                resolve(Array.isArray(credentials) && credentials.length >= 1 ?
+                    credentials :
+                    undefined
+                )
             },
             onError: reject
         });
     });
 }
 
+/*
+    returns a Promise for a credentials object
+*/
 function getMostImportantPassword(passwordPs){
     //console.log('getMostImportantPassword', passwordPs.length);
     
     if(passwordPs.length === 0){
-        return new Promise((resolve, reject) => reject(new Error('no password'))); // TODO : resolve to null to signify no credentials
+        return new Promise(resolve => resolve(undefined));
     }
     else{
+        // const [first, ...rest] = passwordPs; Waiting for https://bugzilla.mozilla.org/show_bug.cgi?id=933276
         const first = passwordPs[0];
         const rest = passwordPs.slice(1);
         
         return first.then(credentials => {
-            //console.log('getMostImportantPassword resolve', credentials)
-            resolve(credentials);
-        })
-        .catch(err => {
-            //console.log('getMostImportantPassword rest')
-            return getMostImportantPassword(rest);
-        })
+            return credentials !== undefined ? 
+                credentials : // credentials found, stop the search
+                getMostImportantPassword(rest) ; // credentials not found, look for next URL
+        });
     }
 }
 
 
 module.exports = function(){
+    throw new Error('write tests and figure out the return value signature')
+    
     return new Promise((resolve, reject) => {
         const passwordPs = PASSWORD_URL_DOMAIN_CANDIDATES.map(getPasswordsForUrl);
         resolve(getMostImportantPassword(passwordPs));

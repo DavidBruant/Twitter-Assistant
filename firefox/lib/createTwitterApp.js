@@ -2,8 +2,8 @@
 
 const tabs = require("sdk/tabs");
 const passwords = require("sdk/passwords");
+const data =  require("sdk/self").data;
 
-const retriveDevTwitterUserCredentials = require('retrieveDevTwitterUserCredentials');
 
 const TWITTER_APP_LOGIN_PAGE = "https://dev.twitter.com/user/login?destination=home";
 
@@ -18,32 +18,23 @@ const TWITTER_APP_LOGIN_PAGE = "https://dev.twitter.com/user/login?destination=h
 
 */
 
-module.exports = function(){
-    
-    const devTwitterUserCredentialsP = retriveDevTwitterUserCredentials()
-            /*.then(pw => console.log(pw))
-            .catch(err => {
-                console.error('no credentials from retriveDevTwitterUserCredentials in createTwitterApp ', err)
-                throw err;
-            });*/
+module.exports = function(devTwitterUserCredentials){
     
     const tabP = new Promise((resolve, reject) => {
-        tabs.open(TWITTER_APP_LOGIN_PAGE, {
+        tabs.open({
+            url: TWITTER_APP_LOGIN_PAGE,
             onReady: resolve
         });
     });
     
-    console.log('created the two promises');
-    
-    Promise.all([devTwitterUserCredentialsP, tabP])
-        .then(function([devTwitterUserCredentials, tab]){
-            console.log('ready to login', devTwitterUserCredentials, tab);
-        })
-        .catch( err => console.error(err) );
-    
-    
     // fill in the login/password form
-    // Promise.all()
+    tabP.then(tab => {
+        tab.attach({
+            contentScriptFile: data.url('createTwitterApp/fillInDevTwitterCredentials.js'),
+            contentScriptOptions: devTwitterUserCredentials
+        });
+    });
+    
     
 };
 
