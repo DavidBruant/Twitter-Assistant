@@ -53,9 +53,9 @@ exports.main = function(){
                             twitterLoginTab.close();
                             
                             // hopefully, we're properly logged in
-                            TWITTER_USER_PAGES.forEach(url => {
+                            /*TWITTER_USER_PAGES.forEach(url => {
                                 tabs.open(url);
-                            })
+                            })*/
                         });
                     })
                     
