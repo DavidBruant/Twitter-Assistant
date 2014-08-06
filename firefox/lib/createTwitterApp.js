@@ -31,8 +31,6 @@ function randomString(length){
 
 module.exports = function(devTwitterUserCredentials){
     
-    console.time('app creation');
-    
     const tabP = new Promise((resolve, reject) => {
         tabs.once('open', resolve); // this looks racy. What if a tab opens before mine?
         tabs.open( TWITTER_APP_LOGIN_PAGE ); 
@@ -57,15 +55,16 @@ module.exports = function(devTwitterUserCredentials){
         // redirect to the app creation page
         var redirectedToAppCreationPageP = loggedinP.then(tab => {
             return new Promise( resolve => {
-                console.log('setTimeout', typeof setTimeout)
                 
                 // change URL only after some time to leave some time to the server to know
-                // the user is logged in to dev.twitter.com
+                // the user is logged in to dev.twitter.com... or something
                 setTimeout(() => {
                     tab.url = 'https://apps.twitter.com/app/new';
-                }, 15*1000);
+                }, 1*1000);
                 
                 tab.once('ready', () => {
+                    // sometimes, tab.title contains "Access Denied | blablablah".
+                    // No idea why. For now, let's do nothing about it.
                     resolve(tab);
                 });
             });
@@ -77,7 +76,7 @@ module.exports = function(devTwitterUserCredentials){
             var appName = TWITTER_ASSISTANT_APP_NAME_PREFIX + '-' + devTwitterUserCredentials.username + '-';
             appName = appName + randomString(TWITTER_APP_NAME_MAX_LENGTH - appName.length);
             
-            tab.attach({
+            var worker = tab.attach({
                 contentScriptFile: data.url('createTwitterApp/fillInAppCreationForm.js'),
                 contentScriptOptions: {
                     // needs to be globally unique and below 32 chars
@@ -89,11 +88,52 @@ module.exports = function(devTwitterUserCredentials){
                     
                 }
             });
-            console.timeEnd('app creation');
+            
+            return new Promise((resolve, reject) => {
+                worker.once('detach', () => {
+                    tab.once('ready', () => {
+
+                        console.log('detached', tab.title, tab.url);
+                        if(tab.title.contains(appName)){
+                            console.log("victory! app created!", appName);
+                            resolve(tab)
+                        }
+                        else{
+                            reject(new Error('problem while trying to create app'));
+                        }
+
+                    });
+                });
+            
+            });
+            
+        });
+
+        var twitterAppAPICredentialsP = appCreatedP.then(tab => {
+            return new Promise((resolve, reject) => {
+                tab.once('ready', () => {
+                    var worker = tab.attach({
+                        contentScriptFile: data.url('createTwitterApp/collectTwitterAppAPICredentials.js')
+                    });
+
+                    worker.port.on('credentials', credentials => {
+                        resolve(credentials);
+                    });
+            
+                    worker.port.on('error', error => {
+                        reject(error);
+                    });
+                })
+
+                tab.url += '/keys';
+            });
+            
         })
         
+        return twitterAppAPICredentialsP;
     });
     
+
     
 };
 

@@ -111,10 +111,16 @@ exports.main = function(){
     credentialsPanel.port.on('automate-twitter-app-creation', () => {
         let devTwitterUserCredentialsP; //= retriveDevTwitterUserCredentials();
         if(staticArgs['username'] && staticArgs['password']){
+        
+            console.time('app creation');
+        
             createTwitterApp({
                 username: staticArgs['username'],
                 password: staticArgs['password']
-            });
+            }).then(twitterAppCredentials => {
+                console.log('twitterAppCredentials', twitterAppCredentials)
+                console.timeEnd('app creation');
+            })
         }
         else{
             throw new Error('no username/password combo. Need to write/fix code reading in stored passwords and handle no passwords at all')
