@@ -1,5 +1,6 @@
 'use strict';
 
+// IMPORTS
 const { store, search, remove } = require("sdk/passwords");
 
 function preparePasswords(credentials){
@@ -47,15 +48,19 @@ function preparePasswords(credentials){
 
 const retrieveDevTwitterUserCredentials = require('./retrieveDevTwitterUserCredentials.js');
 
-exports["test basic tests"] = function(assert) {
+
+// TESTS
+exports["test * Basic tests"] = function(assert) {
     assert.strictEqual(typeof retrieveDevTwitterUserCredentials, "function",
                        "retrieveDevTwitterUserCredentials should be a function");
-    assert.strictEqual(Object.prototype.toString.call(retrieveDevTwitterUserCredentials()), "[object Promise]");
+    assert.strictEqual(Object.prototype.toString.call(retrieveDevTwitterUserCredentials("yo")), "[object Promise]");
+    
+    assert.throws(() => {retrieveDevTwitterUserCredentials()}, Error, "the function throws if called with no args");
 };
 
-exports["test no stored password"] = function(assert, done) {
+exports["test * No stored password"] = function(assert, done) {
     
-    retrieveDevTwitterUserCredentials()
+    retrieveDevTwitterUserCredentials("azerty")
         .then(credentials => {
             assert.strictEqual(credentials, undefined,
                 "if no passwords are stored, retrieveDevTwitterUserCredentials should return a promise for undefined");
@@ -67,7 +72,7 @@ exports["test no stored password"] = function(assert, done) {
 };
 
 
-exports["test no relevant password stored"] = function(assert, done) {
+exports["test * No relevant password stored"] = function(assert, done) {
     // setup
     const {passwordsStoredP, cleanupPasswords} = preparePasswords([
         {
@@ -87,11 +92,11 @@ exports["test no relevant password stored"] = function(assert, done) {
         },
     ]);
         
-    // test
     passwordsStoredP
         .then(() => {
+            // test
         
-            return retrieveDevTwitterUserCredentials()
+            return retrieveDevTwitterUserCredentials("azerty")
                 .then(credentials => {
                     assert.strictEqual(credentials, undefined,
                         "if no relevant passwords are stored, retrieveDevTwitterUserCredentials should return a promise for undefined");
@@ -108,235 +113,257 @@ exports["test no relevant password stored"] = function(assert, done) {
     
 };
 
-/*exports["test exceptions in onComplete are reported"] = function(assert, done) {
-  store({
-    realm: "throws",
-    username: "error",
-    password: "boom!",
-    onComplete: function onComplete(error) {
-      throw new Error("Boom!")
-    },
-    onError: function onError(error) {
-      assert.equal(error.message, "Boom!", "Error thrown is reported");
-      done();
-    }
-  });
-};
-
-exports["test store requires `realm` field"] = function(assert, done) {
-  store({
-    username: "foo",
-    password: "bar",
-    onComplete: function onComplete() {
-      assert.fail("onComplete should not be called");
-    },
-    onError: function onError() {
-      assert.pass("'`realm` is required");
-      done();
-    }
-  });
-};
-
-exports["test can't store same login twice"] = function(assert, done) {
-  store({
-    username: "user",
-    password: "pass",
-    realm: "realm",
-    onComplete: function onComplete() {
-      assert.pass("credential saved");
-
-      store({
-        username: "user",
-        password: "pass",
-        realm: "realm",
-        onComplete: function onComplete() {
-          assert.fail("onComplete should not be called");
-        },
-        onError: function onError() {
-          assert.pass("re-saving credential failed");
-
-          remove({
-            username: "user",
-            password: "pass",
-            realm: "realm",
-            onComplete: function onComplete() {
-              assert.pass("credential was removed");
-              done();
-            },
-            onError: function onError() {
-              assert.fail("remove should not fail");
-            }
-          });
+        
+exports["test * One matching password available for https://dev.twitter.com"] = function(assert, done) {
+    // setup
+    const {passwordsStoredP, cleanupPasswords} = preparePasswords([
+        {
+            username: "azerty",
+            password: "blabla",
+            url: "https://dev.twitter.com"
         }
-      });
-    },
-    onError: function onError() {
-      assert.fail("onError should not be called");
-    }
-  });
+    ]);
+        
+    passwordsStoredP
+        .then(() => {
+            // test
+            return retrieveDevTwitterUserCredentials("azerty")
+                .then(credentials => {
+                    assert.ok(Array.isArray(credentials));
+                    assert.strictEqual(credentials.length, 1);
+                    assert.strictEqual(credentials[0].username, "azerty");
+                    assert.strictEqual(credentials[0].password, "blabla");
+                })
+                .catch(err => { 
+                    assert.fail("retrieveDevTwitterUserCredentials shouldn't reject when there is a password");
+                });
+        })
+        .then(() => {
+            // teardown
+            return cleanupPasswords();
+        }).then(done).catch(done);
 };
 
-exports["test remove fails if no login found"] = function(assert, done) {
-  remove({
-    username: "foo",
-    password: "bar",
-    realm: "baz",
-    onComplete: function onComplete() {
-      assert.fail("should not be able to remove unstored credentials");
-    },
-    onError: function onError() {
-      assert.pass("can't remove unstored credentials");
-      done();
-    }
-  });
-};
 
-exports["test addon associated credentials"] = function(assert, done) {
-  store({
-    username: "foo",
-    password: "bar",
-    realm: "baz",
-    onComplete: function onComplete() {
-      search({
-        username: "foo",
-        password: "bar",
-        realm: "baz",
-        onComplete: function onComplete([credential]) {
-          assert.equal(credential.url.indexOf("addon:"), 0,
-                       "`addon:` uri is used for add-on credentials");
-          assert.equal(credential.username, "foo",
-                       "username matches");
-          assert.equal(credential.password, "bar",
-                       "password matches");
-          assert.equal(credential.realm, "baz", "realm matches");
-          assert.equal(credential.formSubmitURL, null,
-                       "`formSubmitURL` is `null` for add-on credentials");
-          assert.equal(credential.usernameField, "", "usernameField is empty");
-          assert.equal(credential.passwordField, "", "passwordField is empty");
-
-          remove({
-            username: credential.username,
-            password: credential.password,
-            realm: credential.realm,
-            onComplete: function onComplete() {
-              assert.pass("credential is removed");
-              done();
-            },
-            onError: function onError() {
-              assert.fail("onError should not be called");
-            }
-          });
-        },
-        onError: function onError() {
-          assert.fail("onError should not be called");
+exports["test * One non-matching password available for https://dev.twitter.com"] = function(assert, done) {
+    // setup
+    const {passwordsStoredP, cleanupPasswords} = preparePasswords([
+        {
+            username: "clochix",
+            password: "blabla",
+            url: "https://dev.twitter.com"
         }
-      });
-    },
-    onError: function onError() {
-      assert.fail("onError should not be called");
-    }
-  });
+    ]);
+        
+    passwordsStoredP
+        .then(() => {
+            // test
+            return retrieveDevTwitterUserCredentials("azerty")
+                .then(credentials => {
+                    assert.strictEqual(credentials, undefined);
+                })
+                .catch(err => { 
+                    assert.fail("retrieveDevTwitterUserCredentials shouldn't reject when there is a password");
+                });
+        })
+        .then(() => {
+            // teardown
+            return cleanupPasswords();
+        }).then(done).catch(done);
 };
 
-exports["test web page associated credentials"] = function(assert, done) {
-  store({
-    url: "http://bar.foo.com/authentication/?login",
-    formSubmitURL: "http://login.foo.com/authenticate.cgi",
-    username: "user",
-    password: "pass",
-    usernameField: "user-f",
-    passwordField: "pass-f",
-    onComplete: function onComplete() {
-      search({
-        username: "user",
-        password: "pass",
-        url: "http://bar.foo.com",
-        formSubmitURL: "http://login.foo.com",
-        onComplete: function onComplete([credential]) {
-          assert.equal(credential.url, "http://bar.foo.com", "url matches");
-          assert.equal(credential.username, "user", "username matches");
-          assert.equal(credential.password, "pass", "password matches");
-          assert.equal(credential.realm, null, "realm is null");
-          assert.equal(credential.formSubmitURL, "http://login.foo.com",
-                       "formSubmitURL matches");
-          assert.equal(credential.usernameField, "user-f",
-                       "usernameField is matches");
-          assert.equal(credential.passwordField, "pass-f",
-                       "passwordField matches");
 
-          remove({
-            url: credential.url,
-            formSubmitURL: credential.formSubmitURL,
-            username: credential.username,
-            password: credential.password,
-            usernameField: credential.usernameField,
-            passwordField: credential.passwordField,
-
-            onComplete: function onComplete() {
-              assert.pass("credential is removed");
-              done();
-            },
-            onError: function onError(e) {
-              assert.fail("onError should not be called");
-            }
-          });
-        },
-        onError: function onError() {
-          assert.fail("onError should not be called");
+exports["test * One matching password available for http://dev.twitter.com"] = function(assert, done) {
+    // setup
+    const {passwordsStoredP, cleanupPasswords} = preparePasswords([
+        {
+            username: "papapapa",
+            password: "bloublou",
+            url: "http://dev.twitter.com"
         }
-      });
-    },
-    onError: function onError() {
-      assert.fail("onError should not be called");
-    }
-  });
+    ]);
+        
+    passwordsStoredP
+        .then(() => {
+            // test
+            return retrieveDevTwitterUserCredentials("papapapa")
+                .then(credentials => {
+                    assert.ok(Array.isArray(credentials));
+                    assert.strictEqual(credentials.length, 1);
+                    assert.strictEqual(credentials[0].username, "papapapa");
+                    assert.strictEqual(credentials[0].password, "bloublou");
+                })
+                .catch(err => { 
+                    assert.fail("retrieveDevTwitterUserCredentials shouldn't reject when there is a password");
+                });
+        })
+        .then(() => {
+            // teardown
+            return cleanupPasswords();
+        }).then(done).catch(done);
 };
 
-exports["test site authentication credentials"] = function(assert, done) {
-  store({
-    url: "http://authentication.com",
-    username: "U",
-    password: "P",
-    realm: "R",
-    onComplete: function onComplete() {
-      search({
-        url: "http://authentication.com",
-        username: "U",
-        password: "P",
-        realm: "R",
-        onComplete: function onComplete([credential]) {
-          assert.equal(credential.url,"http://authentication.com",
-                       "url matches");
-          assert.equal(credential.username, "U", "username matches");
-          assert.equal(credential.password, "P", "password matches");
-          assert.equal(credential.realm, "R", "realm matches");
-          assert.equal(credential.formSubmitURL, null, "formSubmitURL is null");
-          assert.equal(credential.usernameField, "", "usernameField is empty");
-          assert.equal(credential.passwordField, "", "passwordField is empty");
-
-          remove({
-            url: credential.url,
-            username: credential.username,
-            password: credential.password,
-            realm: credential.realm,
-            onComplete: function onComplete() {
-              assert.pass("credential is removed");
-              done();
-            },
-            onError: function onError() {
-              assert.fail("onError should not be called");
-            }
-          });
-        },
-        onError: function onError() {
-          assert.fail("onError should not be called");
+exports["test * One password available for https://twitter.com"] = function(assert, done) {
+    // setup
+    const {passwordsStoredP, cleanupPasswords} = preparePasswords([
+        {
+            username: "oooo",
+            password: "mmmm",
+            url: "https://twitter.com"
         }
-      });
-    },
-    onError: function onError() {
-      assert.fail("onError should not be called");
-    }
-  });
-};*/
+    ]);
+        
+    passwordsStoredP
+        .then(() => {
+            // test
+            return retrieveDevTwitterUserCredentials("oooo")
+                .then(credentials => {
+                    assert.ok(Array.isArray(credentials));
+                    assert.strictEqual(credentials.length, 1);
+                    assert.strictEqual(credentials[0].username, "oooo");
+                    assert.strictEqual(credentials[0].password, "mmmm");
+                })
+                .catch(err => { 
+                    assert.fail("retrieveDevTwitterUserCredentials shouldn't reject when there is a password");
+                });
+        })
+        .then(() => {
+            // teardown
+            return cleanupPasswords();
+        }).then(done).catch(done);
+};
+
+exports["test * One non-matching password available for https://twitter.com"] = function(assert, done) {
+    // setup
+    const {passwordsStoredP, cleanupPasswords} = preparePasswords([
+        {
+            username: "oncletom",
+            password: "mmmm",
+            url: "https://twitter.com"
+        }
+    ]);
+        
+    passwordsStoredP
+        .then(() => {
+            // test
+            return retrieveDevTwitterUserCredentials("oooo")
+                .then(credentials => {
+                     assert.strictEqual(credentials, undefined);
+                })
+                .catch(err => { 
+                    assert.fail("retrieveDevTwitterUserCredentials shouldn't reject when there is a password");
+                });
+        })
+        .then(() => {
+            // teardown
+            return cleanupPasswords();
+        }).then(done).catch(done);
+};
+
+
+exports["test * Two passwords for https://dev.twitter.com"] = function(assert, done) {
+    // setup
+    const {passwordsStoredP, cleanupPasswords} = preparePasswords([
+        {
+            username: "DavidBruant",
+            password: "toto",
+            url: "https://dev.twitter.com"
+        },
+        {
+            username: "Twikito",
+            password: "titi",
+            url: "https://dev.twitter.com"
+        }
+    ]);
+        
+    passwordsStoredP
+        .then(() => {
+            // test
+            return retrieveDevTwitterUserCredentials("DavidBruant")
+                .then(credentials => {
+                    assert.ok(Array.isArray(credentials));
+                    assert.strictEqual(credentials.length, 1);
+                    assert.strictEqual(credentials[0].username, "DavidBruant");
+                    assert.strictEqual(credentials[0].password, "toto");
+                })
+                .catch(err => {
+                    assert.fail("retrieveDevTwitterUserCredentials shouldn't reject");
+                });
+        })
+        .then(() => {
+            // teardown
+            return cleanupPasswords();
+        }).then(done).catch(done);
+};
+
+exports["test * One password for https://dev.twitter.com and https://twitter.com"] = function(assert, done) {
+    /*
+        Warning: this test may pass because of a race condition
+    */
+    
+    // setup
+    const {passwordsStoredP, cleanupPasswords} = preparePasswords([
+        {
+            username: "DavidBruant",
+            password: "no-dev",
+            url: "https://twitter.com"
+        },
+        {
+            username: "DavidBruant",
+            password: "with-dev",
+            url: "https://dev.twitter.com"
+        }
+    ]);
+        
+    passwordsStoredP
+        .then(() => {
+            // test
+            return retrieveDevTwitterUserCredentials("DavidBruant")
+                .then(credentials => {
+                    assert.ok(Array.isArray(credentials));
+                    assert.strictEqual(credentials.length, 1);
+                    assert.strictEqual(credentials[0].username, "DavidBruant");
+                    assert.strictEqual(credentials[0].password, "with-dev",
+                        "should pick the https://dev.twitter.com password in priority");
+                })
+                .catch(err => {
+                    assert.fail("retrieveDevTwitterUserCredentials shouldn't reject");
+                });
+        })
+        .then(() => {
+            // teardown
+            return cleanupPasswords();
+        }).then(done).catch(done);
+};
+
+
+/*
+exports["test TEMPLATE"] = function(assert, done) {
+    // setup
+    const {passwordsStoredP, cleanupPasswords} = preparePasswords([
+        {
+            username: "azerty",
+            password: "azerty",
+            url: "http://www.example.com"
+        }
+    ]);
+        
+    passwordsStoredP
+        .then(() => {
+            // test
+            return retrieveDevTwitterUserCredentials("USERNAME")
+                .then(credentials => {
+                })
+                .catch(err => {
+                    assert.fail("retrieveDevTwitterUserCredentials shouldn't reject");
+                });
+        })
+        .then(() => {
+            // teardown
+            return cleanupPasswords();
+        }).then(done).catch(done);
+};
+*/
+
 
 require("test").run(exports);

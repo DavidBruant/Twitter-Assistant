@@ -4,17 +4,16 @@ const passwordSearch = require("sdk/passwords").search;
 
 const TWITTER_APP_LOGIN_PAGE = "https://dev.twitter.com/user/login?destination=home";
 const PASSWORD_URL_DOMAIN_CANDIDATES = [ // in order of importance
-    TWITTER_APP_LOGIN_PAGE,
-    'https://dev.twitter.com/user/login',
     'https://dev.twitter.com',
     'http://dev.twitter.com',
     'https://twitter.com',
     'http://twitter.com'
 ];
     
-function getPasswordsForUrl(url){
+function getPasswordsForUrl(url, username){
     return new Promise((resolve, reject) => {
         passwordSearch({
+            username: username,
             url: url,
             onComplete: function(credentials){
                 resolve(Array.isArray(credentials) && credentials.length >= 1 ?
@@ -37,23 +36,25 @@ function getMostImportantPassword(passwordPs){
         return new Promise(resolve => resolve(undefined));
     }
     else{
-        // const [first, ...rest] = passwordPs; Waiting for https://bugzilla.mozilla.org/show_bug.cgi?id=933276
+        // const [first, ...tail] = passwordPs; Waiting for https://bugzilla.mozilla.org/show_bug.cgi?id=933276
         const first = passwordPs[0];
-        const rest = passwordPs.slice(1);
+        const tail = passwordPs.slice(1);
         
         return first.then(credentials => {
             return credentials !== undefined ? 
                 credentials : // credentials found, stop the search
-                getMostImportantPassword(rest) ; // credentials not found, look for next URL
+                getMostImportantPassword(tail) ; // credentials not found, look for next URL
         });
     }
 }
 
 
-module.exports = function(){
+module.exports = function(username){
+    if(!username)
+        throw new Error('missing username');
     
     return new Promise((resolve, reject) => {
-        const passwordPs = PASSWORD_URL_DOMAIN_CANDIDATES.map(getPasswordsForUrl);
+        const passwordPs = PASSWORD_URL_DOMAIN_CANDIDATES.map(url => getPasswordsForUrl(url, username));
         resolve(getMostImportantPassword(passwordPs));
     })
 }
