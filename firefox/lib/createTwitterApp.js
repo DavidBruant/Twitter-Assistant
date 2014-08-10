@@ -1,5 +1,6 @@
 "use strict";
 
+// TODO replace with https://developer.mozilla.org/en-US/Add-ons/SDK/High-Level_APIs/page-worker#contentURL
 const tabs = require("sdk/tabs");
 const {setTimeout} = require("sdk/timers");
 const passwords = require("sdk/passwords");
@@ -58,9 +59,8 @@ module.exports = function(devTwitterUserCredentials){
                 
                 // change URL only after some time to leave some time to the server to know
                 // the user is logged in to dev.twitter.com... or something
-                setTimeout(() => {
-                    tab.url = 'https://apps.twitter.com/app/new';
-                }, 1*1000);
+                tab.url = 'https://apps.twitter.com/app/new';
+                
                 
                 tab.once('ready', () => {
                     // sometimes, tab.title contains "Access Denied | blablablah".
@@ -96,7 +96,7 @@ module.exports = function(devTwitterUserCredentials){
                         console.log('detached', tab.title, tab.url);
                         if(tab.title.contains(appName)){
                             console.log("victory! app created!", appName);
-                            resolve(tab)
+                            resolve(tab);
                         }
                         else{
                             reject(new Error('problem while trying to create app'));
@@ -121,6 +121,7 @@ module.exports = function(devTwitterUserCredentials){
                     });
             
                     worker.port.on('error', error => {
+                        console.log('content script credentials error', error);
                         reject(error);
                     });
                 })
@@ -128,7 +129,13 @@ module.exports = function(devTwitterUserCredentials){
                 tab.url += '/keys';
             });
             
-        })
+        });
+
+        // TODO should be twitterAppAPICredentialsP.finally when that's supported
+        function closeTab(){
+            tabP.then(tab => tab.close());
+        }
+        twitterAppAPICredentialsP.then(closeTab).catch(closeTab);
         
         return twitterAppAPICredentialsP;
     });

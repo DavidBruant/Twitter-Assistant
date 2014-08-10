@@ -41,6 +41,6 @@
     setTimeout(() => {
         // simulate a click since it seems important (appCreationForm.submit() isn't enough apparently)
         inputSubmit.click();              
-    }, 5*1000);
+    }, 2*1000);
 
 })();

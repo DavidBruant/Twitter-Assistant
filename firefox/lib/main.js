@@ -120,7 +120,9 @@ exports.main = function(){
             }).then(twitterAppCredentials => {
                 console.log('twitterAppCredentials', twitterAppCredentials)
                 console.timeEnd('app creation');
-            })
+            }).catch( err => {
+                console.error('twitterAppCredentials error', err);
+            });
         }
         else{
             throw new Error('no username/password combo. Need to write/fix code reading in stored passwords and handle no passwords at all')
