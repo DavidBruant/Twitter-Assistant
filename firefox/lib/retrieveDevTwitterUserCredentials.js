@@ -1,5 +1,7 @@
 'use strict';
 
+const passwordSearch = require("sdk/passwords").search;
+
 const TWITTER_APP_LOGIN_PAGE = "https://dev.twitter.com/user/login?destination=home";
 const PASSWORD_URL_DOMAIN_CANDIDATES = [ // in order of importance
     TWITTER_APP_LOGIN_PAGE,
@@ -12,7 +14,7 @@ const PASSWORD_URL_DOMAIN_CANDIDATES = [ // in order of importance
     
 function getPasswordsForUrl(url){
     return new Promise((resolve, reject) => {
-        passwords.search({
+        passwordSearch({
             url: url,
             onComplete: function(credentials){
                 resolve(Array.isArray(credentials) && credentials.length >= 1 ?
@@ -49,7 +51,6 @@ function getMostImportantPassword(passwordPs){
 
 
 module.exports = function(){
-    throw new Error('write tests and figure out the return value signature')
     
     return new Promise((resolve, reject) => {
         const passwordPs = PASSWORD_URL_DOMAIN_CANDIDATES.map(getPasswordsForUrl);
