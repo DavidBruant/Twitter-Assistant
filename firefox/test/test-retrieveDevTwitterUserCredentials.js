@@ -129,10 +129,9 @@ exports["test * One matching password available for https://dev.twitter.com"] = 
             // test
             return retrieveDevTwitterUserCredentials("azerty")
                 .then(credentials => {
-                    assert.ok(Array.isArray(credentials));
-                    assert.strictEqual(credentials.length, 1);
-                    assert.strictEqual(credentials[0].username, "azerty");
-                    assert.strictEqual(credentials[0].password, "blabla");
+                    assert.ok(Object(credentials) === credentials);
+                    assert.strictEqual(credentials.username, "azerty");
+                    assert.strictEqual(credentials.password, "blabla");
                 })
                 .catch(err => { 
                     assert.fail("retrieveDevTwitterUserCredentials shouldn't reject when there is a password");
@@ -188,10 +187,9 @@ exports["test * One matching password available for http://dev.twitter.com"] = f
             // test
             return retrieveDevTwitterUserCredentials("papapapa")
                 .then(credentials => {
-                    assert.ok(Array.isArray(credentials));
-                    assert.strictEqual(credentials.length, 1);
-                    assert.strictEqual(credentials[0].username, "papapapa");
-                    assert.strictEqual(credentials[0].password, "bloublou");
+                    assert.ok(Object(credentials) === credentials);
+                    assert.strictEqual(credentials.username, "papapapa");
+                    assert.strictEqual(credentials.password, "bloublou");
                 })
                 .catch(err => { 
                     assert.fail("retrieveDevTwitterUserCredentials shouldn't reject when there is a password");
@@ -218,10 +216,9 @@ exports["test * One password available for https://twitter.com"] = function(asse
             // test
             return retrieveDevTwitterUserCredentials("oooo")
                 .then(credentials => {
-                    assert.ok(Array.isArray(credentials));
-                    assert.strictEqual(credentials.length, 1);
-                    assert.strictEqual(credentials[0].username, "oooo");
-                    assert.strictEqual(credentials[0].password, "mmmm");
+                    assert.ok(Object(credentials) === credentials);
+                    assert.strictEqual(credentials.username, "oooo");
+                    assert.strictEqual(credentials.password, "mmmm");
                 })
                 .catch(err => { 
                     assert.fail("retrieveDevTwitterUserCredentials shouldn't reject when there is a password");
@@ -281,10 +278,9 @@ exports["test * Two passwords for https://dev.twitter.com"] = function(assert, d
             // test
             return retrieveDevTwitterUserCredentials("DavidBruant")
                 .then(credentials => {
-                    assert.ok(Array.isArray(credentials));
-                    assert.strictEqual(credentials.length, 1);
-                    assert.strictEqual(credentials[0].username, "DavidBruant");
-                    assert.strictEqual(credentials[0].password, "toto");
+                    assert.ok(Object(credentials) === credentials);
+                    assert.strictEqual(credentials.username, "DavidBruant");
+                    assert.strictEqual(credentials.password, "toto");
                 })
                 .catch(err => {
                     assert.fail("retrieveDevTwitterUserCredentials shouldn't reject");
@@ -320,10 +316,9 @@ exports["test * One password for https://dev.twitter.com and https://twitter.com
             // test
             return retrieveDevTwitterUserCredentials("DavidBruant")
                 .then(credentials => {
-                    assert.ok(Array.isArray(credentials));
-                    assert.strictEqual(credentials.length, 1);
-                    assert.strictEqual(credentials[0].username, "DavidBruant");
-                    assert.strictEqual(credentials[0].password, "with-dev",
+                    assert.ok(Object(credentials) === credentials);
+                    assert.strictEqual(credentials.username, "DavidBruant");
+                    assert.strictEqual(credentials.password, "with-dev",
                         "should pick the https://dev.twitter.com password in priority");
                 })
                 .catch(err => {

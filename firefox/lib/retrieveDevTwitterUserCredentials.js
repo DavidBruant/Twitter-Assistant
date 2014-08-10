@@ -17,7 +17,7 @@ function getPasswordsForUrl(url, username){
             url: url,
             onComplete: function(credentials){
                 resolve(Array.isArray(credentials) && credentials.length >= 1 ?
-                    credentials :
+                    credentials[0] : // there should be a single entry for a (username, url) pair
                     undefined
                 )
             },
