@@ -1,14 +1,21 @@
 'use strict';
 
-const credentialsForm = document.body.querySelector('form');
+const titleUsername = document.body.querySelector('h2 .username');
 
-const keyInput = credentialsForm.querySelector('input.key');
+const apiCredentialsForm = document.body.querySelector('form.api-credentials');
+const keyInput = apiCredentialsForm.querySelector('input.key');
 keyInput.focus();
-const secretInput = credentialsForm.querySelector('input.secret');
+const secretInput = apiCredentialsForm.querySelector('input.secret');
 
-const errorMessage = document.body.querySelector('.error')
+const errorMessage = apiCredentialsForm.querySelector('.error')
 
-const automationButton = document.body.querySelector('button.automatically');
+const automaticButton = document.body.querySelector('button.automatic');
+const manualButton = document.body.querySelector('button.manual');
+
+const userCredentialsForm = document.body.querySelector('form.user-credentials');
+const usernameInput = userCredentialsForm.querySelector('input.username');
+const passwordInput = userCredentialsForm.querySelector('input.password');
+
 
 function hideError(){
     errorMessage.setAttribute('hidden', 'hidden');
@@ -23,11 +30,8 @@ function showError(){
     secretInput.addEventListener('input', hideError);
 }
 
-
-credentialsForm.addEventListener('submit', e => {
+apiCredentialsForm.addEventListener('submit', e => {
     e.preventDefault();
-    
-    console.log('submit event');
     
     var key = keyInput.value,
         secret = secretInput.value;
@@ -42,6 +46,28 @@ credentialsForm.addEventListener('submit', e => {
     // TODO add a spinner
 });
 
+userCredentialsForm.addEventListener('submit', function submitListener(e){
+    self.port.emit('automate-twitter-app-creation', {
+        username: usernameInput.value,
+        password: passwordInput.value
+    });
+} );
+
+automaticButton.addEventListener('click', e => {
+    document.body.querySelector('.instructions.automatic').removeAttribute('hidden');
+    document.body.querySelector('.instructions.manual').setAttribute('hidden', '');
+    
+    if(userCredentialsForm.getAttribute('hidden') !== null){
+        // form is hidden, we already have the password, no need to ask for it.
+        self.port.emit('automate-twitter-app-creation');
+    }
+});
+
+manualButton.addEventListener('click', e => {
+    document.body.querySelector('.instructions.manual').removeAttribute('hidden');
+    document.body.querySelector('.instructions.automatic').setAttribute('hidden', '');
+});
+
 self.port.on('test-credentials-result', result => {
     var key = keyInput.value,
         secret = secretInput.value;
@@ -52,7 +78,7 @@ self.port.on('test-credentials-result', result => {
     
     // parent context sends back the token if it's valid and whatever else otherwise
     if(Object(result) === result && result.key === key && result.secret === secret){
-        self.port.emit('persist-credentials', result);
+        self.port.emit('confirm-credentials', result);
     }
     else{
         // can happen either if the token is invalid or the user change the input field
@@ -60,9 +86,15 @@ self.port.on('test-credentials-result', result => {
     }
 });
 
-automationButton.addEventListener('click', e => {
-    self.port.emit('automate-twitter-app-creation');
-})
+self.port.on('update-username', username => {
+    titleUsername.textContent = username;
+    usernameInput.value = username;
+});
+
+self.port.on('update-password-already-available', () => {
+    userCredentialsForm.setAttribute('hidden', '');
+});
+
 
 if(self.options){
     keyInput.value = self.options.key;

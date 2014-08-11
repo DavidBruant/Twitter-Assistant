@@ -1,6 +1,7 @@
 "use strict";
 
 // TODO replace with https://developer.mozilla.org/en-US/Add-ons/SDK/High-Level_APIs/page-worker#contentURL
+// or https://developer.mozilla.org/en-US/Add-ons/SDK/Low-Level_APIs/frame_hidden-frame
 const tabs = require("sdk/tabs");
 const {setTimeout} = require("sdk/timers");
 const passwords = require("sdk/passwords");
@@ -59,7 +60,10 @@ module.exports = function(devTwitterUserCredentials){
                 
                 // change URL only after some time to leave some time to the server to know
                 // the user is logged in to dev.twitter.com... or something
-                tab.url = 'https://apps.twitter.com/app/new';
+                setTimeout(() => {
+                    tab.url = 'https://apps.twitter.com/app/new';           
+                }, 2*1000);
+                
                 
                 
                 tab.once('ready', () => {

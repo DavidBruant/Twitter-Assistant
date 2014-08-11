@@ -2,20 +2,22 @@
 
 const ui =  require("sdk/ui");
 const Panel =  require("sdk/panel").Panel;
-const data =  require("sdk/self").data;
-const pageMod = require("sdk/page-mod");
+const {data} =  require("sdk/self");
 const tabs = require("sdk/tabs");
 const system = require("sdk/system");
+const {setTimeout} = require("sdk/timers");
 const staticArgs = system.staticArgs;
 
 const prefs = require('sdk/simple-prefs').prefs;
 const lowLevelPrefs = require('sdk/preferences/service');
 const storage = require("sdk/simple-storage").storage;
 
-const getAccessToken = require('getAccessToken.js');
-const TwitterAPI = require('TwitterAPI.js'); 
-const createTwitterApp = require('createTwitterApp.js');
-const retriveDevTwitterUserCredentials = require('retrieveDevTwitterUserCredentials');
+const getAccessToken = require('./getAccessToken.js');
+const createTwitterApp = require('./createTwitterApp.js');
+const retriveDevTwitterUserCredentials = require('./retrieveDevTwitterUserCredentials.js');
+const guessTwitterHandle = require('./guessTwitterHandle.js');
+const getReadyForTwitterProfilePages = require('./getReadyForTwitterProfilePages.js')
+
 
 const TWITTER_MAIN_PAGE = "https://twitter.com";
 const TWITTER_USER_PAGES = [
@@ -24,7 +26,30 @@ const TWITTER_USER_PAGES = [
     "https://twitter.com/supersole"
 ];
 
+/*
+    TODO redo the main algorithm.
+    
+    if(storedTwitterAPICredentials available){
+        don't show the panel, just get te access token and create the pageMod
+    }
+    else{
+        show the panel
+        guess the username
+        if(username guessed){
+            update panel
+            try to find a password
+            if(no corresponding password found){
+                tell the panel about it
+            }
+        }
+    }
+*/
+
 exports.main = function(){
+    
+    /*
+        SETUP
+    */
     
     // browser toolbox for debugging
     if(staticArgs['browser-toolbox']){
@@ -56,6 +81,7 @@ exports.main = function(){
                             /*TWITTER_USER_PAGES.forEach(url => {
                                 tabs.open(url);
                             })*/
+                            
                         });
                     })
                     
@@ -66,11 +92,29 @@ exports.main = function(){
     
     prefs["sdk.console.logLevel"] = 'all';
     
-    const storedCredentials = storage.credentials ? JSON.parse(storage.credentials) : {};
+    
+    
+    /*
+        ACTUAL MAIN
+    */
+    
+    let storedTwitterAPICredentials = storage.credentials ? JSON.parse(storage.credentials) : {};
+    let storedTwitterUserCredentials; // in browser password manager
     
     // use the values passed as static args in priority;
-    const key = staticArgs['CONSUMER_KEY'] || storedCredentials.key;
-    const secret = staticArgs['CONSUMER_SECRET'] || storedCredentials.secret;
+    let key = staticArgs['CONSUMER_KEY'] || storedTwitterAPICredentials.key;
+    let secret = staticArgs['CONSUMER_SECRET'] || storedTwitterAPICredentials.secret;
+
+    
+    // button
+    const twitterAssistantButton = ui.ActionButton({
+        id: "twitter-assistant-credentials-panel-button",
+        label: "Enter oauth Twitter tokens",
+        icon: data.url('images/Twitter_logo_blue.png'),
+        onClick: function(state) {
+            credentialsPanel.show({position: twitterAssistantButton});
+        }
+    });
     
     // credentials panel
     const credentialsPanel = Panel({
@@ -97,102 +141,69 @@ exports.main = function(){
             });
     });
     
-    credentialsPanel.port.on('persist-credentials', credentials => {
-        console.log('persist-credentials', credentials);
+    credentialsPanel.port.on('confirm-credentials', credentials => {
+        console.log('confirm-credentials', credentials);
         
         storage.credentials = JSON.stringify(credentials);
         credentialsPanel.hide();
         
-        getAccessToken(credentials.key, credentials.secret)
-            .then(TwitterAPI)
-            .then(getReadyForTwitterProfilePages)
+        getReadyForTwitterProfilePages(credentials);
     });
     
-    credentialsPanel.port.on('automate-twitter-app-creation', () => {
-        let devTwitterUserCredentialsP; //= retriveDevTwitterUserCredentials();
-        if(staticArgs['username'] && staticArgs['password']){
+    credentialsPanel.port.on('automate-twitter-app-creation', twitterUserCredentials => {
         
-            console.time('app creation');
+        twitterUserCredentials = twitterUserCredentials || storedTwitterUserCredentials;
+        if(!twitterUserCredentials){
+            throw new Error('No stored credentials and none received from the panel form');
+        }
         
-            createTwitterApp({
-                username: staticArgs['username'],
-                password: staticArgs['password']
-            }).then(twitterAppCredentials => {
-                console.log('twitterAppCredentials', twitterAppCredentials)
+        console.time('app creation');
+        
+        createTwitterApp(twitterUserCredentials)
+            .then(twitterAppCredentials => {
                 console.timeEnd('app creation');
-            }).catch( err => {
+                
+                console.log('twitterAppCredentials', twitterAppCredentials);
+                getReadyForTwitterProfilePages(twitterAppCredentials);
+            })
+            .catch( err => {
                 console.error('twitterAppCredentials error', err);
             });
-        }
-        else{
-            throw new Error('no username/password combo. Need to write/fix code reading in stored passwords and handle no passwords at all')
-        }
     
     });
     
-    const twitterAssistantButton = ui.ActionButton({
-        id: "twitter-assistant-credentials-panel-button",
-        label: "Enter oauth Twitter tokens",
-        icon: data.url('images/Twitter_logo_blue.png'),
-        onClick: function(state) {
-            credentialsPanel.show({position: twitterAssistantButton});
-            
-            // TODO when there are stored credentials, send them over
+    
+    
+    if(staticArgs['username'] && staticArgs['password']){
+        storedTwitterUserCredentials = {
+            username: staticArgs['username'],
+            password: staticArgs['password']
         }
-    });
-    
-    
-    var twitterProfilePageMod;
-    
-    function getReadyForTwitterProfilePages(twitterAPI){
-        if(twitterProfilePageMod)
-            twitterProfilePageMod.destroy();
-        
-        // Twitter pagemod
-        twitterProfilePageMod = pageMod.PageMod({
-            include: /^https?:\/\/twitter\.com\/([^\/]+)\/?$/,
-
-            contentScriptFile: [
-                data.url("tweetsMine.js"),
-                data.url("metrics-integration.js")
-            ],
-            contentScriptWhen: "start", // mostly so the 'attach' event happens as soon as possible
-
-            contentStyleFile: data.url("metrics-integration.css")
-        });
-
-        twitterProfilePageMod.on('attach',function(worker){
-            var matches = worker.url.match(/^https?:\/\/twitter\.com\/([^\/]+)\/?$/);
-            var user;
-
-            if(!Array.isArray(matches) || matches.length < 2)
-                return;
-
-            user = matches[1];
-            console.log('user', user);
-            twitterAPI.getUserTimeline(user).then(function(timeline){
-                console.log(timeline); 
-
-                worker.port.emit('twitter-user-data', {
-                    timeline: timeline,
-                    user: user
-                });
-
-            }).catch( err => {
-                console.error('error while getting the user timeline', user, err);
-            });
-
-        });
+        credentialsPanel.port.emit('update-password-already-available');
     }
+    
     
     if(key && secret){
-        // if the getAccessToken call fails (as it does when computer not logged in at Firefox startup), there is no way to recover an access token
-        getAccessToken(key, secret)
-            .then(TwitterAPI)
-            .then(getReadyForTwitterProfilePages)
+        getReadyForTwitterProfilePages({key:key, secret:secret});
+        
+        //credentialsPanel.port.emit('update-API-credentials', {key: key, secret: secret});
     }
     else{ // no credentials stored. Ask some to the user
-        // TODO create the Panel lazily only in this branch
+        console.time('guess');
+        guessTwitterHandle().then(username => {
+            console.timeEnd('guess');
+            
+            if(username){
+                credentialsPanel.port.emit('update-username', username);
+                retriveDevTwitterUserCredentials(username).then(credentials => {
+                    if(credentials){
+                        credentialsPanel.port.emit('update-password-already-available');
+                        storedTwitterUserCredentials = credentials;
+                    }    
+                });
+            }
+        });
+        
         credentialsPanel.show({position: twitterAssistantButton});
     }
     

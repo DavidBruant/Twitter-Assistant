@@ -21,8 +21,10 @@
     const usernameInput = signinForm.querySelector('input#edit-name');
     const passwordInput = signinForm.querySelector('input[type="password"]');
 
+    const inputSubmit = signinForm.querySelector('input[type="submit"]');
+    
     usernameInput.value = username;
     passwordInput.value = password;
 
-    signinForm.submit(); 
+    inputSubmit.click(); 
 })();
