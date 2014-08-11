@@ -4,11 +4,10 @@
 // or https://developer.mozilla.org/en-US/Add-ons/SDK/Low-Level_APIs/frame_hidden-frame
 const tabs = require("sdk/tabs");
 const {setTimeout} = require("sdk/timers");
-const passwords = require("sdk/passwords");
 const data =  require("sdk/self").data;
 
-// redirects to https://apps.twitter.com/ after login
-const TWITTER_APP_LOGIN_PAGE = "https://dev.twitter.com/user/login?destination=apps";
+// this page does HTTP 302 to the destination URL if the user is already logged in
+const TWITTER_APP_LOGIN_PAGE = "https://twitter.com/login?redirect_after_login=https%3A//apps.twitter.com/app/new";
 
 const TWITTER_ASSISTANT_APP_NAME_PREFIX = 'TAssistant';
 const TWITTER_APP_NAME_MAX_LENGTH = 32;
@@ -21,17 +20,8 @@ function randomString(length){
         .join('');
 }
 
-/*
-<ul>
-    <li><strong>Log you in</strong> with your Twitter login and password (if saved in your web browser) to <a target="_blank" href="https://dev.twitter.com/user/login?destination=home">https://dev.twitter.com/</a></li>
-    <li><strong>Create a Twitter app</strong>
-    <li><strong>Accept the</strong> <a target="_blank" href="https://dev.twitter.com/terms/api-terms">terms of services</a> ("Developer rules of the road")
-    <li>When the app is created, the addon will <strong>fetch the "API key" and "API secret"</strong> from the "API keys" tab.
-        </ul>
 
-*/
-
-module.exports = function(devTwitterUserCredentials){
+module.exports = function(username){
     
     const tabP = new Promise((resolve, reject) => {
         tabs.once('open', resolve); // this looks racy. What if a tab opens before mine?
@@ -39,45 +29,16 @@ module.exports = function(devTwitterUserCredentials){
     });
     
     return tabP.then(tab => {
-        // login to dev.twitter.com
+        
         var loggedinP = new Promise((resolve, reject) => {
             tab.once('ready', () => {
-                tab.attach({
-                    contentScriptFile: data.url('createTwitterApp/fillInDevTwitterCredentials.js'),
-                    contentScriptOptions: devTwitterUserCredentials
-                });
-
-                // Waiting for 'ready' is too long. Should catch a 2xx response on succesful login
-                tab.once('ready', () => {
-                    resolve(tab);
-                });  
+                resolve(tab);
             })
         });
-
-        // redirect to the app creation page
-        var redirectedToAppCreationPageP = loggedinP.then(tab => {
-            return new Promise( resolve => {
-                
-                // change URL only after some time to leave some time to the server to know
-                // the user is logged in to dev.twitter.com... or something
-                setTimeout(() => {
-                    tab.url = 'https://apps.twitter.com/app/new';           
-                }, 2*1000);
-                
-                
-                
-                tab.once('ready', () => {
-                    // sometimes, tab.title contains "Access Denied | blablablah".
-                    // No idea why. For now, let's do nothing about it.
-                    resolve(tab);
-                });
-            });
-        })
         
         // fill in the app creation form and submit it
-        var appCreatedP = redirectedToAppCreationPageP.then(tab => {
-            
-            var appName = TWITTER_ASSISTANT_APP_NAME_PREFIX + '-' + devTwitterUserCredentials.username + '-';
+        var appCreatedP = loggedinP.then(tab => {
+            var appName = TWITTER_ASSISTANT_APP_NAME_PREFIX + '-' + username + '-';
             appName = appName + randomString(TWITTER_APP_NAME_MAX_LENGTH - appName.length);
             
             var worker = tab.attach({

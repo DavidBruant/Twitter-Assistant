@@ -9,12 +9,16 @@ const secretInput = apiCredentialsForm.querySelector('input.secret');
 
 const errorMessage = apiCredentialsForm.querySelector('.error')
 
-const automaticButton = document.body.querySelector('button.automatic');
+const automaticInstructionsButton = document.body.querySelector('button.automatic');
+const pleaseLogin = document.body.querySelector('.instructions.automatic .please-login')
+
 const manualButton = document.body.querySelector('button.manual');
 
-const userCredentialsForm = document.body.querySelector('form.user-credentials');
-const usernameInput = userCredentialsForm.querySelector('input.username');
-const passwordInput = userCredentialsForm.querySelector('input.password');
+//const userCredentialsForm = document.body.querySelector('form.user-credentials');
+//const usernameInput = userCredentialsForm.querySelector('input.username');
+//const passwordInput = userCredentialsForm.querySelector('input.password');
+
+const automaticButton = document.body.querySelector('.instructions.automatic button');
 
 
 function hideError(){
@@ -46,21 +50,25 @@ apiCredentialsForm.addEventListener('submit', e => {
     // TODO add a spinner
 });
 
-userCredentialsForm.addEventListener('submit', function submitListener(e){
+/*userCredentialsForm.addEventListener('submit', function submitListener(e){
     self.port.emit('automate-twitter-app-creation', {
         username: usernameInput.value,
         password: passwordInput.value
     });
-} );
+} );*/
 
-automaticButton.addEventListener('click', e => {
+automaticInstructionsButton.addEventListener('click', e => {
     document.body.querySelector('.instructions.automatic').removeAttribute('hidden');
     document.body.querySelector('.instructions.manual').setAttribute('hidden', '');
     
-    if(userCredentialsForm.getAttribute('hidden') !== null){
+    /*if(userCredentialsForm.getAttribute('hidden') !== null){
         // form is hidden, we already have the password, no need to ask for it.
         self.port.emit('automate-twitter-app-creation');
-    }
+    }*/
+});
+
+automaticButton.addEventListener('click', e => {
+    self.port.emit('automate-twitter-app-creation');
 });
 
 manualButton.addEventListener('click', e => {
@@ -89,10 +97,7 @@ self.port.on('test-credentials-result', result => {
 self.port.on('update-username', username => {
     titleUsername.textContent = username;
     usernameInput.value = username;
-});
-
-self.port.on('update-password-already-available', () => {
-    userCredentialsForm.setAttribute('hidden', '');
+    pleaseLogin.setAttribute('hidden', 'hidden');
 });
 
 
