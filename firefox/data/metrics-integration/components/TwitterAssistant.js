@@ -120,8 +120,10 @@ const twitterAssistantContent =
                         tweetMine: tweetMine,
                         histogramSize: HISTOGRAM_SIZE
                     }),
-                    TimelineComposition(),/*
-                    HumansAreNotMetricsReminder()*/
+                    TimelineComposition({
+                        tweetMine: tweetMine
+                    }),
+                    HumansAreNotMetricsReminder()
                 ]);
             }
         }

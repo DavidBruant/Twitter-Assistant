@@ -48,11 +48,6 @@
         twitterAssistantContainerP.then(twitterAssistantContainer => {
             console.log('ready to integrate metrics');
 
-            /*
-            const retweetPercent = (stats.retweetsCount/stats.tweetsConsidered)*100;
-            const tweetsWithLinkPercent = (stats.tweetsWithLinkCount/stats.tweetsConsidered)*100;
-            */
-
             React.renderComponent(TwitterAssistant(tweetMine), twitterAssistantContainer);
 
         }).catch(function(err){

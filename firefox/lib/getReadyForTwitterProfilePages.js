@@ -28,6 +28,8 @@ const twitterProfilePageMod = PageMod({
         
         data.url("metrics-integration/components/TwitterAssistantTopInfo.js"),
         data.url("metrics-integration/components/Histogram.js"),
+        data.url("metrics-integration/components/TimelineComposition.js"),
+        data.url("metrics-integration/components/HumansAreNotMetricsReminder.js"),
         data.url("metrics-integration/components/TwitterAssistant.js"),
         
         data.url("metrics-integration/main.js")
