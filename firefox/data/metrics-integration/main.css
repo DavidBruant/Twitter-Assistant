@@ -1,28 +1,28 @@
-.twitter-assistant{
+.twitter-assistant-container, .twitter-assistant-container *{
+    box-sizing: border-box;
+}
+
+.twitter-assistant-container{
     margin-bottom: auto;
     margin-top: 10px;
+    
+    width: 100%; /* hopefully, the parent isn't a douchebag */
+
+}
+
+.twitter-assistant{
 
     min-height: 300px;
-    width: 100%; /* hopefully, the parent isn't a douchebag */
+    width: 100%;
     max-width: 300px;
+    
+    padding: 1em;
 
     background-color: hsl(300, 45%, 78%);
     border-radius: 6px;
 
-    /*margin-top: 10px;*/
-    padding: 1em;
 }
 
-.twitter-assistant footer{
-    margin-top: 1em;
-    padding: 0.5em;
-    color: #8b6114;
-    background-color: hsla(210, 56%, 82%, 0.5);
-}
-
-.twitter-assistant, .twitter-assistant *{
-    box-sizing: border-box;
-}
 
 .twitter-assistant h1{
     text-align: center;
@@ -33,11 +33,20 @@
 
 .twitter-assistant h2{
     margin: 0;
-
+    padding: 0;
+    
     color: hsl(205, 11%, 25%);
     font-size: 16px;
     font-weight: 300;
     line-height: 22px;
+}
+
+
+.twitter-assistant footer{
+    margin-top: 1em;
+    padding: 0.5em;
+    color: #8b6114;
+    background-color: hsla(210, 56%, 82%, 0.5);
 }
 
 .twitter-assistant h3, .twitter-assistant h4{

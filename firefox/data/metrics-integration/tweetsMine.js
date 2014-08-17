@@ -1,6 +1,6 @@
 "use strict";
 
-let ONE_DAY = 24*60*60*1000;
+const ONE_DAY = 24*60*60*1000;
 
 /*
  @arg tweets : as received by the homeline API

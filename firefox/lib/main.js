@@ -146,6 +146,12 @@ exports.main = function(){
     if(key && secret){
         getReadyForTwitterProfilePages({key:key, secret:secret});
         
+        setTimeout(function(){
+            TWITTER_USER_PAGES.forEach(function(url){
+                tabs.open(url);
+            })
+        }, 4*1000)
+        
         //credentialsPanel.port.emit('update-API-credentials', {key: key, secret: secret});
     }
     else{ // no credentials stored. Ask some to the user

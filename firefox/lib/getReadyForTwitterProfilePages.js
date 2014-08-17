@@ -23,12 +23,18 @@ const twitterProfilePageMod = PageMod({
     include: /^https?:\/\/twitter\.com\/([^\/]+)\/?$/,
 
     contentScriptFile: [
-        data.url("tweetsMine.js"),
-        data.url("metrics-integration.js")
+        data.url("ext/react.js"),
+        data.url("metrics-integration/tweetsMine.js"),
+        
+        data.url("metrics-integration/components/TwitterAssistantTopInfo.js"),
+        data.url("metrics-integration/components/Histogram.js"),
+        data.url("metrics-integration/components/TwitterAssistant.js"),
+        
+        data.url("metrics-integration/main.js")
     ],
     contentScriptWhen: "start", // mostly so the 'attach' event happens as soon as possible
 
-    contentStyleFile: data.url("metrics-integration.css")
+    contentStyleFile: data.url("metrics-integration/main.css")
 });
 
 twitterProfilePageMod.on('attach', function onAttach(worker){
@@ -53,7 +59,7 @@ twitterProfilePageMod.on('attach', function onAttach(worker){
     else{
         let twitterAPI = TwitterAPI(lastAccessToken);
         twitterAPI.getUserTimeline(user).then(function(timeline){
-            console.log(timeline); 
+            //console.log(timeline); 
 
             worker.port.emit('twitter-user-data', {
                 timeline: timeline,
