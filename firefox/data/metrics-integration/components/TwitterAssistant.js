@@ -45,48 +45,6 @@
 </div>
 */
 
-/*
-const twitterAssistantContent =
-'<h2>Last '+daysSinceOldestTweet+' days activity ('+stats.tweetsConsidered+' tweets)</h2>' +
-'<div class="histo-range">' +
-    (
-        Array(30).fill(0).map((e, i) => {
-            let today = (new Date()).getTime();
-            today = today - today%ONE_DAY; // beginning of today
-
-            const thisDayTweets = tweetMine.byDateRange(today - i*ONE_DAY, today - (i-1)*ONE_DAY);
-
-            const height = Math.min(thisDayTweets.length/MAX_TWEETS_PER_DAY , 1)*100;
-            // TODO add a class when > 1
-            return '<div style="height: '+ height +'%;" title="'+thisDayTweets.length+'"></div>'; // begging to be transformed into a React component
-        }).reverse().join('')
-    ) +
-'</div>' + 
-'<div class="legend">' + 
-    '<div>'+HISTOGRAM_SIZE+' days ago</div>' +
-    '<div>today</div>' + 
-'</div>' + 
-'<h3>Timeline composition</h3>' +
-'<div class="all-metrics">' +
-    '<div class="metrics">' +
-        '<div class="name">Tweet type</div>' +
-        '<div class="fraction-container">' +
-            '<div class="value retweets" title="Retweets" style="width: '+retweetPercent.toFixed(1)+'%;"></div>' +
-            '<div class="value conversations" title="Conversations" style="width: '+
-                (tweetMine.getConversations().length*100/tweetMine.length).toFixed(1)+'%;"></div>' +
-        '</div>' +
-    '</div>' +
-    '<div class="metrics">' +
-        '<div class="name" title="non-media links">With link</div>' +
-        '<div class="fraction-container">' +
-            '<div class="value" style="width: '+tweetsWithLinkPercent.toFixed(1)+'%;"></div>' +
-        '</div>' +
-    '</div>' +
-'</div>' + 
-'<footer><p><strong>Warning</strong>: There is more to a person than the few metrics that are shown above</p></footer>';
-
-*/
-
 
 (function(exports){
     'use strict';
@@ -111,19 +69,33 @@ const twitterAssistantContent =
                 const daysSinceOldestTweet = Math.round( (Date.now() - new Date(oldestTweet.created_at))/ONE_DAY );
 
                 return React.DOM.div({className: 'twitter-assistant'}, [
+                    
                     React.DOM.h1({}, "Twitter Assistant"),
+                    
                     TwitterAssistantTopInfo({
                         daysSinceOldestTweet: daysSinceOldestTweet,
                         tweetsConsidered: tweetMine.length
                     }),
+                    
                     Histogram({
                         tweetMine: tweetMine,
                         histogramSize: HISTOGRAM_SIZE
                     }),
+                    
+                    React.DOM.h3({}, 'Timeline Composition'),
+                    
                     TimelineComposition({
                         tweetMine: tweetMine
                     }),
+                    
+                    React.DOM.h3({}, 'Generated Engagement'),
+                    
+                    GeneratedEngagement({
+                        tweetMine: tweetMine
+                    }),
+                    
                     HumansAreNotMetricsReminder()
+                    
                 ]);
             }
         }

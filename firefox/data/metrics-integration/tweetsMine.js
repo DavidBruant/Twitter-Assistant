@@ -59,9 +59,32 @@ function makeTweetMine(tweets, username){
                 });
             },
             
+            getOwnTweets: function(){
+                return tweets.filter(tweet => !('retweeted_status' in tweet));
+            },
+            
+            getGeneratedRetweetsCount: function(){
+                return this.getOwnTweets()
+                    .map(tweet => tweet.retweet_count)
+                    .reduce(function(acc, rtCount){
+                        return acc + rtCount;
+                    });
+            },
+            getGeneratedFavoritesCount: function(){
+                console.log('favs', this.getOwnTweets()
+                    .map(tweet => tweet.favorite_count))
+                
+                
+                return this.getOwnTweets()
+                    .map(tweet => tweet.favorite_count)
+                    .reduce(function(acc, favCount){
+                        return acc + favCount;
+                    });
+            },
             get length(){
                 return tweets.length;
             }   
         }
     }
 }
+
