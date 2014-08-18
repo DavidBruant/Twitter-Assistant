@@ -135,7 +135,9 @@ exports.main = function(){
                         console.timeEnd('app creation');
 
                         console.log('twitterAppCredentials', twitterAppCredentials);
-                        getReadyForTwitterProfilePages(twitterAppCredentials);
+                        return getReadyForTwitterProfilePages(twitterAppCredentials).then(function(){
+                            tabs.open('https://twitter.com/'+username);
+                        });
                     })
                     .catch( err => {
                         console.error('createTwitterApp error', err);

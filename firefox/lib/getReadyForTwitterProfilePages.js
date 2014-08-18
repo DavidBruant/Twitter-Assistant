@@ -84,7 +84,7 @@ module.exports = function(twitterAPICredentials){
     lastTwitterAPICredentials = twitterAPICredentials;
     lastAccessToken = undefined; // forget previous token since it's likely not in sync with the new API credentials
     
-    getAccessToken(twitterAPICredentials.key, twitterAPICredentials.secret)
+    return getAccessToken(twitterAPICredentials.key, twitterAPICredentials.secret)
         .then(accessToken => {
             lastAccessToken = accessToken;
         });
