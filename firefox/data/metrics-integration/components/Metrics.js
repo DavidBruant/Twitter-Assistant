@@ -29,7 +29,7 @@
                 
                 console.log('times, rest', times, rest, value)
                 
-                fractionContainerClasses.push( times <= 5 ? ('x'+(times-1)+'-'+times) : 'lots' )
+                fractionContainerClasses.push( times <= 5 ? ('x'+times+'-'+(times+1)) : 'lots' )
                 
                 fractionContainerChildren = times <= 5 ?
                     React.DOM.div( {

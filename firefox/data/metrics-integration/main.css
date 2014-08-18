@@ -132,6 +132,20 @@
     background-color: red;
 }
 
+.twitter-assistant .fraction-container.x4-5{
+    background-color: red;
+}
+.twitter-assistant .fraction-container.x4-5 .value{
+    background-color: purple;
+}
+
+.twitter-assistant .fraction-container.x5-6{
+    background-color: purple;
+}
+.twitter-assistant .fraction-container.x5-6 .value{
+    background-color: black;
+}
+
 
 
 /*

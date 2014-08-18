@@ -68,6 +68,14 @@
                 const oldestTweet = tweetMine.getOldestTweet();
                 const daysSinceOldestTweet = Math.round( (Date.now() - new Date(oldestTweet.created_at))/ONE_DAY );
 
+                /*var ownTweets = tweetMine.getOwnTweets();
+                console.log(ownTweets.map(tweet => {
+                    return {
+                        text: tweet.text,
+                        rt: tweet.retweet_count
+                    };
+                }));*/
+                
                 return React.DOM.div({className: 'twitter-assistant'}, [
                     
                     React.DOM.h1({}, "Twitter Assistant"),

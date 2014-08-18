@@ -17,14 +17,14 @@
                 Metrics({
                     name: 'Retweets',
                     values : [{
-                            percent: tweetMine.getGeneratedRetweetsCount()*100/tweetMine.length
+                            percent: tweetMine.getGeneratedRetweetsCount()*100/tweetMine.getOwnTweets().length
                         }
                     ]
                 }),
                 Metrics({
                     name: 'Favorites',
                     values : [{
-                            percent: tweetMine.getGeneratedFavoritesCount()*100/tweetMine.length
+                            percent: tweetMine.getGeneratedFavoritesCount()*100/tweetMine.getOwnTweets().length
                         }
                     ]
                 })
