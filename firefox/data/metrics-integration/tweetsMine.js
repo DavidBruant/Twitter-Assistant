@@ -6,7 +6,7 @@ const ONE_DAY = 24*60*60*1000;
  @arg tweets : as received by the homeline API
 */
 function makeTweetMine(tweets, username){
-    
+    console.log('tweetMine', tweets);
     return {
         append: function(otherTweets){
             Array.prototype.push.apply(tweets, otherTweets);
@@ -25,7 +25,7 @@ function makeTweetMine(tweets, username){
                 });
             },
             getRetweets: function(){
-                console.log('getRetweets', tweets);
+                //console.log('getRetweets', tweets);
                 
                 return tweets.filter(function(tweet){
                     return 'retweeted_status' in tweet;
@@ -59,9 +59,28 @@ function makeTweetMine(tweets, username){
                 });
             },
             
+            getOwnTweets: function(){
+                return tweets.filter(tweet => !('retweeted_status' in tweet));
+            },
+            
+            getGeneratedRetweetsCount: function(){
+                return this.getOwnTweets()
+                    .map(tweet => tweet.retweet_count)
+                    .reduce(function(acc, rtCount){
+                        return acc + rtCount;
+                    });
+            },
+            getGeneratedFavoritesCount: function(){
+                return this.getOwnTweets()
+                    .map(tweet => tweet.favorite_count)
+                    .reduce(function(acc, favCount){
+                        return acc + favCount;
+                    });
+            },
             get length(){
                 return tweets.length;
             }   
         }
     }
 }
+

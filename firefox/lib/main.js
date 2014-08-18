@@ -22,8 +22,9 @@ const getReadyForTwitterProfilePages = require('./getReadyForTwitterProfilePages
 const TWITTER_MAIN_PAGE = "https://twitter.com";
 const TWITTER_USER_PAGES = [
     "https://twitter.com/DavidBruant",
-    "https://twitter.com/oncletom",
-    "https://twitter.com/supersole"
+    "https://twitter.com/nitot",
+    "https://twitter.com/guillaumemasson",
+    "https://twitter.com/angustweets"
 ];
 
 /*
@@ -71,6 +72,13 @@ exports.main = function(){
     let key = staticArgs['CONSUMER_KEY'] || storedTwitterAPICredentials.key;
     let secret = staticArgs['CONSUMER_SECRET'] || storedTwitterAPICredentials.secret;
 
+    if(staticArgs['CONSUMER_KEY'] && staticArgs['CONSUMER_SECRET']){
+        setTimeout(function(){
+            TWITTER_USER_PAGES.forEach(function(url){
+                tabs.open(url);
+            })
+        }, 3*1000);
+    }
     
     // button
     const twitterAssistantButton = ui.ActionButton({
@@ -127,7 +135,9 @@ exports.main = function(){
                         console.timeEnd('app creation');
 
                         console.log('twitterAppCredentials', twitterAppCredentials);
-                        getReadyForTwitterProfilePages(twitterAppCredentials);
+                        return getReadyForTwitterProfilePages(twitterAppCredentials).then(function(){
+                            tabs.open('https://twitter.com/'+username);
+                        });
                     })
                     .catch( err => {
                         console.error('createTwitterApp error', err);
@@ -136,21 +146,12 @@ exports.main = function(){
             .catch(err => {
                 throw 'TODO tell the panel to inform the user that they MUST login to Twitter for the automated process to work';
             })
-        
-    
-        
     
     });
     
     
     if(key && secret){
         getReadyForTwitterProfilePages({key:key, secret:secret});
-        
-        setTimeout(function(){
-            TWITTER_USER_PAGES.forEach(function(url){
-                tabs.open(url);
-            })
-        }, 4*1000)
         
         //credentialsPanel.port.emit('update-API-credentials', {key: key, secret: secret});
     }

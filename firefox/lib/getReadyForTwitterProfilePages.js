@@ -26,9 +26,11 @@ const twitterProfilePageMod = PageMod({
         data.url("ext/react.js"),
         data.url("metrics-integration/tweetsMine.js"),
         
+        data.url("metrics-integration/components/Metrics.js"),
         data.url("metrics-integration/components/TwitterAssistantTopInfo.js"),
         data.url("metrics-integration/components/Histogram.js"),
         data.url("metrics-integration/components/TimelineComposition.js"),
+        data.url("metrics-integration/components/GeneratedEngagement.js"),
         data.url("metrics-integration/components/HumansAreNotMetricsReminder.js"),
         data.url("metrics-integration/components/TwitterAssistant.js"),
         
@@ -82,7 +84,7 @@ module.exports = function(twitterAPICredentials){
     lastTwitterAPICredentials = twitterAPICredentials;
     lastAccessToken = undefined; // forget previous token since it's likely not in sync with the new API credentials
     
-    getAccessToken(twitterAPICredentials.key, twitterAPICredentials.secret)
+    return getAccessToken(twitterAPICredentials.key, twitterAPICredentials.secret)
         .then(accessToken => {
             lastAccessToken = accessToken;
         });

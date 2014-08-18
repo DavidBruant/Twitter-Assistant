@@ -1,3 +1,6 @@
+/*
+    Containers
+*/
 .twitter-assistant-container, .twitter-assistant-container *{
     box-sizing: border-box;
 }
@@ -23,7 +26,9 @@
 
 }
 
-
+/*
+    General styles
+*/
 .twitter-assistant h1{
     text-align: center;
     margin: 0;
@@ -54,6 +59,9 @@
     margin-top: 20px;
 }
 
+/*
+    Metrics groups
+*/
 .twitter-assistant .all-metrics{
     display: table;
     border-collapse: collapse;
@@ -96,19 +104,53 @@
 }
 
 /* definitely need variables here */
-.twitter-assistant .fraction-container.q0-1{
+.twitter-assistant .fraction-container.x0-1{
+    background-color: transparent;
+}
+.twitter-assistant .fraction-container.x0-1 .value{
     background-color: rgba(255,255,255,0.5);
 }
-.twitter-assistant .fraction-container.q0-1 .value{
+
+.twitter-assistant .fraction-container.x1-2{
+    background-color: rgba(255,255,255,0.5);
+}
+.twitter-assistant .fraction-container.x1-2 .value{
     background-color: yellow;
 }
-.twitter-assistant .fraction-container.q1-2{
+
+.twitter-assistant .fraction-container.x2-3{
     background-color: yellow;
 }
-.twitter-assistant .fraction-container.q1-2 .value{
+.twitter-assistant .fraction-container.x2-3 .value{
     background-color: orange;
 }
 
+.twitter-assistant .fraction-container.x3-4{
+    background-color: orange;
+}
+.twitter-assistant .fraction-container.x3-4 .value{
+    background-color: red;
+}
+
+.twitter-assistant .fraction-container.x4-5{
+    background-color: red;
+}
+.twitter-assistant .fraction-container.x4-5 .value{
+    background-color: purple;
+}
+
+.twitter-assistant .fraction-container.x5-6{
+    background-color: purple;
+}
+.twitter-assistant .fraction-container.x5-6 .value{
+    background-color: black;
+}
+
+
+
+/*
+    Histogram
+*/
 .twitter-assistant .histo-range{
     display : flex;
     align-items: flex-end;
