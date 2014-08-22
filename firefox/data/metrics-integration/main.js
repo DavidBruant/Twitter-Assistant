@@ -24,7 +24,7 @@
         var twitterAssistantContainer = document.createElement('div');
         twitterAssistantContainer.classList.add('twitter-assistant-container');
 
-        const {tweetMine} = makeTweetMine([], '');
+        const tweetMine = TweetMine([], '');
         React.renderComponent(TwitterAssistant(tweetMine), twitterAssistantContainer);
         
         rightProfileSidebar.insertBefore(twitterAssistantContainer, rightProfileSidebar.firstChild);
@@ -37,11 +37,11 @@
 
     self.port.on('twitter-user-data', data => {
 
-        //console.log('received data from addon', data);
+        throw 'Apparently, conversations are broken?'
 
         let {user: username, timeline} = data;
         data = undefined;
-        const {tweetMine} = makeTweetMine(timeline, username);
+        const tweetMine = TweetMine(timeline, username);
         timeline = undefined;
 
 

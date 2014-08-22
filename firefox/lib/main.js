@@ -21,6 +21,7 @@ const getReadyForTwitterProfilePages = require('./getReadyForTwitterProfilePages
 
 const TWITTER_MAIN_PAGE = "https://twitter.com";
 const TWITTER_USER_PAGES = [
+    "https://twitter.com/rauschma",
     "https://twitter.com/DavidBruant",
     "https://twitter.com/nitot",
     "https://twitter.com/guillaumemasson",

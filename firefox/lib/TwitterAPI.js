@@ -7,13 +7,29 @@ const getAccessToken = require('getAccessToken.js');
 
 module.exports = function TwitterAPI(accessToken){
     return {
-        getUserTimeline : function getUserTimeline(twittername){
-            var deferred = defer();
+        /*
+            maxId: the caller needs to substract 1
+            https://dev.twitter.com/docs/working-with-timelines
+            ... or not:
+            "Environments where a Tweet ID cannot be represented as an integer with 64 bits of
+            precision (such as JavaScript) should skip this step."
+        
+        */
+        getUserTimeline : function getUserTimeline(twittername, maxId){
+            const deferred = defer();
 
-            var reqStart = Date.now();
+            const reqStart = Date.now();
+            
+            const BASE_URL = 'https://api.twitter.com/1.1/statuses/user_timeline.json';
+            let url = BASE_URL + '?trim_user=t&include_rts=1&count=200';
+            url += '&screen_name='+twittername;
+            
+            if(maxId){
+                url += '&max_id='+maxId;
+            }
             
             Request({
-                url: 'https://api.twitter.com/1.1/statuses/user_timeline.json?count=200&screen_name='+twittername,
+                url: url,
                 headers: {
                     'Authorization': 'Bearer '+accessToken
                 },
