@@ -37,8 +37,6 @@
 
     self.port.on('twitter-user-data', data => {
 
-        throw 'Apparently, conversations are broken?'
-
         let {user: username, timeline} = data;
         data = undefined;
         const tweetMine = TweetMine(timeline, username);

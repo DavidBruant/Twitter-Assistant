@@ -21,7 +21,7 @@ module.exports = function TwitterAPI(accessToken){
             const reqStart = Date.now();
             
             const BASE_URL = 'https://api.twitter.com/1.1/statuses/user_timeline.json';
-            let url = BASE_URL + '?trim_user=t&include_rts=1&count=200';
+            let url = BASE_URL + '?&include_rts=1&count=200'; // don't trim user that breaks recognizing conversation
             url += '&screen_name='+twittername;
             
             if(maxId){
