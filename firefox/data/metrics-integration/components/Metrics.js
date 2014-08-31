@@ -27,8 +27,6 @@
                 const times = Math.floor(value.percent/100);
                 const rest = value.percent - times*100;
                 
-                console.log('times, rest', times, rest, value)
-                
                 fractionContainerClasses.push( times <= 5 ? ('x'+times+'-'+(times+1)) : 'lots' )
                 
                 fractionContainerChildren = times <= 5 ?

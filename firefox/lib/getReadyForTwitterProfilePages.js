@@ -10,7 +10,9 @@ const {PageMod} = require("sdk/page-mod");
 const {data} =  require("sdk/self");
 
 const getAccessToken = require('./getAccessToken.js');
-const TwitterAPI = require('./TwitterAPI.js'); 
+const getTimelineOverATimePeriod = require('./getTimelineOverATimePeriod.js'); 
+
+const ONE_DAY = 24*60*60*1000;
 
 let lastTwitterAPICredentials;
 let lastAccessToken;
@@ -24,7 +26,7 @@ const twitterProfilePageMod = PageMod({
 
     contentScriptFile: [
         data.url("ext/react.js"),
-        data.url("metrics-integration/tweetsMine.js"),
+        data.url("metrics-integration/TweetMine.js"),
         
         data.url("metrics-integration/components/Metrics.js"),
         data.url("metrics-integration/components/TwitterAssistantTopInfo.js"),
@@ -61,10 +63,18 @@ twitterProfilePageMod.on('attach', function onAttach(worker){
             })
     }
     else{
-        let twitterAPI = TwitterAPI(lastAccessToken);
-        twitterAPI.getUserTimeline(user).then(function(timeline){
-            //console.log(timeline); 
-
+        const getTimelineWithProgress = getTimelineOverATimePeriod(lastAccessToken);
+        const timelineComplete = getTimelineWithProgress({
+            username:user,
+            timestampFrom: (new Date()).getTime() - ONE_DAY*40,
+        }, function(partialTimeline){
+            worker.port.emit('twitter-user-data', {
+                timeline: partialTimeline,
+                user: user
+            });
+        });
+        
+        timelineComplete.then(function(timeline){
             worker.port.emit('twitter-user-data', {
                 timeline: timeline,
                 user: user
