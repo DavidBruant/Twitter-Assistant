@@ -8,8 +8,8 @@
             
             return React.DOM.footer({},
                 React.DOM.p({}, [
-                    React.DOM.strong({}, "Warning: "),
-                    "There is more to a person than the few metrics shown above"
+                    React.DOM.strong({}, "Reminder: "),
+                    "A human being is more than the few metrics you see above."
                 ])
             );
         }

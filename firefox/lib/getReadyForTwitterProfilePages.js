@@ -11,6 +11,7 @@ const {data} =  require("sdk/self");
 
 const getAccessToken = require('./getAccessToken.js');
 const getTimelineOverATimePeriod = require('./getTimelineOverATimePeriod.js'); 
+const TwitterAPI = require('./TwitterAPI.js');
 
 const ONE_DAY = 24*60*60*1000;
 
@@ -84,6 +85,17 @@ twitterProfilePageMod.on('attach', function onAttach(worker){
             // TODO consider invalidating lastAccessToken here
             console.error('error while getting the user timeline', user, err);
         });
+        
+        
+        /*const twitterAPI = TwitterAPI(lastAccessToken);
+        twitterAPI.search({
+            q: {
+                '@': user
+            }
+        })
+        .then(tweets => console.log("tweets to user", user, tweets))
+        .catch(e => console.error(e))*/
+        
     }
 
 });
