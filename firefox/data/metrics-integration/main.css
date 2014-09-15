@@ -96,12 +96,22 @@
     height: 100%;
     display: inline-block;
 }
+
+
 .twitter-assistant .fraction-container .value.retweets {
-    background-color: hsl(97, 42%, 40%); /* handpicked from Twitter with devtools */
+    background-color: hsl(97, 50%, 30%); /* handpicked from Twitter with devtools */
 }
 .twitter-assistant .fraction-container .value.conversations {
-    background-color: hsl(226, 75%, 38%); 
+    background-color: hsl(226, 50%, 30%); 
 }
+.twitter-assistant .fraction-container .value.media {
+    background-color: hsl(21, 50%, 30%); /* handpicked from Twitter with devtools */
+}
+.twitter-assistant .fraction-container .value.links {
+    background-color: hsl(286, 50%, 30%); 
+}
+
+
 
 /* definitely need variables here */
 .twitter-assistant .fraction-container.x0-1{

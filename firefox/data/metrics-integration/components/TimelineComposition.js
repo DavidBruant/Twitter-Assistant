@@ -13,25 +13,60 @@
             
             const {tweetMine} = data;
             
+            const writtenTweets = tweetMine.getNonRetweetNonConversationTweets();
+            
+            const tweetsWithLinks = writtenTweets.filter(t => {
+                try{
+                    return t.entities.urls.length >= 1;
+                }
+                catch(e){
+                    // most likely a nested property doesn't exist
+                    return false;
+                }
+            });
+            const linkPercent = tweetsWithLinks.length*100/tweetMine.length;
+            let linkTweetSet = new Set(tweetsWithLinks);
+            
+            const mediaTweets = writtenTweets.filter(t => {
+                try{
+                    return t.entities.media.length >= 1 && !linkTweetSet.has(t);
+                }
+                catch(e){
+                    // most likely a nested property doesn't exist
+                    return false;
+                }
+            });
+            linkTweetSet = undefined;
+            const mediaPercent = mediaTweets.length*100/tweetMine.length;
+            
+            
+            
+            const rtPercent = tweetMine.getRetweets().length*100/tweetMine.length;
+            const convPercent = tweetMine.getConversations().length*100/tweetMine.length;
+            
             return React.DOM.div( {className: "all-metrics"}, [
                 Metrics({
                     name: 'Tweet type',
                     values : [{
                             class: 'retweets',
                             title: "Retweets",
-                            percent: tweetMine.getRetweets().length*100/tweetMine.length
+                            percent: rtPercent
                         }, {
                             class: 'conversations',
                             title: "Conversations",
-                            percent: tweetMine.getConversations().length*100/tweetMine.length
-                        }
-                    ]
-                }),
-                Metrics({
-                    name: 'With link',
-                    values : [{
-                            title: "Non-media links",
-                            percent: tweetMine.getTweetsWithLinks().length*100/tweetMine.length
+                            percent: convPercent
+                        }, {
+                            class: 'media',
+                            title: "Media",
+                            percent: mediaPercent
+                        }, {
+                            class: 'links',
+                            title: "Links",
+                            percent: linkPercent
+                        }, {
+                            class: 'other',
+                            title: "Other",
+                            percent: 100 - (rtPercent + convPercent + mediaPercent + linkPercent)
                         }
                     ]
                 })

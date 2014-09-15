@@ -1,7 +1,5 @@
 "use strict";
 
-const ONE_DAY = 24*60*60*1000;
-
 /*
  @arg tweets : as received by the homeline API
 */
@@ -24,6 +22,9 @@ function TweetMine(tweets, username){
                 return 'retweeted_status' in tweet;
             });
         },
+        /*
+            includes RTs and conversations
+        */
         getTweetsWithLinks: function(){
             return tweets.filter(tweet => {
                 try{
@@ -41,6 +42,16 @@ function TweetMine(tweets, username){
                     !tweet.retweeted_status &&
                     tweet.text.startsWith('@'); // a bit weak, but close enough. Would need to check if the user actually exists
             });
+        },
+        getNonRetweetNonConversationTweets: function(){
+            var rts = new Set(this.getRetweets());
+            var convs = new Set(this.getConversations());
+            var ret = new Set(tweets);
+            
+            rts.forEach(t => ret.delete(t))
+            convs.forEach(t => ret.delete(t))
+            
+            return [...ret];
         },
         getOldestTweet: function(){
             return tweets[tweets.length - 1]; // last

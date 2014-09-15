@@ -1,3 +1,6 @@
+
+const ONE_DAY = 24*60*60*1000; // ms
+
 (function(){
     'use strict';
 
@@ -9,8 +12,6 @@
             document.removeEventListener('DOMContentLoaded', listener);
         });
     });
-
-    const ONE_DAY = 24*60*60*1000; // ms
 
     // put the div ASAP so the user knows Twitter Assistant exists
     const twitterAssistantContainerP = documentReadyP.then(document => {
