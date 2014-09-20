@@ -2,6 +2,10 @@
     'use strict';
 
     exports.Metrics = React.createClass({
+        getInitialState: function(){
+            return {detailView: undefined};
+        },
+        
         /*
             {
                 name: string
@@ -10,17 +14,19 @@
                         class: string,
                         title: string,
                         percent: number (between 0 and 100)
+                        detailFunction : () => ReactComponent
                     }
                 ]
             }
         */
         render: function(){
             const data = this.props;
+            const state = this.state;
+            
             const {name, values} = data;
             
             const fractionContainerClasses = ["fraction-container"];
             var fractionContainerChildren;
-            
             
             if(values.length === 1){
                 const value = values[0];
@@ -41,11 +47,16 @@
             }
             else{
                 fractionContainerChildren = values.map(v => {
+                    const clickable = typeof v.detailFunction === 'function';
+                    
                     return React.DOM.div( {
-                        className: ["value", v.class].filter(s => !!s).join(' '),
+                        className: ["value", v.class, clickable ? 'clickable' : ''].filter(s => !!s).join(' '),
                         title: v.title,
                         style: {
                             width: v.percent.toFixed(1)+'%'
+                        },
+                        onClick: !clickable ? undefined : function(){
+                            this.setState({detailView: v})
                         }
                     });
                 });

@@ -45,7 +45,7 @@ Twitter Assistant takes advantage of a Twitter app credentials you create. As su
 # Contributing
 
 
-`cfx xpi ; cfx -b /home/david/Logiciel/aurora/firefox run --static-args="{\"browser-toolbox\": true, \"CONSUMER_KEY\":\"<YOUR CONSUMER KEY>\", \"CONSUMER_SECRET\":\"<YOUR CONSUMER SECRET>\"}" tmetrics.xpi`
+`cfx xpi ; cfx -b /home/david/Logiciel/aurora/firefox run --static-args="{\"browser-toolbox\": true, \"CONSUMER_KEY\":\"<YOUR CONSUMER KEY>\", \"CONSUMER_SECRET\":\"<YOUR CONSUMER SECRET>\"}"`
 
 (sorry for this line. Will explain in more details later, hang tight :-) )
 

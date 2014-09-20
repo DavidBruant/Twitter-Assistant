@@ -27,6 +27,7 @@
             const linkPercent = tweetsWithLinks.length*100/tweetMine.length;
             let linkTweetSet = new Set(tweetsWithLinks);
             
+            // if a tweet has both a link and a media, the link is prioritized
             const mediaTweets = writtenTweets.filter(t => {
                 try{
                     return t.entities.media.length >= 1 && !linkTweetSet.has(t);
@@ -46,7 +47,7 @@
             
             return React.DOM.div( {className: "all-metrics"}, [
                 Metrics({
-                    name: 'Tweet type',
+                    name: '',
                     values : [{
                             class: 'retweets',
                             title: "Retweets",

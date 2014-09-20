@@ -95,22 +95,52 @@
     background-color: rgba(255,255,255,0.5);
     height: 100%;
     display: inline-block;
+    vertical-align: top;
+}
+.twitter-assistant .fraction-container .value::before {
+    color: hsla(0, 0%, 100%, 0.33);
+    
+    /* equivalent to the Icon class */
+    font-family: "rosettaicons";
+    font-weight: normal;
+    font-style: normal;
+    text-align: center;
+    overflow: hidden;
+    display: block;
+    
+    margin: 0 auto;
 }
 
 
 .twitter-assistant .fraction-container .value.retweets {
     background-color: hsl(97, 50%, 30%); /* handpicked from Twitter with devtools */
 }
+.twitter-assistant .fraction-container .value.retweets::before{
+    content: "";
+}
+
+
 .twitter-assistant .fraction-container .value.conversations {
     background-color: hsl(226, 50%, 30%); 
 }
+.twitter-assistant .fraction-container .value.conversations::before{
+    content: "";
+}
+
+
 .twitter-assistant .fraction-container .value.media {
     background-color: hsl(21, 50%, 30%); /* handpicked from Twitter with devtools */
 }
+.twitter-assistant .fraction-container .value.media::before{
+    content: "";
+}
+
 .twitter-assistant .fraction-container .value.links {
     background-color: hsl(286, 50%, 30%); 
 }
-
+.twitter-assistant .fraction-container .value.links::before{
+    content: "";
+}
 
 
 /* definitely need variables here */
