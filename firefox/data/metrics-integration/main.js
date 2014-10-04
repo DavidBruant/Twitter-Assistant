@@ -45,7 +45,6 @@ const ONE_DAY = 24*60*60*1000; // ms
 
 
         twitterAssistantContainerP.then(twitterAssistantContainer => {
-            console.log('ready to integrate metrics');
 
             React.renderComponent(TwitterAssistant(tweetMine), twitterAssistantContainer);
 

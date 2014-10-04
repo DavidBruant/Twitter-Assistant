@@ -83,8 +83,6 @@ module.exports = function TwitterAPI(accessToken){
 
             const searchString = makeSearchString(searchObj);
 
-            console.log('searchString', searchString);
-
             return new Promise((resolve, reject) => {
                 const reqStart = Date.now();
 

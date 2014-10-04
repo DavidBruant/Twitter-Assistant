@@ -1,9 +1,20 @@
 (function(exports){
     'use strict';
-
+    
     exports.Metrics = React.createClass({
         getInitialState: function(){
             return {detailView: undefined};
+        },
+        
+        componentWillReceiveProps: function(nextProps){
+            
+            if(this.state.detailView){
+                const newState = {
+                    detailView: nextProps.values.find(e => e.class === this.state.detailView.class)
+                };
+                
+                this.setState(newState);
+            }
         },
         
         /*
@@ -14,7 +25,14 @@
                         class: string,
                         title: string,
                         percent: number (between 0 and 100)
-                        detailFunction : () => ReactComponent
+                        details : [
+                            {
+                                amount: number,
+                                text: string,
+                                url: string (url),
+                                image: string (url)
+                            }
+                        ]
                     }
                 ]
             }
@@ -47,28 +65,42 @@
             }
             else{
                 fractionContainerChildren = values.map(v => {
-                    const clickable = typeof v.detailFunction === 'function';
+                    const clickable = !!v.details;
                     
                     return React.DOM.div( {
-                        className: ["value", v.class, clickable ? 'clickable' : ''].filter(s => !!s).join(' '),
+                        className: [
+                            "value",
+                            v.class,
+                            clickable ? 'clickable' : '',
+                            state.detailView === v ? 'selected' : ''
+                        ].filter(s => !!s).join(' '),
                         title: v.title,
                         style: {
                             width: v.percent.toFixed(1)+'%'
                         },
-                        onClick: !clickable ? undefined : function(){
-                            this.setState({detailView: v})
+                        onClick: !clickable ? undefined : () => {
+                            console.log('click', v.percent);
+                            this.setState({
+                                detailView: state.detailView === v ? undefined : v
+                            });
                         }
                     });
                 });
             }
             
-            return React.DOM.div( {className: "metrics"}, [
-                React.DOM.div( {className: "name"}, name ),
-                React.DOM.div(
-                    {className: fractionContainerClasses.join(' ')},
-                    fractionContainerChildren
-                )
-            ])
+            var children = [];
+            if(name)
+                children.push(React.DOM.div( {className: "name"}, name ));
+            
+            children.push(React.DOM.div(
+                {className: fractionContainerClasses.join(' ')},
+                fractionContainerChildren
+            ));
+            
+            if(state.detailView)
+                children.push( DetailList({details: state.detailView.details}) );
+            
+            return React.DOM.div( {className: "metrics"}, children)
         }
         
     });
