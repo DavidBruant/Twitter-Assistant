@@ -54,6 +54,8 @@ twitterProfilePageMod.on('attach', function onAttach(worker){
     user = matches[1];
     //console.log('user', user);
     
+    const twitterAPI = TwitterAPI(lastAccessToken);
+    
     if(!lastAccessToken){
         getAccessToken(lastTwitterAPICredentials.key, lastTwitterAPICredentials.secret)
             .then(accessToken => {
@@ -67,7 +69,7 @@ twitterProfilePageMod.on('attach', function onAttach(worker){
     else{
         const getTimelineWithProgress = getTimelineOverATimePeriod(lastAccessToken);
         const timelineComplete = getTimelineWithProgress({
-            username:user,
+            username: user,
             timestampFrom: (new Date()).getTime() - ONE_DAY*40,
         }, function(partialTimeline){
             worker.port.emit('twitter-user-data', {
@@ -87,17 +89,20 @@ twitterProfilePageMod.on('attach', function onAttach(worker){
             console.error('error while getting the user timeline', user, err);
         });
         
-        
-        /*const twitterAPI = TwitterAPI(lastAccessToken);
-        twitterAPI.search({
+        /*twitterAPI.search({
             q: {
                 '@': user
             }
         })
         .then(tweets => console.log("tweets to user", user, tweets))
         .catch(e => console.error(e))*/
-        
     }
+    
+    worker.port.on('ask-users', userIds => {
+        twitterAPI.lookupUsers(userIds).then(users => {
+            worker.port.emit('answer-users', users)
+        })
+    });
 
 });
 

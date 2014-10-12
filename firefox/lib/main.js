@@ -75,9 +75,8 @@ exports.main = function(){
 
     if(staticArgs['CONSUMER_KEY'] && staticArgs['CONSUMER_SECRET']){
         setTimeout(function(){
-            TWITTER_USER_PAGES.forEach(function(url){
+            for(let url of TWITTER_USER_PAGES)
                 tabs.open(url);
-            })
         }, 3*1000);
     }
     

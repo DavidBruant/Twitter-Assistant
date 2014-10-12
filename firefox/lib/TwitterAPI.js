@@ -44,7 +44,7 @@ function stringifyTwitterSearchQuery(obj){
     if(obj.text)
         queryParts.push(obj.text);
     
-    Object.keys(obj).forEach(k => {
+    for(let k of Object.keys(obj)){
         if(k === 'text')
             return;
         
@@ -54,7 +54,7 @@ function stringifyTwitterSearchQuery(obj){
             val = val.toISOString().slice(0, 10); // keep only "2014-08-30"
 
         queryParts.push(k + ':' + val); // don't urlencode. It'll be done by makeSearchString 
-    });
+    };
 
     return queryParts.join('+');
 }
@@ -163,8 +163,37 @@ module.exports = function TwitterAPI(accessToken){
                 }).get();               
                                    
             })
+        },
+        
+        lookupUsers: function(userIds){
+            const searchObj = {
+                user_id: userIds.map(id => String(id)).join(','),
+                include_entities : false,
+            };
 
+            const searchString = makeSearchString(searchObj);
+            
+            return new Promise((resolve, reject) => {
+                const reqStart = Date.now();
 
+                Request({
+                    url: 'https://api.twitter.com/1.1/users/lookup.json?'+searchString,
+                    headers: {
+                        'Authorization': 'Bearer '+accessToken
+                    },
+                    onComplete: function (response) {
+                        console.log(
+                            '/1.1/users/lookup.json status',
+                            response.status, 
+                            ((Date.now() - reqStart)/1000).toFixed(1)+'s'
+                        );
+
+                        resolve(response.json);
+                    },
+                    onError: reject
+                }).get();
+
+            });
         }
     };
 };

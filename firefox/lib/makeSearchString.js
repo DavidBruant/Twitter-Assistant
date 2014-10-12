@@ -5,9 +5,9 @@
 module.exports = function makeSearchString(obj){
     const sp = [];
     
-    Object.keys(obj).forEach(k => {
-        sp.push(encodeURIComponent(k) + '=' + encodeURIComponent(obj[k])); 
-    });
+    // http://stackoverflow.com/a/3608791
+    for(let k of Object.keys(obj))
+        sp.push(encodeURI(k) + '=' + encodeURI(obj[k]));
     
     return sp.join('&');
 }
