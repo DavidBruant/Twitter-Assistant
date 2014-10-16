@@ -165,10 +165,15 @@ module.exports = function TwitterAPI(accessToken){
             })
         },
         
-        lookupUsers: function(userIds){
+        lookupUsers: function(user_ids = [], screen_names = []){
             const searchObj = {
-                user_id: userIds.map(id => String(id)).join(','),
-                include_entities : false,
+                user_id: user_ids.length > 0 ?
+                    user_ids.map(id => String(id)).join(',') :
+                    undefined,
+                screen_name: screen_names.length > 0 ?
+                    screen_names.map(id => String(id)).join(',') :
+                    undefined,
+                include_entities : false
             };
 
             const searchString = makeSearchString(searchObj);

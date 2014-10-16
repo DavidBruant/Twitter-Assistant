@@ -2,6 +2,7 @@
 
 /*
  @arg tweets : as received by the homeline API
+ username : currently viewed user (screen_name)
 */
 function TweetMine(tweets, username){
     return {
