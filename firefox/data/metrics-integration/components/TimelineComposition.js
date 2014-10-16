@@ -1,6 +1,12 @@
 (function(exports){
     'use strict';
     
+    function getDomain(url){
+        const a = document.createElement('a');
+        a.href = url;
+        return a.hostname;
+    }
+    
     /*
         extract the the original tweet out of a retweet
     */
@@ -112,6 +118,47 @@
     }
     
     
+    
+    function makeLinksDetails(tweetsWithLinks){
+        const countsByDomain = new Map();
+        
+        for(let t of tweetsWithLinks){
+            for(let urlObj of t.entities.urls){
+                let domain = getDomain(urlObj.expanded_url);
+                let record = countsByDomain.get(domain);
+                
+                if(!record){
+                    record = {
+                        count: 0,
+                        tweets: []
+                    };
+                    
+                    countsByDomain.set(domain, record);
+                }
+                
+                record.count++;
+                record.tweets.push(t);
+            }
+        }
+        
+        let sortedDomains = [...countsByDomain.keys()]
+            .sort((d1, d2) => countsByDomain.get(d1).count < countsByDomain.get(d2).count ? 1 : -1 );
+        
+        // keep only the first 10 for now
+        sortedDomains = sortedDomains.slice(0, 10);
+        
+        return sortedDomains.map(domain => {
+            const record = countsByDomain.get(domain);
+
+            return {
+                amount: record.count,
+                text: domain,
+                url: 'http://'+record+'/'
+            };
+        });
+    }
+    
+    
     exports.TimelineComposition = React.createClass({
         
         render: function(){
@@ -186,7 +233,8 @@
                     }, {
                         class: 'links',
                         title: "Links",
-                        percent: linkPercent
+                        percent: linkPercent,
+                        details: makeLinksDetails(tweetsWithLinks)
                     }, {
                         class: 'other',
                         title: "Other",

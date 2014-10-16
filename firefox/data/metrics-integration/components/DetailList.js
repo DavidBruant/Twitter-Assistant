@@ -41,7 +41,7 @@
                         href: url || '',
                         target: '_blank'
                     }, [
-                        React.DOM.img({src: image || ''}),
+                        image ? React.DOM.img({src: image}) : undefined,
                         React.DOM.span({}, text),
                         React.DOM.span({}, ' '+String(amount))
                     ]))
