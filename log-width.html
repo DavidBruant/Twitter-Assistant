@@ -1,0 +1,138 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>votre superbe page web créée le lun. 26 mai 2014 15:41</title>
+
+        <style>
+            *{
+                box-sizing: border-box;
+            }
+
+            body{
+                margin: 0;
+                padding: 0;
+                display: flex;
+                height: 100vh;
+                width: 100vw;
+
+                justify-content: space-around;
+
+            }
+        </style>
+
+        <style>
+            .engagement{
+                display: inline-block;
+                max-height: 5em;
+
+                background-color: hsl(300, 45%, 78%);
+            }
+
+            .engagement .bar{
+                display: flex;
+                align-items: center;
+
+                width: 10em;
+                height: 2em;
+
+                border: 1px solid #BBB;
+            }
+            .engagement .bar .value{
+
+                background-color: hsl(300, 46%, 89%);
+            }
+
+        </style>
+
+        <script>
+            'use strict';
+
+            var data = [
+                {
+                    label: 'RT',
+                    number: 10,
+                    proportion: 100
+                },
+                {
+                    label: 'RT',
+                    number: 100,
+                    proportion: 10
+                },
+                {
+                    label: 'RT',
+                    number: 2,
+                    proportion: 50
+                },
+                {
+                    label: 'RT',
+                    number: 30,
+                    proportion: 74
+                },
+                {
+                    label: 'RT',
+                    number: 50000,
+                    proportion: 47
+                },
+                {
+                    label: 'RT',
+                    number: 100000,
+                    proportion: 47
+                },
+                {
+                    label: 'RT',
+                    number: 500000,
+                    proportion: 47
+                },
+                {
+                    label: 'RT',
+                    number: 1000000,
+                    proportion: 47
+                }
+            ];
+
+            function f(x){ 
+                if(x === 0)
+                    return 0;
+
+                return Math.round(Math.pow(x, 1/3)/2);
+            }
+
+            document.addEventListener('DOMContentLoaded', e => {
+                var template = document.querySelector('template');
+
+                function createEngagementBar(d){
+                    var ret = template.cloneNode(true).content;
+
+                    ret.querySelector('.label').textContent = d.label;
+                    var value = ret.querySelector('.bar .value');
+
+                    value.style.width = d.proportion+'%';
+                    value.style.height = f(d.number)+'px';
+
+                    ret.querySelector('.nbs').textContent = d.number + ' - ' + d.proportion;
+
+                    return ret;
+                }
+
+                for(var d of data){
+                    document.body.appendChild(createEngagementBar(d));
+                }
+            })
+
+        </script>
+
+    </head>
+    <body>
+        <template>
+            <div class="engagement">
+                <span class="label"></span>
+                <div class="bar">
+                    <div class="value"></div>
+                </div>
+                <div class="nbs"></div>
+            </div>
+        </template>
+
+    </body>
+</html>

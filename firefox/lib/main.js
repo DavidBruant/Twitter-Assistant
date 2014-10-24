@@ -47,6 +47,15 @@ const TWITTER_USER_PAGES = [
     }
 */
 
+/*
+    Credentials panel:
+    * Push people to automated app creation
+    * Insist on being logged in to Twitter (watch)
+    * Be clearer on "A tab opened in the background. ...."
+    * Choose a better label than "go!"
+*/
+throw 'TODO. see above comment';
+
 exports.main = function(){
     
     /*

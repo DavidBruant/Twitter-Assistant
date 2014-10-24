@@ -44,6 +44,9 @@ Twitter Assistant takes advantage of a Twitter app credentials you create. As su
 
 # Contributing
 
+* Install the [addon SDK](https://developer.mozilla.org/en-US/Add-ons/SDK/Tutorials/Installation) including [cfx](https://developer.mozilla.org/en-US/Add-ons/SDK/Tools/cfx).
+* 
+
 
 `cfx xpi ; cfx -b /home/david/Logiciel/aurora/firefox run --static-args="{\"browser-toolbox\": true, \"CONSUMER_KEY\":\"<YOUR CONSUMER KEY>\", \"CONSUMER_SECRET\":\"<YOUR CONSUMER SECRET>\"}"`
 
