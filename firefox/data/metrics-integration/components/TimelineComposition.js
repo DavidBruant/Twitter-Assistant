@@ -153,7 +153,7 @@
             return {
                 amount: record.count,
                 text: domain,
-                url: 'http://'+record+'/'
+                url: 'http://'+record.domain+'/'
             };
         });
     }
