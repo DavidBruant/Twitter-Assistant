@@ -5,8 +5,6 @@ const TwitterAPI = require('./TwitterAPI.js');
 module.exports = function(accessToken){
     const twitterAPI = TwitterAPI(accessToken);
     
-    var progressCount = 0;
-    
     // should be one of these Stream+Promise hybrid when that's ready
     return function({username, timestampFrom, timestampTo}, progress){
         timestampTo = timestampTo || (new Date()).getTime()
@@ -38,11 +36,9 @@ module.exports = function(accessToken){
             if(timeline.length === accumulated.length){
                 var maxId = accumulatedTweets[accumulatedTweets.length - 1].id_str;
                 progress(accumulatedTweets);
-                progressCount++;
                 return twitterAPI.getUserTimeline(username, maxId).then(processTweets);
             }
             else{
-                console.log(username, progressCount);
                 return accumulatedTweets;
             }
         });

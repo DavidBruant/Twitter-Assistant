@@ -69,7 +69,6 @@
 }
 .twitter-assistant .all-metrics .metrics{
     display: table-row;
-    height: 20px;
 }
 .twitter-assistant .all-metrics .metrics > *{
     display: table-cell;
@@ -93,15 +92,91 @@
 
 .twitter-assistant .fraction-container .value {
     background-color: rgba(255,255,255,0.5);
-    height: 100%;
+    height: 20px;
     display: inline-block;
+    vertical-align: top;
 }
+.twitter-assistant .fraction-container .value::before {
+    color: hsla(0, 0%, 100%, 0.33);
+    
+    /* equivalent to the Icon class */
+    font-family: "rosettaicons";
+    font-weight: normal;
+    font-style: normal;
+    text-align: center;
+    overflow: hidden;
+    display: block;
+    
+    margin: 0 auto;
+}
+
+.twitter-assistant .fraction-container .value.clickable{
+    cursor: pointer;
+} 
+.twitter-assistant .fraction-container .value.selected{
+    box-shadow: 0 0 1em gold;
+} 
+
 .twitter-assistant .fraction-container .value.retweets {
-    background-color: hsl(97, 42%, 40%); /* handpicked from Twitter with devtools */
+    background-color: hsl(97, 50%, 30%); /* handpicked from Twitter with devtools */
 }
+.twitter-assistant .fraction-container .value.retweets::before{
+    content: "";
+}
+
+
 .twitter-assistant .fraction-container .value.conversations {
-    background-color: hsl(226, 75%, 38%); 
+    background-color: hsl(226, 50%, 30%); 
 }
+.twitter-assistant .fraction-container .value.conversations::before{
+    content: "";
+}
+
+
+.twitter-assistant .fraction-container .value.media {
+    background-color: hsl(21, 50%, 30%); /* handpicked from Twitter with devtools */
+}
+.twitter-assistant .fraction-container .value.media::before{
+    content: "";
+}
+
+.twitter-assistant .fraction-container .value.links {
+    background-color: hsl(286, 50%, 30%); 
+}
+.twitter-assistant .fraction-container .value.links::before{
+    content: "";
+}
+
+.twitter-assistant .weighted-user-list{
+    list-style: inside none none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    position: static;
+}
+.twitter-assistant .weighted-user-list li{
+    background-color: rgba(255,255,255,0.5);
+    margin: 5px 0;
+}
+.twitter-assistant .weighted-user-list li a{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    
+    height: 100%;
+}
+
+.twitter-assistant .weighted-user-list li a img{
+    height: 100%;
+    border-radius: 35%;
+}
+
+.twitter-assistant .weighted-user-list li a span{
+    margin: 0 1em;
+}
+
 
 /* definitely need variables here */
 .twitter-assistant .fraction-container.x0-1{

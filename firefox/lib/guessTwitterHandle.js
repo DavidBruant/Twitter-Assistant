@@ -1,28 +1,32 @@
 'use strict';
 
-const PageWorker = require("sdk/page-worker").Page;
-
+const {data} = require("sdk/self");
+const {XMLHttpRequest} = require('sdk/net/xhr');
 
 module.exports = function(){
     return new Promise((resolve, reject) => {
-        const pw = PageWorker({
-            contentURL: "https://twitter.com",
-            contentScript: 
-                "let screenNameElement = document.body.querySelector('.DashboardProfileCard .DashboardProfileCard-screenname');"+
-                // .slice(1) to remove the initial @
-                "if(screenNameElement) self.port.emit('username', screenNameElement.textContent.trim().slice(1));" +
-                "else self.port.emit('error');", 
-            contentScriptWhen: 'ready'
-        });
+        const reqStart = Date.now();
+
+        const xhr = new XMLHttpRequest();
+        xhr.open("GET", 'https://twitter.com/');
+        xhr.responseType = "document";
         
-        pw.port.on('username', username => {
-            pw.destroy();
-            resolve(username);
-        });
+        xhr.onload = function(){
+            if(xhr.status >= 400){
+                reject(new Error('status code '+xhr.status))
+            }
+            else{
+                const doc = xhr.response;
+                const screenNameElement = doc.body.querySelector('.DashboardProfileCard .DashboardProfileCard-screenname');
+
+                if(screenNameElement) // .slice(1) to remove the initial @
+                    resolve(screenNameElement.textContent.trim().slice(1));
+                else
+                    reject('user not logged in or Twitter changed its HTML');
+            }
+        };
         
-        pw.port.on('error', username => {
-            pw.destroy();
-            reject(new Error("username could not be found (either because the user isn't logged in or because Twitter changed its HTML)"));
-        });
+        xhr.send();
+        
     });
 };

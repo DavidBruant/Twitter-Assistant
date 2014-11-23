@@ -11,6 +11,7 @@ const {data} =  require("sdk/self");
 
 const getAccessToken = require('./getAccessToken.js');
 const getTimelineOverATimePeriod = require('./getTimelineOverATimePeriod.js'); 
+const TwitterAPI = require('./TwitterAPI.js');
 
 const ONE_DAY = 24*60*60*1000;
 
@@ -31,6 +32,7 @@ const twitterProfilePageMod = PageMod({
         data.url("metrics-integration/components/Metrics.js"),
         data.url("metrics-integration/components/TwitterAssistantTopInfo.js"),
         data.url("metrics-integration/components/Histogram.js"),
+        data.url("metrics-integration/components/DetailList.js"),
         data.url("metrics-integration/components/TimelineComposition.js"),
         data.url("metrics-integration/components/GeneratedEngagement.js"),
         data.url("metrics-integration/components/HumansAreNotMetricsReminder.js"),
@@ -44,13 +46,28 @@ const twitterProfilePageMod = PageMod({
 });
 
 twitterProfilePageMod.on('attach', function onAttach(worker){
-    var matches = worker.url.match(/^https?:\/\/twitter\.com\/([^\/]+)\/?$/);
-    var user;
+    const matches = worker.url.match(/^https?:\/\/twitter\.com\/([^\/]+)\/?$/);
 
     if(!Array.isArray(matches) || matches.length < 2)
         return;
-    user = matches[1];
+    const user = matches[1];
+    
+    // now, variable user contains a screen_name
     //console.log('user', user);
+    
+    const twitterAPI = TwitterAPI(lastAccessToken);
+    
+    twitterAPI.lookupUsers([], [user]).then(users => {
+        worker.port.emit('current-user-details', users[0]);
+    });
+    
+    /*twitterAPI.search({
+        q: {
+            '@': user
+        }
+    })
+    .then(tweets => console.log("tweets to user", user, tweets))
+    .catch(e => console.error(e))*/
     
     if(!lastAccessToken){
         getAccessToken(lastTwitterAPICredentials.key, lastTwitterAPICredentials.secret)
@@ -65,27 +82,27 @@ twitterProfilePageMod.on('attach', function onAttach(worker){
     else{
         const getTimelineWithProgress = getTimelineOverATimePeriod(lastAccessToken);
         const timelineComplete = getTimelineWithProgress({
-            username:user,
+            username: user,
             timestampFrom: (new Date()).getTime() - ONE_DAY*40,
-        }, function(partialTimeline){
-            worker.port.emit('twitter-user-data', {
-                timeline: partialTimeline,
-                user: user
-            });
-        });
+        }, sendTimelineToContent);
         
-        timelineComplete.then(function(timeline){
-            worker.port.emit('twitter-user-data', {
-                timeline: timeline,
-                user: user
-            });
-
-        }).catch( err => {
+        timelineComplete.then(sendTimelineToContent).catch( err => {
             // TODO consider invalidating lastAccessToken here
             console.error('error while getting the user timeline', user, err);
         });
     }
-
+    
+    function sendTimelineToContent(timeline){
+        worker.port.emit('twitter-user-data', timeline);
+    }
+    
+    worker.port.on('ask-users', userIds => {
+        twitterAPI.lookupUsers(userIds).then(users => {
+            worker.port.emit('answer-users', users)
+        })
+    });
+    
+    
 });
 
 
