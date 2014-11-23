@@ -108,7 +108,7 @@ exports.main = function(){
                 getReadyForTwitterProfilePages(credentials);
             })
             .catch(err => {
-                credentialsPanel.port.emit('non-working-app-credentials', {error: err, credentials, credentials});
+                credentialsPanel.port.emit('non-working-app-credentials', {error: err, credentials: credentials});
             });
     });
     
