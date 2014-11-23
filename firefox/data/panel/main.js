@@ -1,6 +1,49 @@
 'use strict';
 
-const titleUsername = document.body.querySelector('h2 .username');
+// bare minimum "polyfill" so this code doesn't crash when tested in a browser
+if(!self.addon){
+    self.addon = {
+        port: {
+            on: function(){},
+            emit: function(ev, data){
+                console.log("emitting", ev, data);
+            }
+        }
+    }
+}
+
+
+const data = {
+    automateTwitterAppCreation: e => self.addon.port.emit('automate-twitter-app-creation'),
+    testCredentials: credentials => self.addon.port.emit('test-credentials', credentials)
+};
+
+function updatePanel(){
+    React.renderComponent(TwitterAssistantPanel(data), document.body);
+}
+
+
+self.addon.port.on('update-logged-user', username => {
+    data.loggedUser = username;
+    updatePanel();
+});
+
+self.addon.port.on('working-app-credentials', credentials => {
+    data.credentials = credentials;
+    updatePanel();
+});
+
+/*
+    1) Make sure automated case works
+    2) Write code for "I want to make the app manually" & "I already have an app"
+    3) think about "I want to change my credentials"
+*/
+//throw 'TODO: see above comment';
+
+updatePanel();
+
+
+/*
 
 const apiCredentialsForm = document.body.querySelector('form.api-credentials');
 const keyInput = apiCredentialsForm.querySelector('input.key');
@@ -45,30 +88,30 @@ apiCredentialsForm.addEventListener('submit', e => {
     if(!key || !secret || key.length <= 1 || secret.length <= 1)
         return; // ignore
     
-    self.port.emit('test-credentials', {key: key, secret: secret});
+    self.addon.port.emit('test-credentials', {key: key, secret: secret});
     
     // TODO add a spinner
 });
 
-/*userCredentialsForm.addEventListener('submit', function submitListener(e){
-    self.port.emit('automate-twitter-app-creation', {
-        username: usernameInput.value,
-        password: passwordInput.value
-    });
-} );*/
+//userCredentialsForm.addEventListener('submit', function submitListener(e){
+//    self.addon.port.emit('automate-twitter-app-creation', {
+//        username: usernameInput.value,
+//        password: passwordInput.value
+//    });
+//} );
 
 automaticInstructionsButton.addEventListener('click', e => {
     document.body.querySelector('.instructions.automatic').removeAttribute('hidden');
     document.body.querySelector('.instructions.manual').setAttribute('hidden', '');
     
-    /*if(userCredentialsForm.getAttribute('hidden') !== null){
+    //if(userCredentialsForm.getAttribute('hidden') !== null){
         // form is hidden, we already have the password, no need to ask for it.
-        self.port.emit('automate-twitter-app-creation');
-    }*/
+    //    self.addon.port.emit('automate-twitter-app-creation');
+    //}
 });
 
 automaticButton.addEventListener('click', e => {
-    self.port.emit('automate-twitter-app-creation');
+    self.addon.port.emit('automate-twitter-app-creation');
 });
 
 manualButton.addEventListener('click', e => {
@@ -76,7 +119,7 @@ manualButton.addEventListener('click', e => {
     document.body.querySelector('.instructions.automatic').setAttribute('hidden', '');
 });
 
-self.port.on('test-credentials-result', result => {
+self.addon.port.on('test-credentials-result', result => {
     var key = keyInput.value,
         secret = secretInput.value;
     
@@ -86,7 +129,7 @@ self.port.on('test-credentials-result', result => {
     
     // parent context sends back the token if it's valid and whatever else otherwise
     if(Object(result) === result && result.key === key && result.secret === secret){
-        self.port.emit('confirm-credentials', result);
+        self.addon.port.emit('confirm-credentials', result);
     }
     else{
         // can happen either if the token is invalid or the user change the input field
@@ -94,14 +137,10 @@ self.port.on('test-credentials-result', result => {
     }
 });
 
-self.port.on('update-username', username => {
-    titleUsername.textContent = username;
-    usernameInput.value = username;
-    pleaseLogin.setAttribute('hidden', 'hidden');
-});
 
 
-if(self.options){
+
+/*if(self.addon.options){
     keyInput.value = self.options.key;
     secretInput.value = self.options.secret;
-}
+}*/

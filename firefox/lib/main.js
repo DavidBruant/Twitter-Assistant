@@ -28,33 +28,8 @@ const TWITTER_USER_PAGES = [
     "https://twitter.com/angustweets"*/
 ];
 
-/*
-    TODO redo the main algorithm.
-    
-    if(storedTwitterAPICredentials available){
-        don't show the panel, just get te access token and create the pageMod
-    }
-    else{
-        show the panel
-        guess the username
-        if(username guessed){
-            update panel
-            try to find a password
-            if(no corresponding password found){
-                tell the panel about it
-            }
-        }
-    }
-*/
+throw 'add "if you are already logged in click here"';
 
-/*
-    Credentials panel:
-    * Push people to automated app creation
-    * Insist on being logged in to Twitter (watch)
-    * Be clearer on "A tab opened in the background. ...."
-    * Choose a better label than "go!"
-*/
-throw 'TODO. see above comment';
 
 exports.main = function(){
     
@@ -92,7 +67,7 @@ exports.main = function(){
     // button
     const twitterAssistantButton = ui.ActionButton({
         id: "twitter-assistant-credentials-panel-button",
-        label: "Enter oauth Twitter tokens",
+        label: "Twitter Assistant panel",
         icon: data.url('images/Twitter_logo_blue.png'),
         onClick: function(state) {
             credentialsPanel.show({position: twitterAssistantButton});
@@ -103,35 +78,40 @@ exports.main = function(){
     const credentialsPanel = Panel({
         width: 650,
         height: 400, 
-        contentURL: data.url('credentialsPanel.html'),
-        
-        contentScriptFile: data.url('credentialsPanel.js'),
-        contentScriptWhen: "ready",
-        contentScriptOptions: (key && secret) ? 
-            {key: key, secret: secret} : 
-            undefined
+        contentURL: data.url('panel/mainPanel.html')
     });
+    
+    credentialsPanel.on('show', e => {
+        console.log("credentialsPanel.on 'show'")
+        
+        guessTwitterHandle()
+            .then(username => {
+                console.log('guessed user', username);
+                credentialsPanel.port.emit('update-logged-user', username);
+            })
+            .catch(err => {
+                console.log('err guessed user', err);
+                credentialsPanel.port.emit('update-logged-user', undefined);
+            });
+    })
     
     credentialsPanel.port.on('test-credentials', credentials => {
         console.log('test-credentials', credentials);
         
         getAccessToken(credentials.key, credentials.secret)
             .then(token => {
-                credentialsPanel.port.emit('test-credentials-result', credentials);
+                credentialsPanel.port.emit('working-app-credentials', credentials);
+            
+                storage.credentials = JSON.stringify(credentials);
+                setTimeout(() => credentialsPanel.hide(), 5*1000);
+        
+                getReadyForTwitterProfilePages(credentials);
             })
             .catch(err => {
-                credentialsPanel.port.emit('test-credentials-result', err);
+                credentialsPanel.port.emit('non-working-app-credentials', {error: err, credentials, credentials});
             });
     });
     
-    credentialsPanel.port.on('confirm-credentials', credentials => {
-        console.log('confirm-credentials', credentials);
-        
-        storage.credentials = JSON.stringify(credentials);
-        credentialsPanel.hide();
-        
-        getReadyForTwitterProfilePages(credentials);
-    });
     
     credentialsPanel.port.on('automate-twitter-app-creation', () => {
         
@@ -144,6 +124,9 @@ exports.main = function(){
                         console.timeEnd('app creation');
 
                         console.log('twitterAppCredentials', twitterAppCredentials);
+                    
+                        credentialsPanel.port.emit('working-app-credentials', twitterAppCredentials);
+                    
                         return getReadyForTwitterProfilePages(twitterAppCredentials).then(function(){
                             tabs.open('https://twitter.com/'+username);
                         });
@@ -153,7 +136,7 @@ exports.main = function(){
                     });
             })
             .catch(err => {
-                throw 'TODO tell the panel to inform the user that they MUST login to Twitter for the automated process to work';
+                throw 'TODO tell the panel to inform the user that they MUST be connected to the Internet and login to Twitter for the automated process to work';
             })
     
     });
@@ -162,14 +145,14 @@ exports.main = function(){
     if(key && secret){
         getReadyForTwitterProfilePages({key:key, secret:secret});
         
-        //credentialsPanel.port.emit('update-API-credentials', {key: key, secret: secret});
+        credentialsPanel.port.emit('working-app-credentials', {key: key, secret: secret});
     }
     else{ // no credentials stored. Ask some to the user
         console.time('guess');
         guessTwitterHandle().then(username => {
             console.timeEnd('guess');
             
-            credentialsPanel.port.emit('update-username', username);
+            credentialsPanel.port.emit('update-logged-user', username);
         });
         
         credentialsPanel.show({position: twitterAssistantButton});

@@ -56,23 +56,81 @@
                 color: red;
             }
             
-            .choices{
+            .automatic{
+                margin: 0.5em 0;
+                display: block;
+                max-width: 33%;
+            }
+            
+            p a, p button{
+                background-color: inherit;
+                
+                border: 0;
+                padding: 0;
+                margin: 0;
+                
+                font-family: inherit;
+                font-size: 1em;
+                text-decoration: underline;
+                color: #888;
+
+                cursor: pointer;
+            }
+            
+            p.discrete{
+                color: #666;
+                font-size: 0.75em;
+                margin: 0;
+                margin-top: 0.5em;
+                padding: 0;
+            }
+            p.discrete::before{
+                content: '('
+            }
+            p.discrete::after{
+                content: ')'
+            }
+            
+            .app-creation{
                 display: flex;
-                justify-content: space-around;
-                align-content: center;
+                flex-direction: row;
+                align-items: center;
+                justify-content: center;
             }
             
-            button.manual, button.automatic{
-                max-width: 30%;
+            .pending::after{
+                content: '...';
+                margin-left: 1em;
             }
-            
             
         </style>
 
+        <script defer src="../ext/react.js"></script>
+        
+        <script defer src="./components/AutomatedAppCreation.js"></script>
+        <script defer src="./components/TwitterAPICredentialsForm.js"></script>
+        <script defer src="./components/ManualAppCreation.js"></script>
+        <script defer src="./components/TwitterAssistantPanel.js"></script>
+        
+        <script defer src="./main.js"></script>
+        
         <title>Twitter Assistant Panel</title>
     </head>
+    <!--
+    * If person not logged in, ask to log in
+
+    * If no credentials, propose to create some. Push automated way forward
+    * If working credentials, don't propose the ability to create some.
+
+     Credentials panel:
+    * Push people to automated app creation
+    * Insist on being logged in to Twitter (watch)
+    * Be clearer on "A tab opened in the background. ...."
+    * Choose a better label than "go!"
+    -->
+
     <body>
-        <h1>Twitter Assistant</h1>
+        <!--<h1>Twitter Assistant</h1>
         <h2>Hello<span class="username"></span>!</h2>
         <p>For the addon to work, you <strong>need to create a Twitter App.</strong></p>
         <div class="choices">
@@ -104,7 +162,7 @@
                 <li>When the app is created, the addon will <strong>fetch the "API key" and "API secret"</strong> from the "API keys" tab.
             </ul>
             <button>GO !</button>
-        </div>
+        </div> -->
         
     </body>
 </html>
