@@ -28,7 +28,7 @@ const TWITTER_USER_PAGES = [
     "https://twitter.com/angustweets"*/
 ];
 
-throw 'add "if you are already logged in click here"';
+// throw 'add "if you are already logged in click here"';
 
 
 exports.main = function(){
