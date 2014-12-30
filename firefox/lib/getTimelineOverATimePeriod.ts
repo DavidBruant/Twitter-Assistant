@@ -1,19 +1,30 @@
 'use strict';
 
-const TwitterAPI = require('./TwitterAPI.js');
+import TwitterAPI = require('./TwitterAPI');
 
-module.exports = function(accessToken){
-    const twitterAPI = TwitterAPI(accessToken);
+interface getTimelineOverATimePeriodQuery{
+    username:string
+    timestampFrom: number // timestamp
+    timestampTo?: number // timestamp
+}
+
+function getTimelineOverATimePeriod(accessToken: AccessToken){
+    var twitterAPI = TwitterAPI(accessToken);
     
     // should be one of these Stream+Promise hybrid when that's ready
-    return function({username, timestampFrom, timestampTo}, progress){
-        timestampTo = timestampTo || (new Date()).getTime()
-        let accumulatedTweets = [];
+    return function(query: getTimelineOverATimePeriodQuery, progress : (tweets : TwitterAPITweet[]) => void){
+        var username = query.username,
+            timestampFrom = query.timestampFrom, 
+            timestampTo = query.timestampTo;
         
-        function accumulateTweets(timeline){
+        
+        timestampTo = timestampTo || (new Date()).getTime()
+        var accumulatedTweets : TwitterAPITweet[] = [];
+        
+        function accumulateTweets(timeline: TwitterAPITweet[]){
             // remove from timeline tweets that wouldn't be in the range
-            const toAccumulate = timeline = timeline.filter(tweet => {
-                const createdTimestamp = (new Date(tweet.created_at)).getTime();
+            var toAccumulate = timeline = timeline.filter(tweet => {
+                var createdTimestamp = (new Date(tweet.created_at)).getTime();
                 return createdTimestamp >= timestampFrom && createdTimestamp <= timestampTo;
             });
             
@@ -43,4 +54,6 @@ module.exports = function(accessToken){
             }
         });
     }
-};
+}
+
+export = getTimelineOverATimePeriod;

@@ -6,23 +6,27 @@
 
 */
 
-const {PageMod} = require("sdk/page-mod");
-const {data} =  require("sdk/self");
+import pagemodModule = require("sdk/page-mod");
+import selfModule =  require("sdk/self");
 
-const getAccessToken = require('./getAccessToken.js');
-const getTimelineOverATimePeriod = require('./getTimelineOverATimePeriod.js'); 
-const TwitterAPI = require('./TwitterAPI.js');
 
-const ONE_DAY = 24*60*60*1000;
+import getAccessToken = require('./getAccessToken');
+import getTimelineOverATimePeriod = require('./getTimelineOverATimePeriod'); 
+import TwitterAPI = require('./TwitterAPI');
 
-let lastTwitterAPICredentials;
-let lastAccessToken;
+var PageMod = pagemodModule.PageMod;
+var data = selfModule.data;
+
+var ONE_DAY = 24*60*60*1000;
+
+var lastTwitterAPICredentials : OAuthCredentials;
+var lastAccessToken : AccessToken;
 
 
 // create the pageMod inconditionally
 // if the browser was offline initially, an access token couldn't be acquired
 // the pageMod will verify if there is an access token at each attach event (and retry)
-const twitterProfilePageMod = PageMod({
+var twitterProfilePageMod = new PageMod({
     include: /^https?:\/\/twitter\.com\/([^\/]+)\/?$/,
 
     contentScriptFile: [
@@ -46,16 +50,16 @@ const twitterProfilePageMod = PageMod({
 });
 
 twitterProfilePageMod.on('attach', function onAttach(worker){
-    const matches = worker.url.match(/^https?:\/\/twitter\.com\/([^\/]+)\/?$/);
+    var matches = worker.url.match(/^https?:\/\/twitter\.com\/([^\/]+)\/?$/);
 
     if(!Array.isArray(matches) || matches.length < 2)
         return;
-    const user = matches[1];
+    var user : string = matches[1];
     
     // now, variable user contains a screen_name
     //console.log('user', user);
     
-    const twitterAPI = TwitterAPI(lastAccessToken);
+    var twitterAPI = TwitterAPI(lastAccessToken);
     
     twitterAPI.lookupUsers([], [user]).then(users => {
         worker.port.emit('current-user-details', users[0]);
@@ -71,7 +75,7 @@ twitterProfilePageMod.on('attach', function onAttach(worker){
     
     if(!lastAccessToken){
         getAccessToken(lastTwitterAPICredentials.key, lastTwitterAPICredentials.secret)
-            .then(accessToken => {
+            .then((accessToken : AccessToken) => {
                 lastAccessToken = accessToken;
                 
                 // retry now that we have a token (but only if the worker is relevant at all)
@@ -80,10 +84,10 @@ twitterProfilePageMod.on('attach', function onAttach(worker){
             })
     }
     else{
-        const getTimelineWithProgress = getTimelineOverATimePeriod(lastAccessToken);
-        const timelineComplete = getTimelineWithProgress({
+        var getTimelineWithProgress = getTimelineOverATimePeriod(lastAccessToken);
+        var timelineComplete = getTimelineWithProgress({
             username: user,
-            timestampFrom: (new Date()).getTime() - ONE_DAY*40,
+            timestampFrom: (new Date()).getTime() - ONE_DAY*40
         }, sendTimelineToContent);
         
         timelineComplete.then(sendTimelineToContent).catch( err => {
@@ -92,21 +96,20 @@ twitterProfilePageMod.on('attach', function onAttach(worker){
         });
     }
     
-    function sendTimelineToContent(timeline){
+    function sendTimelineToContent(timeline: TwitterAPITweet[]){
         worker.port.emit('twitter-user-data', timeline);
     }
     
-    worker.port.on('ask-users', userIds => {
+    worker.port.on('ask-users', (userIds: string[]) => {
         twitterAPI.lookupUsers(userIds).then(users => {
             worker.port.emit('answer-users', users)
-        })
+        });
     });
     
     
 });
 
-
-module.exports = function(twitterAPICredentials){
+function getReady(twitterAPICredentials: OAuthCredentials){
     // save credentials for later in case we're not connected yet 
     lastTwitterAPICredentials = twitterAPICredentials;
     lastAccessToken = undefined; // forget previous token since it's likely not in sync with the new API credentials
@@ -117,3 +120,5 @@ module.exports = function(twitterAPICredentials){
         });
     
 }
+
+export = getReady;

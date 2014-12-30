@@ -1,13 +1,16 @@
 'use strict';
 
-const {data} = require("sdk/self");
-const {XMLHttpRequest} = require('sdk/net/xhr');
+import xhrModule = require("sdk/net/xhr");
+import selfModule =  require("sdk/self");
 
-module.exports = function(){
-    return new Promise((resolve, reject) => {
-        const reqStart = Date.now();
+var XMLHttpRequest = xhrModule.XMLHttpRequest;
+var data = selfModule.data;
 
-        const xhr = new XMLHttpRequest();
+function guessTwitterHandle(){
+    return new Promise<string>((resolve, reject) => {
+        var reqStart = Date.now();
+
+        var xhr = new XMLHttpRequest();
         xhr.open("GET", 'https://twitter.com/');
         xhr.responseType = "document";
         
@@ -16,8 +19,8 @@ module.exports = function(){
                 reject(new Error('status code '+xhr.status))
             }
             else{
-                const doc = xhr.response;
-                const screenNameElement = doc.body.querySelector('.DashboardProfileCard .DashboardProfileCard-screenname');
+                var doc = xhr.response;
+                var screenNameElement = doc.body.querySelector('.DashboardProfileCard .DashboardProfileCard-screenname');
 
                 if(screenNameElement) // .slice(1) to remove the initial @
                     resolve(screenNameElement.textContent.trim().slice(1));
@@ -30,3 +33,5 @@ module.exports = function(){
         
     });
 };
+
+export = guessTwitterHandle;
