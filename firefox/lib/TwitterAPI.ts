@@ -70,7 +70,7 @@ function TwitterAPI(accessToken: AccessToken) : TwitterAPI_I{
             "Environments where a Tweet ID cannot be represented as an integer with 64 bits of
             precision (such as JavaScript) should skip this step."
         */
-        getUserTimeline : function getUserTimeline(twittername: string, maxId?:string){
+        getUserTimeline : function getUserTimeline(twittername: string, maxId?:TwitterTweetId){
 
             var searchObj: TwitterAPIUserTimelineOptions = {
                 count: 200,

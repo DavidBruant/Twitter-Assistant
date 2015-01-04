@@ -33,7 +33,7 @@ function getTimelineOverATimePeriod(accessToken: AccessToken){
             return toAccumulate;
         }
         
-        return twitterAPI.getUserTimeline(username).then(function processTweets(timeline){
+        return twitterAPI.getUserTimeline(username).then(function processTweets(timeline: TwitterAPITweet[]) : Promise<TwitterAPITweet[]>{
             //console.log("processTweets", accumulatedTweets.length, timeline.length);
             
             // max_id dance may lead to re-feching one same tweet.
@@ -50,7 +50,8 @@ function getTimelineOverATimePeriod(accessToken: AccessToken){
                 return twitterAPI.getUserTimeline(username, maxId).then(processTweets);
             }
             else{
-                return accumulatedTweets;
+                // Promise.resolve added to calm TypeScript. Union types in TS1.4 might allow removing it
+                return Promise.resolve(accumulatedTweets); 
             }
         });
     }

@@ -10,7 +10,7 @@ interface TwitterAPI_I {
         "Environments where a Tweet ID cannot be represented as an integer with 64 bits of
         precision (such as JavaScript) should skip this step."
     */
-    getUserTimeline : (twittername: string, maxId?:string) => Promise<TwitterAPITweet[]>
+    getUserTimeline : (twittername: string, maxId?: TwitterTweetId) => Promise<TwitterAPITweet[]>
 
     /*
         https://dev.twitter.com/docs/api/1.1/get/search/tweets
@@ -34,7 +34,7 @@ interface TwitterAPIUserTimelineOptions{
     include_rts?: number // 0 or 1
     'trim_user'?: string // 't' or nothing
     screen_name?: string
-    max_id?: string
+    max_id?: TwitterTweetId
 }
 
 
@@ -54,8 +54,8 @@ interface TwitterAPISearchParams{
         until: Date
         filter: string
     }
-    since_id: string
-    max_id: string
+    since_id: TwitterTweetId
+    max_id: TwitterTweetId
     count: number
     result_type: string // 'mixed', 'recent', 'popular'
     lang: string
@@ -64,16 +64,43 @@ interface TwitterAPISearchParams{
 
 
 
+interface TwitterAPIEntities{
+    urls: TwitterAPIEntityDescription[]
+    user_mentions: TwitterAPIEntityDescription[]
+}
+
+interface TwitterAPIEntityDescription{
+    
+}
+
+interface TwitterTweetId extends String{
+    __TwitterTweetId : TwitterTweetId
+}
 
 
 
 interface TwitterAPITweet{
-    id_str : string
+    // id: number // purposefully commented so TypeScript warns about its use, because it shouldn't be used in JS
+    id_str : TwitterTweetId
 
     created_at : string // Date-parseable string
+
+    entities: TwitterAPIEntities
+    user: TwitterAPIUser
+    text: string
+
+    retweeted_status?: TwitterAPITweet
+    retweet_count: number
+    favorite_count: number
+}
+
+interface TwitterUserId{
+    __TwitterUserId: TwitterUserId
 }
 
 interface TwitterAPIUser{
+    id_str: TwitterUserId
     
+    screen_name: string
 }
 

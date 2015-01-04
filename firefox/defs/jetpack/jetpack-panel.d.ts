@@ -2,13 +2,18 @@
 declare module "sdk/panel" {
     import ui = require("sdk/ui");
     import EventTargetModule = require("sdk/event/target");
-    import JetpackPortModule = require("JetpackPort");
     
-    export class Panel extends EventTargetModule.JetpackEventTarget{
+    export class Panel implements JetpackEventTarget{
         constructor(params: PanelParams)
         show: (params: ShowParams) => void
         hide: () => void
-        port: JetpackPortModule.JetpackPort
+        port: JetpackPort
+        
+        // TODO document specific events
+        on(eventName: string, listener:(e:any)=>void) : void
+        once(eventName: string, listener:(e:any)=>void) : void
+        off(eventName: string, listener:(e:any)=>void) : void
+        emit(eventName: string, event:any) : void
     }
     
     export interface PanelParams{

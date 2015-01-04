@@ -5,7 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "compile": "tsc --sourceMap --noImplicitAny -m commonjs -t ES5 firefox/**/*.ts"
+    "compile": "tsc --sourceMap --noImplicitAny -m commonjs -t ES5 firefox/**/*.ts firefox/**/**/*.ts",
+    "build": "browserify firefox/data/metrics-integration/main.ts -p [ tsify --noImplicitAny --sourceMap -t ES5 ] --debug > firefox/data/metrics-integration/twitter-assistant-content.js",
+    "xpi": "cfx xpi --pkgdir firefox",
+    "run": "cfx run --pkgdir firefox"
   },
   "repository": {
     "type": "git",

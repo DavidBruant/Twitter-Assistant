@@ -3,12 +3,17 @@
 
 declare module "sdk/content/worker" {
     
-    import EventTargetModule = require("sdk/event/target");
-    import JetpackPortModule = require("JetpackPort");
-    
-    export class Worker extends EventTargetModule.JetpackEventTarget {
+    //import EventTargetModule = require("sdk/event/target");
+    //import JetpackPortModule = require("JetpackPort");
+     
+    export class Worker implements JetpackEventTarget {
         constructor(options : WorkerOptions)
-        port : JetpackPortModule.JetpackPort
+        port : JetpackPort
+        
+        on(eventName: string, listener:(e:any)=>void) : void
+        once(eventName: string, listener:(e:any)=>void) : void
+        off(eventName: string, listener:(e:any)=>void) : void
+        emit(eventName: string, event:any) : void
     }
     
     export interface WorkerOptions extends WorkerDescription{

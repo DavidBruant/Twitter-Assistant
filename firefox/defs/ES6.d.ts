@@ -1,20 +1,42 @@
-interface Set<T> {
-    values() : Iterator<T>
+/*interface Set<T> {
+    add(value: T): Set<T>;
+    clear(): void;
+    delete(value: T): boolean;
+    entries(): Iterator<[T, T]>;
+    forEach(callbackfn: (value: T, index: T, set: Set<T>) => void, thisArg?: any): void;
+    has(value: T): boolean;
+    keys(): Iterator<T>;
+    //size: number;
+    values(): Iterator<T>;
+    // [Symbol.iterator]():Iterator<T>;
+    // [Symbol.toStringTag]: string;
 }
-    
-/*declare var Set: {
-    new <T>(initArray? : T[]): Set<T>;
-}*/
+
+interface SetConstructor {
+    new <T>(): Set<T>;
+    new <T>(iterable: Iterable<T>): Set<T>;
+    prototype: Set<any>;
+}
+declare var Set: {
+    new <T>(iterable?: Iterable<T>): Set<T>;
+}
+*/
+
+interface IteratorResult<T> {
+    done: boolean;
+    value?: T;
+}
+
+interface Iterator<T> {
+    //[Symbol.iterator](): Iterator<T>;
+    next(): IteratorResult<T>;
+}
+
+interface Iterable<T> {
+  //[Symbol.iterator](): Iterator<T>;
+}
 
 
-interface Iteration<V>{
-    value: V
-    done: boolean
-}
-
-interface Iterator<V>{
-    next(): Iteration<V>
-}
 
 declare function Proxy(target: Object, handler: Object) : void
 
