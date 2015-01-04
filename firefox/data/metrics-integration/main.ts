@@ -41,7 +41,7 @@ twitterAssistantContainerP.catch(err => {
     console.error('twitterAssistantContainerP error', String(err));
 });
 
-var users = new Map();
+var users = new Map<TwitterUserId, TwitterAPIUser>();
 var timeline : TwitterAPITweet[] = [];
 var currentUser : TwitterAPIUser;
 

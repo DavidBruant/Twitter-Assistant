@@ -32,14 +32,6 @@ var twitterProfilePageMod = new PageMod({
     contentScriptFile: [
         data.url("ext/react.js"),
         
-        data.url("metrics-integration/components/Metrics.js"),
-        data.url("metrics-integration/components/TwitterAssistantTopInfo.js"),
-        data.url("metrics-integration/components/Histogram.js"),
-        data.url("metrics-integration/components/DetailList.js"),
-        data.url("metrics-integration/components/TimelineComposition.js"),
-        data.url("metrics-integration/components/GeneratedEngagement.js"),
-        data.url("metrics-integration/components/HumansAreNotMetricsReminder.js"),
-        
         data.url("metrics-integration/twitter-assistant-content.js")
     ],
     contentScriptWhen: "start", // mostly so the 'attach' event happens as soon as possible

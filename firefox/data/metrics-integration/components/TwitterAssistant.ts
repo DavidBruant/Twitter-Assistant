@@ -3,28 +3,28 @@
 
 'use strict';
 
-declare var TwitterAssistantMainInfo : any;
-declare var Histogram : any;
-declare var TimelineComposition : any;
-declare var HumansAreNotMetricsReminder : any;
-declare var TwitterAssistantTopInfo : any;  
-declare var GeneratedEngagement : any;
+import Histogram = require('./Histogram');
+import TimelineComposition = require('./TimelineComposition');
+import TwitterAssistantTopInfo = require('./TwitterAssistantTopInfo');
+import GeneratedEngagement = require('./GeneratedEngagement');
+import HumansAreNotMetricsReminder = require('./HumansAreNotMetricsReminder');
+import TweetMine = require('../TweetMine');
 
 
 var HISTOGRAM_SIZE = 30;
 var ONE_DAY = 24*60*60*1000; // ms
 
-/*interface TwitterAssistantData{
-    tweetMine: TweetMine;
+interface TwitterAssistantProps{
+    tweetMine: any //for now. TODO create TweetMine interface
     users: TwitterAPIUser[];
     askUsers: (userIds: TwitterUserId[]) => void;
-}*/
+}
 
 
 var TwitterAssistant = React.createClass({
     
     render: function(){
-        var data = this.props, // TweetMine instance
+        var data: TwitterAssistantProps = this.props, // TweetMine instance
             state = this.state;
 
         var tweetMine = data.tweetMine,

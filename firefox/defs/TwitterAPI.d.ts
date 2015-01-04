@@ -65,13 +65,27 @@ interface TwitterAPISearchParams{
 
 
 interface TwitterAPIEntities{
-    urls: TwitterAPIEntityDescription[]
-    user_mentions: TwitterAPIEntityDescription[]
+    urls: TwitterAPIURLEntity[]
+    user_mentions: TwitterAPIUserMentionEntity[]
+    media: TwitterAPIMediaEntity[]
 }
 
-interface TwitterAPIEntityDescription{
-    
+interface TwitterAPIUserMentionEntity{
+    id_str: TwitterUserId
+    indices: number[]
 }
+
+interface TwitterAPIURLEntity{
+    url: string
+    expanded_url: string
+    indices: number[]
+}
+
+interface TwitterAPIMediaEntity{
+
+}
+
+
 
 interface TwitterTweetId extends String{
     __TwitterTweetId : TwitterTweetId
@@ -92,6 +106,8 @@ interface TwitterAPITweet{
     retweeted_status?: TwitterAPITweet
     retweet_count: number
     favorite_count: number
+
+    in_reply_to_user_id_str: TwitterUserId
 }
 
 interface TwitterUserId{
@@ -102,5 +118,7 @@ interface TwitterAPIUser{
     id_str: TwitterUserId
     
     screen_name: string
+    name: string
+    profile_image_url_https : string
 }
 

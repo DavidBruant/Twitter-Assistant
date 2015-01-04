@@ -2,6 +2,7 @@
 *.xpi
 *.js.map
 firefox/lib/*.js
+firefox/data/metrics-integration/**.js
 
 node_modules
 
