@@ -45,12 +45,25 @@ Twitter Assistant takes advantage of a Twitter app credentials you create. As su
 # Contributing
 
 * Install the [addon SDK](https://developer.mozilla.org/en-US/Add-ons/SDK/Tutorials/Installation) including [cfx](https://developer.mozilla.org/en-US/Add-ons/SDK/Tools/cfx).
-* 
-
 
 `cfx xpi ; cfx -b /home/david/Logiciel/aurora/firefox run --static-args="{\"browser-toolbox\": true, \"CONSUMER_KEY\":\"<YOUR CONSUMER KEY>\", \"CONSUMER_SECRET\":\"<YOUR CONSUMER SECRET>\"}"`
 
 (sorry for this line. Will explain in more details later, hang tight :-) )
+
+* Install [Node.js](http://nodejs.org/)
+
+```bash
+git clone git@github.com:DavidBruant/Twitter-Assistant.git
+cd Twitter-Assistant
+npm install
+
+npm run compile
+npm run build
+npm run run
+```
+
+compile is to compile everything in TypeScript
+build is to browserify content-side
 
 
 # Acknowledgements
