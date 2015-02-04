@@ -1,26 +1,33 @@
 "use strict";
 
-const ui =  require("sdk/ui");
-const Panel =  require("sdk/panel").Panel;
-const {data} =  require("sdk/self");
-const tabs = require("sdk/tabs");
-const system = require("sdk/system");
-const {setTimeout} = require("sdk/timers");
-const staticArgs = system.staticArgs;
+import ui =  require("sdk/ui");
+import panelModule =  require("sdk/panel");
+import selfModule =  require("sdk/self");
+import tabs = require("sdk/tabs");
+import system = require("sdk/system");
+import timersModule = require("sdk/timers");
 
-const prefs = require('sdk/simple-prefs').prefs;
-const lowLevelPrefs = require('sdk/preferences/service');
-const storage = require("sdk/simple-storage").storage;
+import prefModule = require('sdk/simple-prefs');
+import lowLevelPrefs = require('sdk/preferences/service');
+import storageModule = require("sdk/simple-storage");
 
-const getAccessToken = require('./getAccessToken.js');
-const createTwitterApp = require('./createTwitterApp.js');
-const retriveDevTwitterUserCredentials = require('./retrieveDevTwitterUserCredentials.js');
-const guessTwitterHandle = require('./guessTwitterHandle.js');
-const getReadyForTwitterProfilePages = require('./getReadyForTwitterProfilePages.js')
+import getAccessToken = require('./getAccessToken');
+import createTwitterApp = require('./createTwitterApp');
+import guessTwitterHandle = require('./guessTwitterHandle');
+import getReadyForTwitterProfilePages = require('./getReadyForTwitterProfilePages')
 
 
-const TWITTER_MAIN_PAGE = "https://twitter.com";
-const TWITTER_USER_PAGES = [
+var Panel = panelModule.Panel;
+var data = selfModule.data;
+var setTimeout = timersModule.setTimeout;
+var staticArgs = system.staticArgs;
+var prefs = prefModule.prefs;
+var storage = storageModule.storage;
+    
+    
+
+var TWITTER_MAIN_PAGE = "https://twitter.com";
+var TWITTER_USER_PAGES = [
     "https://twitter.com/DavidBruant"/*,
     "https://twitter.com/rauschma",
     "https://twitter.com/nitot",
@@ -31,7 +38,7 @@ const TWITTER_USER_PAGES = [
 // throw 'add "if you are already logged in click here"';
 
 
-exports.main = function(){
+export var main = function(){
     
     /*
         SETUP
@@ -51,21 +58,20 @@ exports.main = function(){
         ACTUAL MAIN
     */
     
-    let storedTwitterAPICredentials = storage.credentials ? JSON.parse(storage.credentials) : {};
+    var storedTwitterAPICredentials = storage.credentials ? JSON.parse(storage.credentials) : {};
     
     // use the values passed as static args in priority;
-    let key = staticArgs['CONSUMER_KEY'] || storedTwitterAPICredentials.key;
-    let secret = staticArgs['CONSUMER_SECRET'] || storedTwitterAPICredentials.secret;
+    var key = staticArgs['CONSUMER_KEY'] || storedTwitterAPICredentials.key;
+    var secret = staticArgs['CONSUMER_SECRET'] || storedTwitterAPICredentials.secret;
 
     if(staticArgs['CONSUMER_KEY'] && staticArgs['CONSUMER_SECRET']){
         setTimeout(function(){
-            for(let url of TWITTER_USER_PAGES)
-                tabs.open(url);
+            TWITTER_USER_PAGES.forEach(url => tabs.open(url));
         }, 3*1000);
     }
     
     // button
-    const twitterAssistantButton = ui.ActionButton({
+    var twitterAssistantButton = new ui.ActionButton({
         id: "twitter-assistant-credentials-panel-button",
         label: "Twitter Assistant panel",
         icon: data.url('images/Twitter_logo_blue.png'),
@@ -75,7 +81,7 @@ exports.main = function(){
     });
     
     // credentials panel
-    const credentialsPanel = Panel({
+    var credentialsPanel = new Panel({
         width: 650,
         height: 400, 
         contentURL: data.url('panel/mainPanel.html')

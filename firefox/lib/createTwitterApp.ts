@@ -2,35 +2,38 @@
 
 // TODO replace with https://developer.mozilla.org/en-US/Add-ons/SDK/High-Level_APIs/page-worker#contentURL
 // or https://developer.mozilla.org/en-US/Add-ons/SDK/Low-Level_APIs/frame_hidden-frame
-const tabs = require("sdk/tabs");
-const {setTimeout} = require("sdk/timers");
-const data =  require("sdk/self").data;
+import tabs = require("sdk/tabs");
+import timersModule = require("sdk/timers");
+import selfModule =  require("sdk/self");
+
+var setTimeout = timersModule.setTimeout;
+var data = selfModule.data;
 
 // this page does HTTP 302 to the destination URL if the user is already logged in
-const TWITTER_APP_LOGIN_PAGE = "https://twitter.com/login?redirect_after_login=https%3A//apps.twitter.com/app/new";
+var TWITTER_APP_LOGIN_PAGE = "https://twitter.com/login?redirect_after_login=https%3A//apps.twitter.com/app/new";
 
-const TWITTER_ASSISTANT_APP_NAME_PREFIX = 'TAssistant';
-const TWITTER_APP_NAME_MAX_LENGTH = 32;
+var TWITTER_ASSISTANT_APP_NAME_PREFIX = 'TAssistant';
+var TWITTER_APP_NAME_MAX_LENGTH = 32;
 
-function randomString(length){
+function randomString(length = 30){
     var chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
     
-    return Array(length).fill()
+    return Array(length).fill(undefined)
         .map(() => chars[ Math.floor(chars.length*Math.random()) ])
         .join('');
 }
 
 
-module.exports = function(username){
+function createTwitterApp(username: string){
     
-    const tabP = new Promise((resolve, reject) => {
+    var tabP = new Promise<tabs.SdkTab>((resolve, reject) => {
         tabs.once('open', resolve); // this looks racy. What if a tab opens before mine?
         tabs.open( TWITTER_APP_LOGIN_PAGE ); 
     });
     
     return tabP.then(tab => {
         
-        var loggedinP = new Promise((resolve, reject) => {
+        var loggedinP = new Promise<tabs.SdkTab>((resolve, reject) => {
             tab.once('ready', () => {
                 resolve(tab);
             })
@@ -54,7 +57,7 @@ module.exports = function(username){
                 }
             });
             
-            return new Promise((resolve, reject) => {
+            return new Promise<tabs.SdkTab>((resolve, reject) => {
                 worker.once('detach', () => {
                     tab.once('ready', () => {
 
@@ -75,7 +78,7 @@ module.exports = function(username){
         });
 
         var twitterAppAPICredentialsP = appCreatedP.then(tab => {
-            return new Promise((resolve, reject) => {
+            return new Promise<OAuthCredentials>((resolve, reject) => {
                 tab.once('ready', () => {
                     var worker = tab.attach({
                         contentScriptFile: data.url('createTwitterApp/collectTwitterAppAPICredentials.js')
@@ -105,7 +108,8 @@ module.exports = function(username){
         return twitterAppAPICredentialsP;
     });
     
+}
 
-    
-};
+
+export = createTwitterApp;
 

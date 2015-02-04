@@ -1,17 +1,19 @@
 'use strict';
 
-const Request = require("sdk/request").Request;
+import RequestModule = require("sdk/request");
 
-const getAccessToken = require('./getAccessToken.js');
-const makeSearchString = require('./makeSearchString.js');
+import getAccessToken = require('./getAccessToken');
+import makeSearchString = require('./makeSearchString');
+
+var Request = RequestModule.Request;
 
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign#Polyfill
-if (!Object.assign) {
-    Object.defineProperty(Object, "assign", {
+if (!(<any>Object).assign) {
+    Object.defineProperty((<any>Object), "assign", {
         enumerable: false,
         configurable: true,
         writable: true,
-        value: function(target, firstSource) {
+        value: function(target:any, firstSource:any) {
             if (target == null) {
                 throw new TypeError("can't convert " + target + " to object");
             }
@@ -36,30 +38,30 @@ if (!Object.assign) {
     });
 }
 
-const str = Function.prototype.call.bind( Object.prototype.toString );
+var str = Function.prototype.call.bind( Object.prototype.toString );
 
-function stringifyTwitterSearchQuery(obj){
-    const queryParts = [];
+function stringifyTwitterSearchQuery(obj: any){
+    var queryParts: string[] = [];
     
     if(obj.text)
         queryParts.push(obj.text);
     
-    for(let k of Object.keys(obj)){
+    Object.keys(obj).forEach(k => {
         if(k === 'text')
             return;
         
-        let val = obj[k];
+        var val = obj[k];
         
         if(str(val) === str(new Date()))
             val = val.toISOString().slice(0, 10); // keep only "2014-08-30"
 
         queryParts.push(k + ':' + val); // don't urlencode. It'll be done by makeSearchString 
-    };
+    });
 
     return queryParts.join('+');
 }
 
-module.exports = function TwitterAPI(accessToken){
+function TwitterAPI(accessToken: AccessToken) : TwitterAPI_I{
     return {
         /*
             maxId: the caller needs to substract 1
@@ -68,9 +70,9 @@ module.exports = function TwitterAPI(accessToken){
             "Environments where a Tweet ID cannot be represented as an integer with 64 bits of
             precision (such as JavaScript) should skip this step."
         */
-        getUserTimeline : function getUserTimeline(twittername, maxId){
+        getUserTimeline : function getUserTimeline(twittername: string, maxId?:TwitterTweetId){
 
-            const searchObj = {
+            var searchObj: TwitterAPIUserTimelineOptions = {
                 count: 200,
                 include_rts: 1,
                 // 'trim_user': 't' // https://github.com/DavidBruant/Twitter-Assistant/issues/52
@@ -81,10 +83,10 @@ module.exports = function TwitterAPI(accessToken){
                 searchObj['max_id'] = maxId;
             }
 
-            const searchString = makeSearchString(searchObj);
+            var searchString = makeSearchString(searchObj);
 
             return new Promise((resolve, reject) => {
-                const reqStart = Date.now();
+                var reqStart = Date.now();
 
                 Request({
                     url: 'https://api.twitter.com/1.1/statuses/user_timeline.json?'+searchString,
@@ -128,9 +130,9 @@ module.exports = function TwitterAPI(accessToken){
             }
         */
         search: function(parameters){
-            const q = stringifyTwitterSearchQuery(parameters.q);
+            var q = stringifyTwitterSearchQuery(parameters.q);
 
-            const searchString = makeSearchString(Object.assign(
+            var searchString = makeSearchString((<any>Object).assign(
                 {},
                 { // defaults
                     count: 100,
@@ -143,7 +145,7 @@ module.exports = function TwitterAPI(accessToken){
             console.log("searchString", searchString)
             
             return new Promise((resolve, reject) => {
-                const reqStart = Date.now();
+                var reqStart = Date.now();
                 
                 Request({
                     url: 'https://api.twitter.com/1.1/search/tweets.json?'+searchString,
@@ -165,8 +167,11 @@ module.exports = function TwitterAPI(accessToken){
             })
         },
         
-        lookupUsers: function(user_ids = [], screen_names = []){
-            const searchObj = {
+        lookupUsers: function(user_ids: string[], screen_names?: string[]){
+            if(!user_ids) user_ids = [];
+            if(!screen_names) screen_names = [];
+            
+            var searchObj = {
                 user_id: user_ids.length > 0 ?
                     user_ids.map(id => String(id)).join(',') :
                     undefined,
@@ -176,10 +181,10 @@ module.exports = function TwitterAPI(accessToken){
                 include_entities : false
             };
 
-            const searchString = makeSearchString(searchObj);
+            var searchString = makeSearchString(searchObj);
             
             return new Promise((resolve, reject) => {
-                const reqStart = Date.now();
+                var reqStart = Date.now();
 
                 Request({
                     url: 'https://api.twitter.com/1.1/users/lookup.json?'+searchString,
@@ -201,4 +206,6 @@ module.exports = function TwitterAPI(accessToken){
             });
         }
     };
-};
+}
+
+export = TwitterAPI;

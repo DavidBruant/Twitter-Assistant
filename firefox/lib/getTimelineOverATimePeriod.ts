@@ -1,19 +1,30 @@
 'use strict';
 
-const TwitterAPI = require('./TwitterAPI.js');
+import TwitterAPI = require('./TwitterAPI');
 
-module.exports = function(accessToken){
-    const twitterAPI = TwitterAPI(accessToken);
+interface getTimelineOverATimePeriodQuery{
+    username:string
+    timestampFrom: number // timestamp
+    timestampTo?: number // timestamp
+}
+
+function getTimelineOverATimePeriod(accessToken: AccessToken){
+    var twitterAPI = TwitterAPI(accessToken);
     
     // should be one of these Stream+Promise hybrid when that's ready
-    return function({username, timestampFrom, timestampTo}, progress){
-        timestampTo = timestampTo || (new Date()).getTime()
-        let accumulatedTweets = [];
+    return function(query: getTimelineOverATimePeriodQuery, progress : (tweets : TwitterAPITweet[]) => void){
+        var username = query.username,
+            timestampFrom = query.timestampFrom, 
+            timestampTo = query.timestampTo;
         
-        function accumulateTweets(timeline){
+        
+        timestampTo = timestampTo || (new Date()).getTime()
+        var accumulatedTweets : TwitterAPITweet[] = [];
+        
+        function accumulateTweets(timeline: TwitterAPITweet[]){
             // remove from timeline tweets that wouldn't be in the range
-            const toAccumulate = timeline = timeline.filter(tweet => {
-                const createdTimestamp = (new Date(tweet.created_at)).getTime();
+            var toAccumulate = timeline = timeline.filter(tweet => {
+                var createdTimestamp = (new Date(tweet.created_at)).getTime();
                 return createdTimestamp >= timestampFrom && createdTimestamp <= timestampTo;
             });
             
@@ -22,7 +33,7 @@ module.exports = function(accessToken){
             return toAccumulate;
         }
         
-        return twitterAPI.getUserTimeline(username).then(function processTweets(timeline){
+        return twitterAPI.getUserTimeline(username).then(function processTweets(timeline: TwitterAPITweet[]) : Promise<TwitterAPITweet[]>{
             //console.log("processTweets", accumulatedTweets.length, timeline.length);
             
             // max_id dance may lead to re-feching one same tweet.
@@ -39,8 +50,11 @@ module.exports = function(accessToken){
                 return twitterAPI.getUserTimeline(username, maxId).then(processTweets);
             }
             else{
-                return accumulatedTweets;
+                // Promise.resolve added to calm TypeScript. Union types in TS1.4 might allow removing it
+                return Promise.resolve(accumulatedTweets); 
             }
         });
     }
-};
+}
+
+export = getTimelineOverATimePeriod;

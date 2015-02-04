@@ -1,3 +1,10 @@
 *.data
+*.xpi
+*.js.map
+firefox/lib/*.js
+firefox/data/metrics-integration/**.js
+twitter-assistant-content.js
+
+node_modules
 
 notes.md
