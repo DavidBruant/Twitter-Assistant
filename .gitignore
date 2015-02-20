@@ -3,6 +3,7 @@
 *.js.map
 firefox/lib/*.js
 firefox/data/metrics-integration/**.js
+firefox/data/metrics-integration/components/*.js
 twitter-assistant-content.js
 
 node_modules

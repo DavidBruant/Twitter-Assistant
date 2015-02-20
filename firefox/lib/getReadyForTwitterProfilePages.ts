@@ -40,7 +40,7 @@ var twitterProfilePageMod = new PageMod({
 });
 
 twitterProfilePageMod.on('attach', function onAttach(worker){
-    var matches = worker.url.match(/^https?:\/\/twitter\.com\/([^\/]+)\/?$/);
+    var matches = worker.url.match(/^https?:\/\/twitter\.com\/([^\/\?]+)[\/\?]?/);
 
     if(!Array.isArray(matches) || matches.length < 2)
         return;
