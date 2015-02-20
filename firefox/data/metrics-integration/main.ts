@@ -76,8 +76,8 @@ self.port.on('current-user-details', currentUserDetails => {
     updateTwitterAssistant();
 });
 
-self.port.on('twitter-user-data', _timeline => {
-    timeline = _timeline;
+self.port.on('twitter-user-data', partialTimeline => {
+    timeline = timeline.concat(partialTimeline);
 
     updateTwitterAssistant();
 });

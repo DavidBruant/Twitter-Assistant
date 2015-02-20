@@ -80,14 +80,14 @@ twitterProfilePageMod.on('attach', function onAttach(worker){
             timestampFrom: (new Date()).getTime() - ONE_DAY*40
         }, sendTimelineToContent);
         
-        timelineComplete.then(sendTimelineToContent).catch( err => {
+        timelineComplete.catch( err => {
             // TODO consider invalidating lastAccessToken here
             console.error('error while getting the user timeline', user, err);
         });
     }
     
-    function sendTimelineToContent(timeline: TwitterAPITweet[]){
-        worker.port.emit('twitter-user-data', timeline);
+    function sendTimelineToContent(partialTimeline: TwitterAPITweet[]){
+        worker.port.emit('twitter-user-data', partialTimeline);
     }
     
     worker.port.on('ask-users', (userIds: string[]) => {
