@@ -70,13 +70,22 @@ build is to browserify content-side
 
 # Acknowledgements
 
-Thanks to @clochix, @davidbk, @oncletom and a couple of others for the inspiration to make this addon an emancipating purely client-side piece of software.
+Thanks to [@clochix](https://twitter.com/clochix), [@davidbgk](https://twitter.com/davidbgk/), [@oncletom](https://twitter.com/oncletom) and a couple of others for the inspiration to make this addon an emancipating purely client-side piece of software.
 
-Thanks to @glovesmore for learning HTML/CSS/JS :-)
+Thanks to [@glovesmore](https://twitter.com/glovesmore) for learning HTML/CSS/JS :-)
 
-Thanks to @pascalc, @guillaumemasson, Yannick Gaultier and all of those who contributed ideas, thoughts, shared feedback about this addon
+Thanks to [@Twikito](https://twitter.com/Twikito) for the amazing visuals, UI and UX work I wouldn't have been able to do.
 
-Thanks to @amarlakel for making me understand that there is more to social networks than what we do with them.
+Thanks to [@pascalc](https://twitter.com/pascalchevrel), [@guillaumemasson](https://twitter.com/guillaumemasson), **Yannick Gaultier** and all of those who contributed ideas, thoughts, shared feedback about this addon
+
+Thanks to [@amarlakel](https://twitter.com/amarlakel) for making me understand that there is more to social networks than what we do with them.
+
+Thanks to the [Région Aquitaine](http://aquitaine.fr/) for [awarding a 10.000€ grant](http://numerique.aquitaine.fr/Laureats-de-l-appel-a-projets-2014) to support the project at the occasion of the "appel à projet « Usages innovants des données numériques : partage, exploitation et valorisation »".
+
+![Aquitaine Région logo](http://www.aquitaine.fr/var/ezdemo_site/storage/images/media/images/region/logo-couleurs-jpg/46638-1-fre-FR/logo-couleurs-jpg_large.jpg).
+
+This grant is being shared among David Bruant (5000€) and Matthieu Bué (5000€) to get the project to a robust, easy-to-use, well-designed and featurefull 1.0 version.
+
 
 # Licence
 
