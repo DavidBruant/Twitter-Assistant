@@ -7,37 +7,6 @@ import makeSearchString = require('./makeSearchString');
 
 var Request = RequestModule.Request;
 
-// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign#Polyfill
-if (!(<any>Object).assign) {
-    Object.defineProperty((<any>Object), "assign", {
-        enumerable: false,
-        configurable: true,
-        writable: true,
-        value: function(target:any, firstSource:any) {
-            if (target == null) {
-                throw new TypeError("can't convert " + target + " to object");
-            }
-            var to = Object(target);
-            if (arguments.length === 1) return to;
-            var i = 1;
-            do {
-                var nextSource = arguments[i];
-                if (nextSource === null || nextSource === undefined) continue;
-                var from = Object(nextSource);
-                var keysArray = Object.keys(from);
-                var len = keysArray.length;
-                var nextIndex = 0;
-                while (nextIndex < len) {
-                    var nextKey = keysArray[nextIndex];
-                    to[nextKey] = from[nextKey];
-                    nextIndex++;
-                }
-            } while (++i < arguments.length);
-            return to;
-        }
-    });
-}
-
 var str = Function.prototype.call.bind( Object.prototype.toString );
 
 function stringifyTwitterSearchQuery(obj: any){
