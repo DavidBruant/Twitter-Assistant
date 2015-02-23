@@ -96,13 +96,15 @@ twitterProfilePageMod.on('attach', function onAttach(worker){
         });
     });
     
-    
 });
 
 function getReady(twitterAPICredentials: OAuthCredentials){
     // save credentials for later in case we're not connected yet 
     lastTwitterAPICredentials = twitterAPICredentials;
     lastAccessToken = undefined; // forget previous token since it's likely not in sync with the new API credentials
+    
+    throw 'TODO add addonUsername parameter. When the token is here, do a userLookup to get its id, then get its full friend list';
+    // the friend list will then be used to compute how much tweet would a person add to the addon user timeline
     
     return getAccessToken(twitterAPICredentials.key, twitterAPICredentials.secret)
         .then(accessToken => {

@@ -1,10 +1,16 @@
 "use strict";
 
 /*
- @arg tweets : as received by the homeline API
- username : currently viewed user (screen_name)
+ @args 
+    tweets : as received by the homeline API
+    visitedUsername : currently viewed user (screen_name)
 */
-function TweetMine(tweets: TwitterAPITweet[], username: string){
+function TweetMine(
+    tweets: TwitterAPITweet[], 
+    visitedUsername: string /*should be TwitterUserId*/, 
+    addonUser: TwitterUserId, 
+    addonUserFriendIds: Set<TwitterUserId>
+    ){
     return {
         // from and to are UNIX timestamps (number of ms since Jan 1st 1970)
         byDateRange: function(from: number, to: number){
@@ -41,7 +47,7 @@ function TweetMine(tweets: TwitterAPITweet[], username: string){
         
         getConversations: function(){
             return tweets.filter(tweet => {
-                return tweet.user.screen_name === username &&
+                return tweet.user.screen_name === visitedUsername &&
                     !tweet.retweeted_status &&
                     tweet.text.startsWith('@') &&
                     // if a user recently changed of screen_name, a tweet may start with @, but not
@@ -79,6 +85,18 @@ function TweetMine(tweets: TwitterAPITweet[], username: string){
             return this.getOwnTweets()
                 .map((tweet : TwitterAPITweet) => tweet.favorite_count)
                 .reduce((acc: number, favCount: number) => {return acc + favCount}, 0);
+        },
+        
+        getTweetsThatWouldBeSeenIfAddonUserFollowedVisitedUser: function(){
+            /*
+                User U is looking at user V.
+                When U follows V, U sees a tweet T from V if:
+
+                    T is a RT of W
+                        unless U already follows W
+                    T is written by V
+                        unless T is a conversation with someone not followed by U
+            */
         },
         
         get length(){

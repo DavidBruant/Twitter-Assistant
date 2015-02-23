@@ -136,21 +136,40 @@ function TwitterAPI(accessToken: AccessToken) : TwitterAPI_I{
             })
         },
         
-        lookupUsers: function(user_ids: string[], screen_names?: string[]){
-            if(!user_ids) user_ids = [];
-            if(!screen_names) screen_names = [];
-            
-            var searchObj = {
-                user_id: user_ids.length > 0 ?
-                    user_ids.map(id => String(id)).join(',') :
-                    undefined,
-                screen_name: screen_names.length > 0 ?
-                    screen_names.map(id => String(id)).join(',') :
-                    undefined,
+        lookupUsersByIds: function(user_ids: TwitterUserId[]){
+            var searchString = makeSearchString({
+                user_id: user_ids.join(','),
                 include_entities : false
-            };
+            });
+            
+            return new Promise((resolve, reject) => {
+                var reqStart = Date.now();
 
-            var searchString = makeSearchString(searchObj);
+                Request({
+                    url: 'https://api.twitter.com/1.1/users/lookup.json?'+searchString,
+                    headers: {
+                        'Authorization': 'Bearer '+accessToken
+                    },
+                    onComplete: function (response) {
+                        console.log(
+                            '/1.1/users/lookup.json status',
+                            response.status, 
+                            ((Date.now() - reqStart)/1000).toFixed(1)+'s'
+                        );
+
+                        resolve(response.json);
+                    },
+                    onError: reject
+                }).get();
+
+            });
+        },
+        
+        lookupUsersByScreenNames: function(screen_names: string[]){
+            var searchString = makeSearchString({
+                screen_name: screen_names.join(','),
+                include_entities : false
+            });
             
             return new Promise((resolve, reject) => {
                 var reqStart = Date.now();
@@ -174,6 +193,7 @@ function TwitterAPI(accessToken: AccessToken) : TwitterAPI_I{
 
             });
         }
+    
     };
 }
 
