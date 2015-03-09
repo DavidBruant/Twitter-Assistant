@@ -2,6 +2,17 @@
 
 import Metrics = require('./Metrics');
 
+// debugging function
+function iterableToArray(it: any): any[]{
+    var e = it.next();
+    var a : any[] = [];
+    
+    while(!e.done){ a.push(e.value) }
+    
+    return a;
+}
+
+
 function getDomain(url: string){
     var a = document.createElement('a');
     a.href = url;
@@ -25,7 +36,7 @@ interface UserCountEntry{
     user: TwitterAPIUser
 }
 
-function makeRetweetDetails(retweets: TwitterAPITweet[]){
+function makeRetweetDetails(retweets: TwitterAPITweet[], users: Map<TwitterUserId, TwitterAPIUser>){
     var originalTweets = retweets.map(getOriginalTweet);
     var originalTweetsByAuthor = new Map<TwitterUserId, UserCountEntry>();
     originalTweets.forEach( t => {
@@ -34,7 +45,7 @@ function makeRetweetDetails(retweets: TwitterAPITweet[]){
         if(!originalTweetsByAuthor.has(userId)){
             originalTweetsByAuthor.set(userId, {
                 count: 0,
-                user: t.user
+                user: users.get(userId)
             });
         }
 
@@ -53,9 +64,9 @@ function makeRetweetDetails(retweets: TwitterAPITweet[]){
         
         return {
             amount: count,
-            text: user.name,
-            url: "https://twitter.com/"+user.screen_name,
-            image: user.profile_image_url_https
+            text: user && user.name,
+            url: user && ("https://twitter.com/"+user.screen_name),
+            image: user && user.profile_image_url_https
         }
     });
 }
@@ -194,6 +205,8 @@ var TimelineComposition = React.createClass({
         var tweetMine = data.tweetMine,
             users = data.users, 
             askMissingUsers = data.askMissingUsers;
+        
+        // console.log('TimelineComposition props users', iterableToArray(users.keys()));
 
         var writtenTweets : TwitterAPITweet[] = tweetMine.getNonRetweetNonConversationTweets();
 
@@ -237,6 +250,8 @@ var TimelineComposition = React.createClass({
         if(missingUsers){
             askMissingUsers(missingUsers);
         }
+        
+        throw 'Call askMissingUsers for missing users of retweets';
 
         return React.DOM.div( {}, [
             Metrics({
@@ -244,7 +259,7 @@ var TimelineComposition = React.createClass({
                     class: 'retweets',
                     title: "Retweets",
                     percent: rtPercent,
-                    details: makeRetweetDetails(retweets)
+                    details: makeRetweetDetails(retweets, users)
                 }, {
                     class: 'conversations',
                     title: "Conversations",

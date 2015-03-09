@@ -43,17 +43,29 @@ twitterAssistantContainerP.catch(err => {
 
 var users = new Map<TwitterUserId, TwitterAPIUser>();
 var timeline : TwitterAPITweet[] = [];
-var currentUser : TwitterAPIUser;
+var visitedUser : TwitterAPIUser;
+var addonUserAndFriends : {
+    user: TwitterAPIUser
+    friendIds: Set<TwitterUserId>
+};
 
 function updateTwitterAssistant(){
     return twitterAssistantContainerP.then(twitterAssistantContainer => {
         React.renderComponent(TwitterAssistant({
+            /*
+                tweets: TwitterAPITweet[], 
+                visitedUserId: TwitterUserId, 
+                addonUserId: TwitterUserId, 
+                addonUserFriendIds: Set<TwitterUserId>
+            */
             tweetMine: TweetMine(
                 timeline,
-                currentUser ? currentUser.screen_name : ''
+                visitedUser ? visitedUser.id_str : undefined,
+                addonUserAndFriends ? addonUserAndFriends.user.id_str : undefined,
+                addonUserAndFriends ? addonUserAndFriends.friendIds : undefined
             ),
             users: users,
-            currentUser: currentUser,
+            visitedUser: visitedUser,
             askUsers: function askUsers(userIds : TwitterUserId[]){
                 self.port.emit('ask-users', userIds);
             }
@@ -70,8 +82,17 @@ self.port.on('answer-users', (receivedUsers: TwitterAPIUser[]) => {
     updateTwitterAssistant();
 });
 
-self.port.on('current-user-details', currentUserDetails => {
-    currentUser = currentUserDetails;
+self.port.on('visited-user-details', u => {
+    visitedUser = u;
+
+    updateTwitterAssistant();
+});
+
+self.port.on('addon-user-and-friends', _addonUserAndFriends => {
+    addonUserAndFriends = {
+        user: _addonUserAndFriends.user,
+        friendIds: new (<any>Set)(_addonUserAndFriends.friendIds)
+    }
 
     updateTwitterAssistant();
 });

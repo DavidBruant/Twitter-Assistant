@@ -26,6 +26,12 @@ interface TwitterAPI_I {
     */
     lookupUsersByIds: (user_ids: TwitterUserId[]) => Promise<TwitterAPIUser[]>
     lookupUsersByScreenNames: (screen_names: string[]) => Promise<TwitterAPIUser[]>
+    
+    /*
+        https://dev.twitter.com/rest/reference/get/friends/ids
+        endpoint : https://api.twitter.com/1.1/friends/ids.json
+    */
+    getFriends: (id: TwitterUserId) => Promise<{ids: TwitterUserId[]}>
 }
 
 

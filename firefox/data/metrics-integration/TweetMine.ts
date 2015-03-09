@@ -7,7 +7,7 @@
 */
 function TweetMine(
     tweets: TwitterAPITweet[], 
-    visitedUsername: string /*should be TwitterUserId*/, 
+    visitedUserId: TwitterUserId, 
     addonUser: TwitterUserId, 
     addonUserFriendIds: Set<TwitterUserId>
     ){
@@ -47,7 +47,7 @@ function TweetMine(
         
         getConversations: function(){
             return tweets.filter(tweet => {
-                return tweet.user.screen_name === visitedUsername &&
+                return tweet.user.id_str === visitedUserId &&
                     !tweet.retweeted_status &&
                     tweet.text.startsWith('@') &&
                     // if a user recently changed of screen_name, a tweet may start with @, but not

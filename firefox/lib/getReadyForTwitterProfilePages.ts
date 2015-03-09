@@ -13,14 +13,25 @@ import selfModule =  require("sdk/self");
 import getAccessToken = require('./getAccessToken');
 import getTimelineOverATimePeriod = require('./getTimelineOverATimePeriod'); 
 import TwitterAPI = require('./TwitterAPI');
+import guessAddonUserTwitterName = require('./guessAddonUserTwitterName');
+import getAddonUserInfoAndFriends = require('./getAddonUserInfoAndFriends');
 
 var PageMod = pagemodModule.PageMod;
 var data = selfModule.data;
 
 var ONE_DAY = 24*60*60*1000;
 
+
 var lastTwitterAPICredentials : OAuthCredentials;
 var lastAccessToken : AccessToken;
+
+var twitterAPI : TwitterAPI_I;
+
+var addonUsername : string;
+var addonUserAndFriendsP : Promise<{
+    user: TwitterAPIUser
+    friendIds: TwitterUserId[]
+}>;
 
 
 // create the pageMod inconditionally
@@ -44,24 +55,20 @@ twitterProfilePageMod.on('attach', function onAttach(worker){
 
     if(!Array.isArray(matches) || matches.length < 2)
         return;
-    var user : string = matches[1];
+    var visitedUser : string = matches[1];
     
     // now, variable user contains a screen_name
     //console.log('user', user);
     
-    var twitterAPI = TwitterAPI(lastAccessToken);
     
-    twitterAPI.lookupUsers([], [user]).then(users => {
-        worker.port.emit('current-user-details', users[0]);
+    twitterAPI.lookupUsersByScreenNames([visitedUser]).then(users => {
+        worker.port.emit('visited-user-details', users[0]);
     });
     
-    /*twitterAPI.search({
-        q: {
-            '@': user
-        }
-    })
-    .then(tweets => console.log("tweets to user", user, tweets))
-    .catch(e => console.error(e))*/
+    getAddonUserInfoAndFriends(twitterAPI).then(function(result){
+        worker.port.emit('addon-user-and-friends', result);
+    });
+    
     
     if(!lastAccessToken){
         getAccessToken(lastTwitterAPICredentials.key, lastTwitterAPICredentials.secret)
@@ -76,13 +83,13 @@ twitterProfilePageMod.on('attach', function onAttach(worker){
     else{
         var getTimelineWithProgress = getTimelineOverATimePeriod(lastAccessToken);
         var timelineComplete = getTimelineWithProgress({
-            username: user,
+            username: visitedUser,
             timestampFrom: (new Date()).getTime() - ONE_DAY*40
         }, sendTimelineToContent);
         
         timelineComplete.catch( err => {
             // TODO consider invalidating lastAccessToken here
-            console.error('error while getting the user timeline', user, err);
+            console.error('error while getting the user timeline', visitedUser, err);
         });
     }
     
@@ -90,27 +97,34 @@ twitterProfilePageMod.on('attach', function onAttach(worker){
         worker.port.emit('twitter-user-data', partialTimeline);
     }
     
-    worker.port.on('ask-users', (userIds: string[]) => {
-        twitterAPI.lookupUsers(userIds).then(users => {
+    worker.port.on('ask-users', (userIds: TwitterUserId[]) => {
+        twitterAPI.lookupUsersByIds(userIds).then(users => {
             worker.port.emit('answer-users', users)
         });
     });
     
 });
 
-function getReady(twitterAPICredentials: OAuthCredentials){
+function getReady(twitterAPICredentials: OAuthCredentials) : Promise<any>{
     // save credentials for later in case we're not connected yet 
     lastTwitterAPICredentials = twitterAPICredentials;
     lastAccessToken = undefined; // forget previous token since it's likely not in sync with the new API credentials
+    addonUserAndFriendsP = undefined;
+    twitterAPI = undefined;
     
-    throw 'TODO add addonUsername parameter. When the token is here, do a userLookup to get its id, then get its full friend list';
-    // the friend list will then be used to compute how much tweet would a person add to the addon user timeline
-    
-    return getAccessToken(twitterAPICredentials.key, twitterAPICredentials.secret)
+    var accessTokenP = getAccessToken(twitterAPICredentials.key, twitterAPICredentials.secret)
         .then(accessToken => {
             lastAccessToken = accessToken;
+            twitterAPI = TwitterAPI(lastAccessToken);
+            return accessToken;
         });
     
+    var addonUsernameP = guessAddonUserTwitterName().then(username => {
+        addonUsername = username;
+    });
+    
+    // <any> so TS shut up
+    return (<any>Promise).all([accessTokenP, addonUsernameP]);
 }
 
 export = getReady;

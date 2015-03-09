@@ -97,6 +97,15 @@ function TwitterAPI(accessToken: AccessToken) : TwitterAPI_I{
                 lang: string,
                 geocode: string
             }
+            
+                
+            twitterAPI.search({
+                q: {
+                    '@': user
+                }
+            })
+            .then(tweets => console.log("tweets to user", user, tweets))
+            .catch(e => console.error(e))
         */
         search: function(parameters){
             var q = stringifyTwitterSearchQuery(parameters.q);
@@ -153,6 +162,7 @@ function TwitterAPI(accessToken: AccessToken) : TwitterAPI_I{
                     onComplete: function (response) {
                         console.log(
                             '/1.1/users/lookup.json status',
+                            user_ids,
                             response.status, 
                             ((Date.now() - reqStart)/1000).toFixed(1)+'s'
                         );
@@ -182,6 +192,37 @@ function TwitterAPI(accessToken: AccessToken) : TwitterAPI_I{
                     onComplete: function (response) {
                         console.log(
                             '/1.1/users/lookup.json status',
+                            screen_names,
+                            response.status, 
+                            ((Date.now() - reqStart)/1000).toFixed(1)+'s'
+                        );
+
+                        resolve(response.json);
+                    },
+                    onError: reject
+                }).get();
+
+            });
+        },
+        
+        getFriends: function(user_id: TwitterUserId){
+            var searchString = makeSearchString({
+                user_id: user_id,
+                stringify_ids : true,
+                count: 5000
+            });
+            
+            return new Promise((resolve, reject) => {
+                var reqStart = Date.now();
+
+                Request({
+                    url: 'https://api.twitter.com/1.1/friends/ids.json?'+searchString,
+                    headers: {
+                        'Authorization': 'Bearer '+accessToken
+                    },
+                    onComplete: function (response) {
+                        console.log(
+                            '/1.1/friends/ids.json status',
                             response.status, 
                             ((Date.now() - reqStart)/1000).toFixed(1)+'s'
                         );

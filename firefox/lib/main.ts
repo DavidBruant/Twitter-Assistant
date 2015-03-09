@@ -11,7 +11,7 @@ import lowLevelPrefs = require('sdk/preferences/service');
 import storageModule = require("sdk/simple-storage");
 
 import getAccessToken = require('./getAccessToken');
-import guessTwitterHandle = require('./guessTwitterHandle');
+import guessAddonUserTwitterName = require('./guessAddonUserTwitterName');
 import getReadyForTwitterProfilePages = require('./getReadyForTwitterProfilePages');
 import makeCredentialsPanel = require('./makeCredentialsPanel');
 
@@ -35,7 +35,7 @@ var TWITTER_USER_PAGES = [
     // https://twitter.com/BuzzFeed // for an account with LOTS of tweets
 ];
 
-// throw 'add "if you are already logged in click here"';
+throw 'Apparently retweet details are broken + Need to test whether addon user infos are properly fetched, then propagated to the tweetMine to compute the number nia nia nia + Make sure the "no logged in addon user" case is taken care of + add trim_user everywhere';
 
 
 export var main = function(){
@@ -65,7 +65,7 @@ export var main = function(){
     var secret = staticArgs['CONSUMER_SECRET'] || storedTwitterAPICredentials.secret;
 
     if(staticArgs['CONSUMER_KEY'] && staticArgs['CONSUMER_SECRET']){
-        setTimeout(function(){
+        setTimeout(() => { 
             TWITTER_USER_PAGES.forEach(url => tabs.open(url));
         }, 3*1000);
     }
@@ -77,7 +77,7 @@ export var main = function(){
         id: "twitter-assistant-credentials-panel-button",
         label: "Twitter Assistant panel",
         icon: data.url('images/Twitter_logo_blue.png'),
-        onClick: function(state) {
+        onClick: state => {
             credentialsPanel.show({position: twitterAssistantButton});
         }
     });
@@ -90,7 +90,7 @@ export var main = function(){
     }
     else{ // no credentials stored. Ask some to the user
         console.time('guess');
-        guessTwitterHandle().then(username => {
+        guessAddonUserTwitterName().then(username => {
             console.timeEnd('guess');
             
             credentialsPanel.port.emit('update-logged-user', username);

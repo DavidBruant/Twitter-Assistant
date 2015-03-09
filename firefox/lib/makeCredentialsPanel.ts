@@ -6,7 +6,7 @@ import tabs = require("sdk/tabs");
 import storageModule = require("sdk/simple-storage");
 
 import createTwitterApp = require('./createTwitterApp');
-import guessTwitterHandle = require('./guessTwitterHandle');
+import guessAddonUserTwitterName = require('./guessAddonUserTwitterName');
 import getAccessToken = require('./getAccessToken');
 import getReadyForTwitterProfilePages = require('./getReadyForTwitterProfilePages');
 
@@ -26,7 +26,7 @@ function makeCredentialsPanel(){
     credentialsPanel.on('show', e => {
         console.log("credentialsPanel.on 'show'")
         
-        guessTwitterHandle()
+        guessAddonUserTwitterName()
             .then(username => {
                 console.log('guessed user', username);
                 credentialsPanel.port.emit('update-logged-user', username);
@@ -59,7 +59,7 @@ function makeCredentialsPanel(){
         
         console.time('app creation');
         
-        guessTwitterHandle()
+        guessAddonUserTwitterName()
             .then(username => {
                 createTwitterApp(username)
                     .then(twitterAppCredentials => {
