@@ -1,0 +1,172 @@
+/* ------------------------------------------------------------------
+   Imports
+   ------------------------------------------------------------------ */
+
+@import "variables";
+
+/* ------------------------------------------------------------------
+   Twitter Assistant
+   ------------------------------------------------------------------ */
+
+.#{$plugin-name} {
+	.#{$plugin-name}-section-title {
+		margin: 1.5em 0 .5em;
+		font-size: $default-font-size; color: $default-color; font-weight: bold;
+	}
+	.#{$plugin-name}-graduation {
+		font-weight: bold;
+		cursor: ew-resize;
+	}
+	.#{$plugin-name}-activity {
+		display: flex; height: $histogram-height;
+		flex-flow: row nowrap; align-items: stretch;
+		.#{$plugin-name}-bar {
+			position: relative; display: flex; z-index: 0; height: 100%; overflow: visible;
+			flex: 1; flex-flow: column nowrap; justify-content: flex-end; align-items: stretch;
+			&::after {
+				position: absolute; top: calc(100% + .3em); left: 50%; padding: .1em .2em;
+				background: $bg-color;
+				font-size: 10px; color: $default-color;
+				transform: translateX(-50%); opacity: 0;
+				content: attr(data-value);
+			}
+			&:hover {
+				z-index: 1;
+				box-shadow: 0 0 0 1px $default-color;
+				&::after {
+					opacity: 1;
+				}
+			}
+		}
+	}
+	.#{$plugin-name}-tweets   { background: $tweets-color; }
+	.#{$plugin-name}-links    { background: $links-color; }
+	.#{$plugin-name}-medias   { background: $medias-color; }
+	.#{$plugin-name}-replies  { background: $replies-color; }
+	.#{$plugin-name}-retweets { background: $retweets-color; }
+
+	.#{$plugin-name}-period {
+		display: flex;
+		flex-flow: row nowrap; align-items: stretch;
+	}
+	.#{$plugin-name}-period-from,
+	.#{$plugin-name}-period-to {
+		flex: 1;
+		font-size: $default-font-size; color: $lighter-color;
+	}
+	.#{$plugin-name}-period-from { text-align: left; }
+	.#{$plugin-name}-period-to   { text-align: right; }
+
+	.#{$plugin-name}-composition {
+		display: flex; width: 100%; height: $composition-height;
+		flex-flow: row-reverse nowrap; align-items: stretch;
+		div {
+			position: relative; display: flex; overflow: hidden;
+			&::before {
+				margin: auto;
+				color: $icons-color;
+			}
+		}
+		.#{$plugin-name}-tweets::before   { content: "\f029"; }
+		.#{$plugin-name}-links::before    { content: "\f098"; }
+		.#{$plugin-name}-medias::before   { content: "\f027"; }
+		.#{$plugin-name}-replies::before  { content: "\f151"; }
+		.#{$plugin-name}-retweets::before { content: "\f152"; }
+	}
+	.#{$plugin-name}-composition-details {
+		position: relative; margin: 1em ($frame-padding * -1) 2em; padding: 0 $frame-padding;
+		border: solid $border-color; border-width: 1px 0;
+		&::before {
+			position: absolute; top: -6px; left: 15px; width: 10px; height: 10px;
+			border: solid $border-color; border-width: 1px 0 0 1px;
+			background: $frame-bg-color;
+			content: ""; transform: rotate(45deg);
+		}
+	}
+	.#{$plugin-name}-account {
+		position: relative; margin: 10px 0; min-height: 35px;
+		.#{$plugin-name}-account-value {
+			position: absolute; top:0; bottom: 0; right: 0; z-index: 0;
+			background: $bg-color;
+			&::before {
+				position: absolute; bottom: 0; right: 2px;
+				font-size: 14px; color: $lighter-color;
+				content: attr(data-value);
+			}
+		}
+		.#{$plugin-name}-account-inner {
+			position: relative; z-index: 1;
+		}
+		.#{$plugin-name}-account-content {
+			margin-left: 45px;
+		}
+		.#{$plugin-name}-avatar {
+			width: 35px; height: 35px;
+		}
+		.#{$plugin-name}-fullname,
+		.#{$plugin-name}-username {
+			display: block; overflow: hidden;
+			white-space: nowrap; text-overflow: ellipsis;
+		}
+	}
+	.#{$plugin-name}-composition-details-more {
+		margin: 1em ($frame-padding * -1) 0; padding: 5px $frame-padding;
+		border-top: 1px dashed $border-color;
+		.#{$plugin-name}-account-min {
+			display: inline-block; margin: 5px 0;
+			color: $lighter-color; text-decoration: none;
+			&:hover,
+			&:focus {
+				.#{$plugin-name}-count {
+					text-decoration: underline;
+				}
+			}
+		}
+		.#{$plugin-name}-avatar {
+			width: 20px; height: 20px;
+			border-radius: 5px;
+			text-decoration: none;
+			vertical-align: bottom;
+			-moz-force-broken-image-icon: 1;
+		}
+		.#{$plugin-name}-count {
+			display: inline-block; width: 19px; margin-left: -2px; overflow: hidden;
+			line-height: 1;
+			vertical-align: bottom;
+		}
+	}
+	.#{$plugin-name}-engagement {
+		display: flex; width: 100%; height: ($composition-height * 2);
+		flex-flow: column nowrap; align-items: stretch;
+		background: $bg-color;
+		.#{$plugin-name}-rt,
+		.#{$plugin-name}-fav {
+			flex: 1; display: flex; overflow: hidden;
+			background: $fg-color;
+			&::before {
+				margin: auto auto auto 2px;
+				color: $icons-color;
+			}
+		}
+		.#{$plugin-name}-rt::before  { content: "\f152"; }
+		.#{$plugin-name}-fav::before { content: "\f147"; }
+	}
+	.#{$plugin-name}-language {
+		display: flex; width: 100%; height: $composition-height;
+		flex-flow: row nowrap; align-items: stretch;
+		background: $bg-color;
+		div {
+			padding-left: 2px;
+			background: $fg-color;
+			line-height: $composition-height; color: $icons-color; font-weight: bold; text-transform: uppercase;
+			&:nth-child(even) {
+				background: darken($fg-color,20%);
+			}
+		}
+	}
+	.#{$plugin-name}-reminder {
+		margin: 1em ($frame-padding * -1) 0; padding: $frame-padding $frame-padding 0;
+		border-top: 1px solid $border-color;
+		color: $lighter-color;
+	}
+}

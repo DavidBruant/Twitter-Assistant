@@ -1,0 +1,175 @@
+/* ------------------------------------------------------------------
+   Extracted from Twitter stylesheets
+   ------------------------------------------------------------------ */
+
+body {
+	font-family: Arial,sans-serif;
+}
+.ProfilePage {
+	background-image: none!important;
+	background-color: #f5f8fa!important;
+	line-height: 1.375;
+	min-width: 936px;
+}
+
+.WhoToFollow {
+	display: none;
+	font-size: 12px;
+}
+.ProfileSidebar .ProfileTweetbox, .ProfileSidebar .SignupCallOut, .ProfileSidebar .ProfileLifelineInfo, .ProfileSidebar .ProfileUserList, .ProfileSidebar .PhotoRail, .ProfileSidebar .WhoToFollow, .ProfileSidebar .EventFollowAll, .ProfileSidebar .Trends, .ProfileSidebar .RelatedStream, .ProfileSidebar .Footer {
+	margin-top: 20px;
+}
+.ProfileSidebar .SignupCallOut, .ProfileSidebar .ProfileLifelineInfo, .ProfileSidebar .WhoToFollow, .ProfileSidebar .RelatedStream, .ProfileSidebar .EventFollowAll, .ProfileSidebar .Trends {
+	background-color: #fff;
+	border: 1px solid #e1e8ed;
+	border-radius: 5px;
+	margin-top: 10px;
+	padding: 15px;
+}
+.WhoToFollow.is-visible {
+	display: block;
+}
+.WhoToFollow-header {
+	margin-bottom: 15px;
+}
+blockquote, dl, dd, h1, h2, h3, h4, h5, h6, figure, p, pre {
+	margin: 0;
+}
+.WhoToFollow-title {
+	color: #66757f;
+	display: inline-block;
+	font-size: 18px;
+	font-weight: 300;
+	line-height: 1;
+}
+
+a {
+	background: transparent;
+}
+a {
+	color: #2b7bb9;
+	text-decoration: none;
+}
+a, a:hover, a:focus, a:active {
+	color: #00D084;
+}
+a:hover, a:focus, a:active {
+	text-decoration: underline;
+}
+a:active, a:hover {
+	outline: 0;
+}
+
+button, html input[type="button"], input[type="reset"], input[type="submit"] {
+	-webkit-appearance: button;
+	cursor: pointer;
+}
+button {
+	border: 0;
+}
+button {
+	background: transparent;
+	border: 0;
+	padding: 0;
+}
+.btn-link {
+	padding: 0;
+	background-color: transparent;
+	background-image: none;
+	border: 0;
+	cursor: pointer;
+	border-radius: 0;
+	box-shadow: none;
+}
+.btn-link:hover, .btn-link:focus {
+	outline: 0;
+	text-decoration: underline;
+	box-shadow: none;
+}
+a, .btn-link, .btn-link:focus, .icon-btn, .pretty-link b, .pretty-link:hover s, .pretty-link:hover b, .pretty-link:focus s, .pretty-link:focus b, .metadata a:hover, .metadata a:focus, .account-group:hover .fullname, .account-group:focus .fullname, .account-summary:focus .fullname, .message .message-text a, .stats a strong, .plain-btn:hover, .plain-btn:focus, .dropdown.open .user-dropdown.plain-btn, .open > .plain-btn, #global-actions .new:before, .module .list-link:hover, .module .list-link:focus, .UserCompletion-step:hover, .stats a:hover, .stats a:hover strong, .stats a:focus, .stats a:focus strong, .profile-modal-header .fullname a:hover, .profile-modal-header .username a:hover, .profile-modal-header .fullname a:focus, .profile-modal-header .username a:focus, .story-article:hover .metadata, .story-article .metadata a:focus, .find-friends-sources li:hover .source, .stream-item a:hover .fullname, .stream-item a:focus .fullname, .stream-item .view-all-supplements:hover, .stream-item .view-all-supplements:focus, .tweet .time a:hover, .tweet .time a:focus, .tweet .details.with-icn b, .tweet .details.with-icn .Icon, .tweet .tweet-geo-text a:hover, .stream-item:hover .original-tweet .details b, .stream-item .original-tweet.focus .details b, .stream-item.open .original-tweet .details b, .simple-tweet:hover .details b, .simple-tweet.focus .details b, .simple-tweet.open .details b, .simple-tweet:hover .details .simple-details-link, .simple-tweet.focus .details .simple-details-link, .client-and-actions a:hover, .client-and-actions a:focus, .dismiss-promoted:hover b, .tweet .context .pretty-link:hover s, .tweet .context .pretty-link:hover b, .tweet .context .pretty-link:focus s, .tweet .context .pretty-link:focus b, .list .username a:hover, .list .username a:focus, .list-membership-container .create-a-list, .list-membership-container .create-a-list:hover, .story-header:hover .view-tweets, .card .list-details a:hover, .card .list-details a:focus, .card .card-body:hover .attribution, .card .card-body .attribution:focus, .events-card .card-body:hover .attribution, .events-card .card-body .attribution:focus, .new-tweets-bar, .onebox .soccer ul.ticker a:hover, .onebox .soccer ul.ticker a:focus, .discover-item-actions a, .remove-background-btn, .stream-item-activity-me .latest-tweet .tweet-row a:hover, .stream-item-activity-me .latest-tweet .tweet-row a:focus, .stream-item-activity-me .latest-tweet .tweet-row a:hover b, .stream-item-activity-me .latest-tweet .tweet-row a:focus b {
+	color: #00D084;
+}
+
+.account-summary {
+	position: relative;
+	display: block;
+	min-height: 48px;
+}
+.account-summary .content {
+	margin-left: 58px;
+	margin-right: 20px;
+}
+.account-summary .account-group, .account-summary .account-action {
+	display: block;
+	line-height: 16px;
+}
+.account-group:hover, .account-summary:focus .account-group {
+	text-decoration: none;
+}
+.account-group:hover .fullname, .account-group:focus .fullname, .account-summary:focus .fullname {
+	text-decoration: underline;
+}
+img {
+	border: 0;
+}
+.avatar {
+	width: 48px;
+	height: 48px;
+	border-radius: 5px;
+	-moz-force-broken-image-icon: 1;
+}
+.account-summary .avatar {
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+.account-summary .account-group-inner, .account-summary .pretty-link, .account-summary .account-action, .account-summary .location {
+	color: #8899a6;
+}
+.account-summary .account-group-inner, .account-summary .metadata {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+.account-summary .account-group-inner {
+	display: block;
+	width: 100%;
+}
+.fullname {
+	font-weight: bold;
+	color: #292f33;
+}
+.WhoToFollow-users .fullname {
+	color: #292f33;
+	font-size: 13px;
+}
+.account-summary .account-group-inner, .account-summary .metadata {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+.username, .time, .time a, .metadata, .metadata button.btn-link, .metadata a {
+	font-size: 13px;
+	color: #8899a6;
+}
+.username {
+	direction: ltr;
+	unicode-bidi: embed;
+}
+.WhoToFollow-users .username {
+	color: #8899a6;
+}
+s {
+	text-decoration: none;
+}
+.username s, .account-group-inner s {
+	color: #b1bbc3;
+}
+
+/* ------------------------------------------------------------------
+   Just for demo
+   ------------------------------------------------------------------ */
+
+.WhoToFollow {
+	width: 290px; margin: 10px auto; box-sizing: border-box;
+}
