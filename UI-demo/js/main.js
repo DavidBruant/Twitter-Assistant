@@ -26,4 +26,7 @@ $(function() {
 				)
 		);
 	}
+	$("#toggle").click(function(event){
+		$(".TA-composition-details").toggleClass("TA-active");
+	});
 });

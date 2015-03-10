@@ -74,7 +74,15 @@
 		.#{$plugin-name}-retweets::before { content: "\f152"; }
 	}
 	.#{$plugin-name}-composition-details {
-		position: relative; margin: 1em ($frame-padding * -1) 2em; padding: 0 $frame-padding;
+		max-height: 0; margin: 0 ($frame-padding * -1); overflow: hidden;
+		opacity: 0; transition: all .3s ease-in-out;
+		&.#{$plugin-name}-active {
+			max-height: 530px; padding-top: 1em;
+			opacity: 1;
+		}
+	}
+	.#{$plugin-name}-composition-details-inner {
+		position: relative; padding: 0 $frame-padding;
 		border: solid $border-color; border-width: 1px 0;
 		&::before {
 			position: absolute; top: -6px; left: 15px; width: 10px; height: 10px;
