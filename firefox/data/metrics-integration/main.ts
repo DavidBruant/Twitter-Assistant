@@ -42,34 +42,40 @@ var twitterAssistantContainerP : Promise<HTMLElement> = (new Promise<Document>( 
     console.error('twitterAssistantContainerP error', String(err));
 });
 
-var users = new Map<TwitterUserId, TwitterAPIUser>();
-var timeline : TwitterAPITweet[] = [];
-var visitedUser : TwitterAPIUser;
-var addonUserAndFriends : {
+let users = new Map<TwitterUserId, TwitterAPIUser>();
+let timeline : TwitterAPITweet[] = [];
+let visitedUser : TwitterAPIUser;
+let addonUserAndFriends : {
     user: TwitterAPIUser
     friendIds: Set<TwitterUserId>
 };
+let displayDayCount = 30; // give a value by default to get started
 
 function updateTwitterAssistant(){
+    let addonUserAlreadyFollowingVisitedUser: boolean;
+    let visitedUserIsAddonUser: boolean;
+    if(addonUserAndFriends && visitedUser){
+        addonUserAlreadyFollowingVisitedUser = addonUserAndFriends.friendIds.has(visitedUser.id_str);
+        visitedUserIsAddonUser = addonUserAndFriends.user.id_str === visitedUser.id_str;
+    }
+    
     return twitterAssistantContainerP.then(twitterAssistantContainer => {
         React.renderComponent(TwitterAssistant({
-            /*
-                tweets: TwitterAPITweet[], 
-                visitedUserId: TwitterUserId, 
-                addonUserId: TwitterUserId, 
-                addonUserFriendIds: Set<TwitterUserId>
-            */
             tweetMine: TweetMine(
                 timeline,
+                displayDayCount,
                 visitedUser ? visitedUser.id_str : undefined,
                 addonUserAndFriends ? addonUserAndFriends.user.id_str : undefined,
                 addonUserAndFriends ? addonUserAndFriends.friendIds : undefined
             ),
+            displayDayCount : displayDayCount,
             users: users,
             visitedUser: visitedUser,
             askUsers: function askUsers(userIds : TwitterUserId[]){
                 self.port.emit('ask-users', userIds);
-            }
+            },
+            addonUserAlreadyFollowingVisitedUser: addonUserAlreadyFollowingVisitedUser,
+            visitedUserIsAddonUser: visitedUserIsAddonUser
         }), twitterAssistantContainer);
     }).catch(function(err){
         console.error('metrics integration error', String(err));
@@ -90,9 +96,11 @@ self.port.on('visited-user-details', u => {
 });
 
 self.port.on('addon-user-and-friends', _addonUserAndFriends => {
+    console.log("received addon user infos in content", _addonUserAndFriends);
+    
     addonUserAndFriends = {
-        user: _addonUserAndFriends.user,
-        friendIds: new (<any>Set)(_addonUserAndFriends.friendIds)
+        user: <TwitterAPIUser>_addonUserAndFriends.user,
+        friendIds: new Set<TwitterUserId>(_addonUserAndFriends.friendIds)
     }
 
     updateTwitterAssistant();
@@ -104,6 +112,11 @@ self.port.on('twitter-user-data', partialTimeline => {
     updateTwitterAssistant();
 });
 
+self.port.on('display-days-count', _displayDayCount => {
+    displayDayCount = _displayDayCount;
+    
+    updateTwitterAssistant();
+});
 
 // Initial "empty" rendering ASAP so the user knows Twitter Assistant exists
 updateTwitterAssistant();

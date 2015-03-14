@@ -1,34 +1,61 @@
 "use strict";
 
+import getRetweetOriginalTweet = require('./getRetweetOriginalTweet');
+import getWhosBeingConversedWith = require('./getWhosBeingConversedWith');
+
+const ONE_DAY = 24*60*60*1000; // ms
+
+
+function isRetweet(t: TwitterAPITweet) : boolean{
+    return 'retweeted_status' in t;
+}
+
+
 /*
  @args 
     tweets : as received by the homeline API
     visitedUsername : currently viewed user (screen_name)
 */
 function TweetMine(
-    tweets: TwitterAPITweet[], 
+    tweets: TwitterAPITweet[],
+    nbDays: number,
     visitedUserId: TwitterUserId, 
     addonUser: TwitterUserId, 
     addonUserFriendIds: Set<TwitterUserId>
     ){
+    
+    function isConversation(tweet: TwitterAPITweet) : boolean{
+        return tweet.user.id_str === visitedUserId &&
+            !tweet.retweeted_status &&
+            tweet.text.startsWith('@') &&
+            // if a user recently changed of screen_name, a tweet may start with @, but not
+            // refer to an actual user. Testing if there is an entity to make sure.
+            tweet.entities.user_mentions && tweet.entities.user_mentions.length >= 1; // a bit weak, but close enough. Would need to check if the user actually exists
+    }
+    
+    function byDateRage(from: number, to: number){
+        if(!from || !to)
+            throw new TypeError('need 2 args');
+
+        return tweets.filter( t => {
+            var createdTimestamp = (new Date(t.created_at)).getTime();
+            return createdTimestamp >= from && createdTimestamp < to;
+        });
+    }
+    
+    // remove all tweets that don't fit in the range
+    var now = Date.now();
+    var since = now - nbDays*ONE_DAY;
+    
+    tweets = byDateRage(since, now);
+    
+    
     return {
         // from and to are UNIX timestamps (number of ms since Jan 1st 1970)
-        byDateRange: function(from: number, to: number){
-            if(!from || !to)
-                throw new TypeError('need 2 args');
-
-            return tweets.filter( t => {
-                var createdTimestamp = (new Date(t.created_at)).getTime();
-                return createdTimestamp >= from && createdTimestamp < to;
-            });
-        },
+        byDateRange: byDateRage,
         
         getRetweets: function(){
-            //console.log('getRetweets', tweets);
-
-            return tweets.filter(function(tweet){
-                return 'retweeted_status' in tweet;
-            });
+            return tweets.filter(isRetweet);
         },
         /*
             includes RTs and conversations
@@ -46,14 +73,7 @@ function TweetMine(
         },
         
         getConversations: function(){
-            return tweets.filter(tweet => {
-                return tweet.user.id_str === visitedUserId &&
-                    !tweet.retweeted_status &&
-                    tweet.text.startsWith('@') &&
-                    // if a user recently changed of screen_name, a tweet may start with @, but not
-                    // refer to an actual user. Testing if there is an entity to make sure.
-                    tweet.entities.user_mentions && tweet.entities.user_mentions.length >= 1; // a bit weak, but close enough. Would need to check if the user actually exists
-            });
+            return tweets.filter(isConversation);
         },
         
         getNonRetweetNonConversationTweets: function(){
@@ -88,15 +108,22 @@ function TweetMine(
         },
         
         getTweetsThatWouldBeSeenIfAddonUserFollowedVisitedUser: function(){
-            /*
-                User U is looking at user V.
-                When U follows V, U sees a tweet T from V if:
-
-                    T is a RT of W
-                        unless U already follows W
-                    T is written by V
-                        unless T is a conversation with someone not followed by U
-            */
+            return tweets.filter(t => {
+                const isRT = isRetweet(t);
+                const isConv = isConversation(t);
+                
+                if(!isRT && !isConv)
+                    return true;
+                else{
+                    if(!addonUserFriendIds){
+                        return isRT || !isConv;
+                    }
+                    
+                    return (isRT && !addonUserFriendIds.has(getRetweetOriginalTweet(t).user.id_str)) ||
+                        (isConv && addonUserFriendIds.has( getWhosBeingConversedWith(t) ));
+                }
+            });
+            
         },
         
         get length(){

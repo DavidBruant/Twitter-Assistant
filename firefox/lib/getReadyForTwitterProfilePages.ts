@@ -16,11 +16,11 @@ import TwitterAPI = require('./TwitterAPI');
 import guessAddonUserTwitterName = require('./guessAddonUserTwitterName');
 import getAddonUserInfoAndFriends = require('./getAddonUserInfoAndFriends');
 
-var PageMod = pagemodModule.PageMod;
-var data = selfModule.data;
+const PageMod = pagemodModule.PageMod;
+const data = selfModule.data;
 
-var ONE_DAY = 24*60*60*1000;
-
+const ONE_DAY = 24*60*60*1000;
+const DISPLAY_DAY_COUNT = 40;
 
 var lastTwitterAPICredentials : OAuthCredentials;
 var lastAccessToken : AccessToken;
@@ -69,6 +69,7 @@ twitterProfilePageMod.on('attach', function onAttach(worker){
         worker.port.emit('addon-user-and-friends', result);
     });
     
+    worker.port.emit('display-days-count', DISPLAY_DAY_COUNT);
     
     if(!lastAccessToken){
         getAccessToken(lastTwitterAPICredentials.key, lastTwitterAPICredentials.secret)

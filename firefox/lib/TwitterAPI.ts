@@ -44,7 +44,7 @@ function TwitterAPI(accessToken: AccessToken) : TwitterAPI_I{
             var searchObj: TwitterAPIUserTimelineOptions = {
                 count: 200,
                 include_rts: 1,
-                // 'trim_user': 't' // https://github.com/DavidBruant/Twitter-Assistant/issues/52
+                'trim_user': 't',
                 screen_name : twittername
             };
 
@@ -161,7 +161,7 @@ function TwitterAPI(accessToken: AccessToken) : TwitterAPI_I{
                     },
                     onComplete: function (response) {
                         console.log(
-                            '/1.1/users/lookup.json status',
+                            '/1.1/users/lookup.json (ids) status',
                             user_ids,
                             response.status, 
                             ((Date.now() - reqStart)/1000).toFixed(1)+'s'
@@ -191,7 +191,7 @@ function TwitterAPI(accessToken: AccessToken) : TwitterAPI_I{
                     },
                     onComplete: function (response) {
                         console.log(
-                            '/1.1/users/lookup.json status',
+                            '/1.1/users/lookup.json (screen names) status',
                             screen_names,
                             response.status, 
                             ((Date.now() - reqStart)/1000).toFixed(1)+'s'

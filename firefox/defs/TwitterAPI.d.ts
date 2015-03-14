@@ -13,7 +13,7 @@ interface TwitterAPI_I {
     getUserTimeline : (twittername: string, maxId?: TwitterTweetId) => Promise<TwitterAPITweet[]>
 
     /*
-        https://dev.twitter.com/docs/api/1.1/get/search/tweets
+        https://dev.twitter.com/rest/reference/get/search/tweets
         https://dev.twitter.com/docs/using-search
         endpoint: https://api.twitter.com/1.1/search/tweets.json
     */

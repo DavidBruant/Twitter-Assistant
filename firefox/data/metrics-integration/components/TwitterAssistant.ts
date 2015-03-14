@@ -8,23 +8,27 @@ import TimelineComposition = require('./TimelineComposition');
 import TwitterAssistantTopInfo = require('./TwitterAssistantTopInfo');
 import GeneratedEngagement = require('./GeneratedEngagement');
 import HumansAreNotMetricsReminder = require('./HumansAreNotMetricsReminder');
+import TweetsPerDayEstimation = require('./TweetsPerDayEstimation');
+
 import TweetMine = require('../TweetMine');
 
 
-var HISTOGRAM_SIZE = 30;
-var ONE_DAY = 24*60*60*1000; // ms
+const ONE_DAY = 24*60*60*1000; // ms
 
 interface TwitterAssistantProps{
     tweetMine: any //for now. TODO create TweetMine interface
+    displayDayCount: number
     users: TwitterAPIUser[];
     askUsers: (userIds: TwitterUserId[]) => void;
+    addonUserAlreadyFollowingVisitedUser: boolean
+    visitedUserIsAddonUser: boolean
 }
 
 
 var TwitterAssistant = React.createClass({
     
     render: function(){
-        var data: TwitterAssistantProps = this.props, // TweetMine instance
+        var data: TwitterAssistantProps = this.props,
             state = this.state;
 
         var tweetMine = data.tweetMine,
@@ -47,6 +51,8 @@ var TwitterAssistant = React.createClass({
                     rt: tweet.retweet_count
                 };
             }));*/
+            
+            const estimate = tweetMine.getTweetsThatWouldBeSeenIfAddonUserFollowedVisitedUser().length/data.displayDayCount;
 
             return React.DOM.div({className: 'twitter-assistant'}, [
 
@@ -57,9 +63,14 @@ var TwitterAssistant = React.createClass({
                     tweetsConsidered: tweetMine.length
                 }),
 
+                data.visitedUserIsAddonUser ? undefined : TweetsPerDayEstimation({
+                    addonUserAlreadyFollowingVisitedUser: data.addonUserAlreadyFollowingVisitedUser,
+                    estimate: estimate
+                }),
+                
                 Histogram({
                     tweetMine: tweetMine,
-                    histogramSize: HISTOGRAM_SIZE
+                    histogramSize: data.displayDayCount
                 }),
 
                 React.DOM.h3({}, 'Timeline Composition'),
