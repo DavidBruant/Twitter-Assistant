@@ -87,7 +87,7 @@ twitterProfilePageMod.on('attach', function onAttach(worker){
             timestampFrom: (new Date()).getTime() - ONE_DAY*40
         }, sendTimelineToContent);
         
-        timelineComplete.catch( err => {
+        (<any> timelineComplete).catch( (err: Error) => {
             // TODO consider invalidating lastAccessToken here
             console.error('error while getting the user timeline', visitedUser, err);
         });

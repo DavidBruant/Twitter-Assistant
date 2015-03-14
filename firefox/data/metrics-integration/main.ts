@@ -1,3 +1,4 @@
+/// <reference path="../../../node_modules/typescript/bin/lib.es6.d.ts" />
 /// <reference path="../../defs/ES6.d.ts" />
 /// <reference path="../../defs/react-0.11.d.ts" />
 /// <reference path="../../defs/TwitterAPI.d.ts" />
@@ -18,7 +19,7 @@ import TweetMine = require('./TweetMine');
 var ONE_DAY = 24*60*60*1000; // ms
 var RIGHT_PROFILE_SIDEBAR_SELECTOR = '.ProfileSidebar .ProfileWTFAndTrends';
 
-var twitterAssistantContainerP = <Promise<HTMLElement>> (new Promise<Document>( resolve => {
+var twitterAssistantContainerP : Promise<HTMLElement> = (new Promise<Document>( resolve => {
     document.addEventListener('DOMContentLoaded', function listener(){
         resolve(document);
         document.removeEventListener('DOMContentLoaded', listener);
@@ -35,9 +36,9 @@ var twitterAssistantContainerP = <Promise<HTMLElement>> (new Promise<Document>( 
     rightProfileSidebar.insertBefore(twitterAssistantContainer, rightProfileSidebar.firstChild);
 
     return twitterAssistantContainer;
-})
+});
 
-twitterAssistantContainerP.catch(err => {
+(<any> twitterAssistantContainerP).catch( (err: Error) => {
     console.error('twitterAssistantContainerP error', String(err));
 });
 
