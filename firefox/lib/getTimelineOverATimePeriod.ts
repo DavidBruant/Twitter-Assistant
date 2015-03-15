@@ -43,10 +43,11 @@ function getTimelineOverATimePeriod(accessToken: AccessToken){
             
             //console.log("processTweets 2", accumulatedTweets.length, timeline.length, accumulated.length);
             
+            progress(accumulated);
+            
             // if tweets don't go back far enough, get max_id of last tweet and call twitterAPI.getUserTimeline again
             if(timeline.length === accumulated.length){
                 var maxId = accumulatedTweets[accumulatedTweets.length - 1].id_str;
-                progress(accumulatedTweets);
                 return twitterAPI.getUserTimeline(username, maxId).then(processTweets);
             }
             else{

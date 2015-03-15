@@ -12,13 +12,14 @@
   "version": "0.1.0",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "compile": "tsc --sourceMap --noImplicitAny -m commonjs -t ES5 firefox/**/*.ts firefox/**/**/*.ts",
+    "compile": "tsc --sourceMap --noImplicitAny -m commonjs -t ES6 firefox/**/*.ts firefox/**/**/*.ts",
     "xpi": "cfx xpi --pkgdir firefox",
     "run": "cfx run --pkgdir firefox",
-    "build": "browserify firefox/data/metrics-integration/main.ts -p [ tsify --noImplicitAny --sourceMap -t ES5 ] --debug > firefox/data/metrics-integration/twitter-assistant-content.js"
+    "build": "browserify firefox/data/metrics-integration/main.ts -p [ tsify --noImplicitAny --sourceMap -t ES6 ] --debug > firefox/data/metrics-integration/twitter-assistant-content.js",
+    "watch": "watchify firefox/data/metrics-integration/main.ts -p [ tsify --noImplicitAny --sourceMap -t ES6 ] --debug -o firefox/data/metrics-integration/twitter-assistant-content.js -v"
   },
   "devDependencies": {
-    "watchify": "^2.3.0"
+    "watchify": "^2.4.0"
   },
   "main": "index.js",
   "id": "jid1-BptUkbczEocdyg",

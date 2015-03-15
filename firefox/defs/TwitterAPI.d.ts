@@ -13,7 +13,7 @@ interface TwitterAPI_I {
     getUserTimeline : (twittername: string, maxId?: TwitterTweetId) => Promise<TwitterAPITweet[]>
 
     /*
-        https://dev.twitter.com/docs/api/1.1/get/search/tweets
+        https://dev.twitter.com/rest/reference/get/search/tweets
         https://dev.twitter.com/docs/using-search
         endpoint: https://api.twitter.com/1.1/search/tweets.json
     */
@@ -24,7 +24,14 @@ interface TwitterAPI_I {
         https://dev.twitter.com/rest/reference/get/users/lookup
         endpoint: https://api.twitter.com/1.1/users/lookup.json
     */
-    lookupUsers: (user_ids: string[], screen_names?: string[]) => Promise<TwitterAPIUser[]>
+    lookupUsersByIds: (user_ids: TwitterUserId[]) => Promise<TwitterAPIUser[]>
+    lookupUsersByScreenNames: (screen_names: string[]) => Promise<TwitterAPIUser[]>
+    
+    /*
+        https://dev.twitter.com/rest/reference/get/friends/ids
+        endpoint : https://api.twitter.com/1.1/friends/ids.json
+    */
+    getFriends: (id: TwitterUserId) => Promise<{ids: TwitterUserId[]}>
 }
 
 
@@ -100,7 +107,7 @@ interface TwitterAPITweet{
     created_at : string // Date-parseable string
 
     entities: TwitterAPIEntities
-    user: TwitterAPIUser
+    user: TwitterAPIReducedUser // the 'trim_user' parameter will always be used
     text: string
 
     retweeted_status?: TwitterAPITweet
@@ -110,13 +117,20 @@ interface TwitterAPITweet{
     in_reply_to_user_id_str: TwitterUserId
 }
 
-interface TwitterUserId{
+
+interface TwitterUserId extends String{
     __TwitterUserId: TwitterUserId
 }
 
-interface TwitterAPIUser{
+/*
+    Some API calls allow for a 'trim_user' parameter. When used, a reduced version of the user is used
+*/
+interface TwitterAPIReducedUser{
+    // 'id' purposefully omitted
     id_str: TwitterUserId
-    
+}
+
+interface TwitterAPIUser extends TwitterAPIReducedUser{
     screen_name: string
     name: string
     profile_image_url_https : string
