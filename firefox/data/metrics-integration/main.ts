@@ -1,3 +1,4 @@
+/// <reference path="../../../node_modules/typescript/bin/lib.es6.d.ts" />
 /// <reference path="../../defs/ES6.d.ts" />
 /// <reference path="../../defs/react-0.11.d.ts" />
 /// <reference path="../../defs/TwitterAPI.d.ts" />
@@ -18,7 +19,7 @@ import TweetMine = require('./TweetMine');
 var ONE_DAY = 24*60*60*1000; // ms
 var RIGHT_PROFILE_SIDEBAR_SELECTOR = '.ProfileSidebar .ProfileWTFAndTrends';
 
-var twitterAssistantContainerP = <Promise<HTMLElement>> (new Promise<Document>( resolve => {
+var twitterAssistantContainerP : Promise<HTMLElement> = (new Promise<Document>( resolve => {
     document.addEventListener('DOMContentLoaded', function listener(){
         resolve(document);
         document.removeEventListener('DOMContentLoaded', listener);
@@ -35,28 +36,46 @@ var twitterAssistantContainerP = <Promise<HTMLElement>> (new Promise<Document>( 
     rightProfileSidebar.insertBefore(twitterAssistantContainer, rightProfileSidebar.firstChild);
 
     return twitterAssistantContainer;
-})
+});
 
-twitterAssistantContainerP.catch(err => {
+(<any> twitterAssistantContainerP).catch( (err: Error) => {
     console.error('twitterAssistantContainerP error', String(err));
 });
 
-var users = new Map<TwitterUserId, TwitterAPIUser>();
-var timeline : TwitterAPITweet[] = [];
-var currentUser : TwitterAPIUser;
+let users = new Map<TwitterUserId, TwitterAPIUser>();
+let timeline : TwitterAPITweet[] = [];
+let visitedUser : TwitterAPIUser;
+let addonUserAndFriends : {
+    user: TwitterAPIUser
+    friendIds: Set<TwitterUserId>
+};
+let displayDayCount = 30; // give a value by default to get started
 
 function updateTwitterAssistant(){
+    let addonUserAlreadyFollowingVisitedUser: boolean;
+    let visitedUserIsAddonUser: boolean;
+    if(addonUserAndFriends && visitedUser){
+        addonUserAlreadyFollowingVisitedUser = addonUserAndFriends.friendIds.has(visitedUser.id_str);
+        visitedUserIsAddonUser = addonUserAndFriends.user.id_str === visitedUser.id_str;
+    }
+    
     return twitterAssistantContainerP.then(twitterAssistantContainer => {
         React.renderComponent(TwitterAssistant({
             tweetMine: TweetMine(
                 timeline,
-                currentUser ? currentUser.screen_name : ''
+                displayDayCount,
+                visitedUser ? visitedUser.id_str : undefined,
+                addonUserAndFriends ? addonUserAndFriends.user.id_str : undefined,
+                addonUserAndFriends ? addonUserAndFriends.friendIds : undefined
             ),
+            displayDayCount : displayDayCount,
             users: users,
-            currentUser: currentUser,
+            visitedUser: visitedUser,
             askUsers: function askUsers(userIds : TwitterUserId[]){
                 self.port.emit('ask-users', userIds);
-            }
+            },
+            addonUserAlreadyFollowingVisitedUser: addonUserAlreadyFollowingVisitedUser,
+            visitedUserIsAddonUser: visitedUserIsAddonUser
         }), twitterAssistantContainer);
     }).catch(function(err){
         console.error('metrics integration error', String(err));
@@ -70,18 +89,34 @@ self.port.on('answer-users', (receivedUsers: TwitterAPIUser[]) => {
     updateTwitterAssistant();
 });
 
-self.port.on('current-user-details', currentUserDetails => {
-    currentUser = currentUserDetails;
+self.port.on('visited-user-details', u => {
+    visitedUser = u;
 
     updateTwitterAssistant();
 });
 
-self.port.on('twitter-user-data', _timeline => {
-    timeline = _timeline;
+self.port.on('addon-user-and-friends', _addonUserAndFriends => {
+    console.log("received addon user infos in content", _addonUserAndFriends);
+    
+    addonUserAndFriends = {
+        user: <TwitterAPIUser>_addonUserAndFriends.user,
+        friendIds: new Set<TwitterUserId>(_addonUserAndFriends.friendIds)
+    }
 
     updateTwitterAssistant();
 });
 
+self.port.on('twitter-user-data', partialTimeline => {
+    timeline = timeline.concat(partialTimeline);
+
+    updateTwitterAssistant();
+});
+
+self.port.on('display-days-count', _displayDayCount => {
+    displayDayCount = _displayDayCount;
+    
+    updateTwitterAssistant();
+});
 
 // Initial "empty" rendering ASAP so the user knows Twitter Assistant exists
 updateTwitterAssistant();

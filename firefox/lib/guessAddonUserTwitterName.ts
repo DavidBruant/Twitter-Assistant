@@ -6,7 +6,7 @@ import selfModule =  require("sdk/self");
 var XMLHttpRequest = xhrModule.XMLHttpRequest;
 var data = selfModule.data;
 
-function guessTwitterHandle(){
+function guessAddonUserTwitterName(){
     return new Promise<string>((resolve, reject) => {
         var reqStart = Date.now();
 
@@ -34,4 +34,4 @@ function guessTwitterHandle(){
     });
 };
 
-export = guessTwitterHandle;
+export = guessAddonUserTwitterName;

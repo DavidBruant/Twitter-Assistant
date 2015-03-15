@@ -7,37 +7,6 @@ import makeSearchString = require('./makeSearchString');
 
 var Request = RequestModule.Request;
 
-// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign#Polyfill
-if (!(<any>Object).assign) {
-    Object.defineProperty((<any>Object), "assign", {
-        enumerable: false,
-        configurable: true,
-        writable: true,
-        value: function(target:any, firstSource:any) {
-            if (target == null) {
-                throw new TypeError("can't convert " + target + " to object");
-            }
-            var to = Object(target);
-            if (arguments.length === 1) return to;
-            var i = 1;
-            do {
-                var nextSource = arguments[i];
-                if (nextSource === null || nextSource === undefined) continue;
-                var from = Object(nextSource);
-                var keysArray = Object.keys(from);
-                var len = keysArray.length;
-                var nextIndex = 0;
-                while (nextIndex < len) {
-                    var nextKey = keysArray[nextIndex];
-                    to[nextKey] = from[nextKey];
-                    nextIndex++;
-                }
-            } while (++i < arguments.length);
-            return to;
-        }
-    });
-}
-
 var str = Function.prototype.call.bind( Object.prototype.toString );
 
 function stringifyTwitterSearchQuery(obj: any){
@@ -75,7 +44,7 @@ function TwitterAPI(accessToken: AccessToken) : TwitterAPI_I{
             var searchObj: TwitterAPIUserTimelineOptions = {
                 count: 200,
                 include_rts: 1,
-                // 'trim_user': 't' // https://github.com/DavidBruant/Twitter-Assistant/issues/52
+                'trim_user': 't',
                 screen_name : twittername
             };
 
@@ -128,6 +97,15 @@ function TwitterAPI(accessToken: AccessToken) : TwitterAPI_I{
                 lang: string,
                 geocode: string
             }
+            
+                
+            twitterAPI.search({
+                q: {
+                    '@': user
+                }
+            })
+            .then(tweets => console.log("tweets to user", user, tweets))
+            .catch(e => console.error(e))
         */
         search: function(parameters){
             var q = stringifyTwitterSearchQuery(parameters.q);
@@ -167,21 +145,11 @@ function TwitterAPI(accessToken: AccessToken) : TwitterAPI_I{
             })
         },
         
-        lookupUsers: function(user_ids: string[], screen_names?: string[]){
-            if(!user_ids) user_ids = [];
-            if(!screen_names) screen_names = [];
-            
-            var searchObj = {
-                user_id: user_ids.length > 0 ?
-                    user_ids.map(id => String(id)).join(',') :
-                    undefined,
-                screen_name: screen_names.length > 0 ?
-                    screen_names.map(id => String(id)).join(',') :
-                    undefined,
+        lookupUsersByIds: function(user_ids: TwitterUserId[]){
+            var searchString = makeSearchString({
+                user_id: user_ids.join(','),
                 include_entities : false
-            };
-
-            var searchString = makeSearchString(searchObj);
+            });
             
             return new Promise((resolve, reject) => {
                 var reqStart = Date.now();
@@ -193,7 +161,68 @@ function TwitterAPI(accessToken: AccessToken) : TwitterAPI_I{
                     },
                     onComplete: function (response) {
                         console.log(
-                            '/1.1/users/lookup.json status',
+                            '/1.1/users/lookup.json (ids) status',
+                            user_ids,
+                            response.status, 
+                            ((Date.now() - reqStart)/1000).toFixed(1)+'s'
+                        );
+
+                        resolve(response.json);
+                    },
+                    onError: reject
+                }).get();
+
+            });
+        },
+        
+        lookupUsersByScreenNames: function(screen_names: string[]){
+            var searchString = makeSearchString({
+                screen_name: screen_names.join(','),
+                include_entities : false
+            });
+            
+            return new Promise((resolve, reject) => {
+                var reqStart = Date.now();
+
+                Request({
+                    url: 'https://api.twitter.com/1.1/users/lookup.json?'+searchString,
+                    headers: {
+                        'Authorization': 'Bearer '+accessToken
+                    },
+                    onComplete: function (response) {
+                        console.log(
+                            '/1.1/users/lookup.json (screen names) status',
+                            screen_names,
+                            response.status, 
+                            ((Date.now() - reqStart)/1000).toFixed(1)+'s'
+                        );
+
+                        resolve(response.json);
+                    },
+                    onError: reject
+                }).get();
+
+            });
+        },
+        
+        getFriends: function(user_id: TwitterUserId){
+            var searchString = makeSearchString({
+                user_id: user_id,
+                stringify_ids : true,
+                count: 5000
+            });
+            
+            return new Promise((resolve, reject) => {
+                var reqStart = Date.now();
+
+                Request({
+                    url: 'https://api.twitter.com/1.1/friends/ids.json?'+searchString,
+                    headers: {
+                        'Authorization': 'Bearer '+accessToken
+                    },
+                    onComplete: function (response) {
+                        console.log(
+                            '/1.1/friends/ids.json status',
                             response.status, 
                             ((Date.now() - reqStart)/1000).toFixed(1)+'s'
                         );
@@ -205,6 +234,7 @@ function TwitterAPI(accessToken: AccessToken) : TwitterAPI_I{
 
             });
         }
+    
     };
 }
 
