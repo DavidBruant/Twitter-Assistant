@@ -9,6 +9,7 @@ import TwitterAssistantTopInfo = require('./TwitterAssistantTopInfo');
 import GeneratedEngagement = require('./GeneratedEngagement');
 import HumansAreNotMetricsReminder = require('./HumansAreNotMetricsReminder');
 import TweetsPerDayEstimation = require('./TweetsPerDayEstimation');
+import DetailList = require('./DetailList');
 
 import TweetMine = require('../TweetMine');
 
@@ -26,12 +27,17 @@ interface TwitterAssistantProps{
 
 
 var TwitterAssistant = React.createClass({
+    getInitialState: function(){
+        return <any>{
+            detailView: undefined
+        };
+    },
     
     render: function(){
-        var data: TwitterAssistantProps = this.props,
+        const data: TwitterAssistantProps = this.props,
             state = this.state;
 
-        var tweetMine = data.tweetMine,
+        const tweetMine = data.tweetMine,
             users = data.users,
             askUsers = data.askUsers;
 
@@ -41,8 +47,8 @@ var TwitterAssistant = React.createClass({
             ]);
         }
         else{
-            var oldestTweet = tweetMine.getOldestTweet();
-            var daysSinceOldestTweet = Math.round( (Date.now() - (new Date(oldestTweet.created_at)).getTime())/ONE_DAY );
+            const oldestTweet = tweetMine.getOldestTweet();
+            const daysSinceOldestTweet = Math.round( (Date.now() - (new Date(oldestTweet.created_at)).getTime())/ONE_DAY );
 
             /*var ownTweets = tweetMine.getOwnTweets();
             console.log(ownTweets.map(tweet => {
@@ -54,9 +60,11 @@ var TwitterAssistant = React.createClass({
             
             const estimate = tweetMine.getTweetsThatWouldBeSeenIfAddonUserFollowedVisitedUser().length/data.displayDayCount;
 
-            return React.DOM.div({className: 'twitter-assistant'}, [
+            return React.DOM.div({className: 'TA WhoToFollow is-visible'}, [
 
-                React.DOM.h1({}, "Twitter Assistant"),
+                React.DOM.header({className: 'TA-header WhoToFollow-header'}, [
+                    React.DOM.h3({className: 'TA-title WhoToFollow-title'}, "Twitter Assistant")
+                ]),
 
                 TwitterAssistantTopInfo({
                     daysSinceOldestTweet: daysSinceOldestTweet,
@@ -73,19 +81,32 @@ var TwitterAssistant = React.createClass({
                     histogramSize: data.displayDayCount
                 }),
 
-                React.DOM.h3({}, 'Timeline Composition'),
+                
+                React.DOM.div({className: "TA-period"}, [
+                    React.DOM.div({className: "TA-period-from"}, data.displayDayCount+' days ago'),
+                    React.DOM.div({className: "TA-period-to"}, 'today'),
+                ]),
+                
+                React.DOM.div({className: "TA-section-title"}, 'Timeline Composition'),
 
                 TimelineComposition({
                     tweetMine: tweetMine,
                     users : users,
-                    askMissingUsers : askUsers
+                    askMissingUsers : askUsers,
+                    showDetails: (details: any) =>{
+                        this.setState({
+                            detailView: state.detailView === details ? undefined : details    
+                        })
+                    }
                 }),
 
-                React.DOM.h3({}, 'Generated Engagement'),
+                state.detailView ? DetailList({details: state.detailView}) : undefined,
+                
+                /*React.DOM.div({className: "TA-section-title"}, 'Generated Engagement'),
 
                 GeneratedEngagement({
                     tweetMine: tweetMine
-                }),
+                }),*/
 
                 HumansAreNotMetricsReminder()
 

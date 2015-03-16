@@ -26,7 +26,7 @@ interface MetricsProps{
     values: MetricsPropsValue[]
 }
 
-var Metrics = React.createClass({
+/*const Metrics = React.createClass({
     getInitialState: function() : MetricsState{
         return {detailView: undefined};
     },
@@ -43,20 +43,18 @@ var Metrics = React.createClass({
     },
     
     render: function(){
-        var data : MetricsProps = this.props;
-        var state : MetricsState = this.state;
+        const data : MetricsProps = this.props;
+        const state : MetricsState = this.state;
 
-        var name = data.name, 
+        const name = data.name, 
             values = data.values;
         
-
-        var fractionContainerClasses = ["fraction-container"];
         var fractionContainerChildren : any; // Actually a ReactChild (ReactElement | string), but union types aren't there yet
 
         if(values.length === 1){
-            var value = values[0];
-            var times = Math.floor(value.percent/100);
-            var rest = value.percent - times*100;
+            let value = values[0];
+            let times = Math.floor(value.percent/100);
+            let rest = value.percent - times*100;
 
             fractionContainerClasses.push( times <= 5 ? ('x'+times+'-'+(times+1)) : 'lots' )
 
@@ -76,10 +74,8 @@ var Metrics = React.createClass({
 
                 return React.DOM.div( {
                     className: [
-                        "value",
                         v.class,
-                        clickable ? 'clickable' : '',
-                        state.detailView === v ? 'selected' : ''
+                        clickable ? 'clickable' : ''
                     ].filter(s => !!s).join(' '),
                     title: v.title,
                     style: {
@@ -113,4 +109,4 @@ var Metrics = React.createClass({
 });
 
 
-export = Metrics;
+export = Metrics;*/

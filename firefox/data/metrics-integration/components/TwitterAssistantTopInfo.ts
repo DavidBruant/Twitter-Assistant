@@ -1,20 +1,19 @@
 'use strict';
 
-var TwitterAssistantTopInfo = React.createClass({
+interface TwitterAssistantTopInfoProps{
+    nbDays: number
+    tweetsConsidered: number
+}
+
+const TwitterAssistantTopInfo = React.createClass({
 
     render: function(){
-        /*
-            {
-                daysSinceOldestTweet: number,
-                tweetsConsidered: number
-            }
-        */
-        var data = this.props;
+        const props : TwitterAssistantTopInfoProps = this.props;
 
-        return React.DOM.h2(
-            {},
-            'Last '+data.daysSinceOldestTweet+' days activity ('+data.tweetsConsidered+' tweets)'
-        );
+        return React.DOM.section({className: 'TA-section-title'}, [
+            // TODO make props.nbDays a button with className="TA-graduation btn-link"
+            'Last '+props.nbDays+' days activity: '+props.tweetsConsidered+' tweets'
+        ]);
     }
 });
         

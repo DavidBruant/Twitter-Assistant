@@ -1,17 +1,15 @@
 'use strict';
 
-var HumansAreNotMetricsReminder = React.createClass({
+const HumansAreNotMetricsReminder = React.createClass({
 
     render: function(){ 
-        var data = this.props;
-
-        return React.DOM.footer({},
-            React.DOM.p({}, [
-                React.DOM.strong({}, "Reminder: "),
-                "A human being is more than the few metrics you see above."
-            ])
-        );
+        return React.DOM.footer({className: 'TA-reminder'}, [
+            React.DOM.strong({}, "Reminder: "),
+            "A human being is more than the few metrics you see above."
+        ]);
+        // missing feedback link
     }
+
 });
 
 export = HumansAreNotMetricsReminder;

@@ -16,7 +16,7 @@ var GeneratedEngagement = React.createClass({
         var tweetMine = data.tweetMine;
 
         return React.DOM.div( {className: "all-metrics"}, [
-            Metrics({
+            /*Metrics({
                 name: 'Retweets',
                 values : [{
                         percent: tweetMine.getGeneratedRetweetsCount()*100/tweetMine.getOwnTweets().length
@@ -29,7 +29,7 @@ var GeneratedEngagement = React.createClass({
                         percent: tweetMine.getGeneratedFavoritesCount()*100/tweetMine.getOwnTweets().length
                     }
                 ]
-            })
+            })*/
 
             /*,
             Holding off replies for now as the count is going to be fairly hard to get https://github.com/DavidBruant/Twitter-Assistant/issues/14
