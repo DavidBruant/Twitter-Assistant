@@ -227,14 +227,14 @@ var TimelineComposition = React.createClass({
                 title: "other tweets",
                 percent: 100 - (rtPercent + convPercent + mediaPercent + linkPercent)
             }, {
+                class: 'TA-medias Icon',
+                title: "medias",
+                percent: mediaPercent
+            }, {
                 class: 'TA-links Icon',
                 title: "links",
                 percent: linkPercent,
                 details: makeLinksDetails(tweetsWithLinks)
-            }, {
-                class: 'TA-medias Icon',
-                title: "medias",
-                percent: mediaPercent
             }, {
                 class: 'TA-replies Icon',
                 title: "replies",

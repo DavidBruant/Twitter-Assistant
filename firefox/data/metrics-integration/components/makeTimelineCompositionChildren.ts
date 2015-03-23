@@ -8,14 +8,17 @@ function makeTimelineCompositionChildren(values: any, onDetailViewChange: any){
         return React.DOM.div( {
             className: [
                 v.class,
-                clickable ? 'clickable' : ''
+                clickable ? 'TA-trigger' : ''
             ].filter(s => !!s).join(' '),
             title: v.title,
             style: {
                 width: v.percent.toFixed(1)+'%'
             },
             onClick: !clickable ? undefined : () => {
-                onDetailViewChange(v.details);
+                onDetailViewChange({
+                    class: v.class,
+                    details: v.details
+                });
             }
         });
     });

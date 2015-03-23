@@ -8,7 +8,7 @@ import TimelineComposition = require('./TimelineComposition');
 import TwitterAssistantTopInfo = require('./TwitterAssistantTopInfo');
 import GeneratedEngagement = require('./GeneratedEngagement');
 import HumansAreNotMetricsReminder = require('./HumansAreNotMetricsReminder');
-import TweetsPerDayEstimation = require('./TweetsPerDayEstimation');
+import TweetsPerDayEstimate = require('./TweetsPerDayEstimate');
 import DetailList = require('./DetailList');
 
 import TweetMine = require('../TweetMine');
@@ -29,7 +29,8 @@ interface TwitterAssistantProps{
 var TwitterAssistant = React.createClass({
     getInitialState: function(){
         return <any>{
-            detailView: undefined
+            details: undefined,
+            class: undefined
         };
     },
     
@@ -74,7 +75,7 @@ var TwitterAssistant = React.createClass({
                     tweetsConsidered: tweetMine.length
                 }),
 
-                data.visitedUserIsAddonUser ? undefined : TweetsPerDayEstimation({
+                data.visitedUserIsAddonUser ? undefined : TweetsPerDayEstimate({
                     addonUserAlreadyFollowingVisitedUser: data.addonUserAlreadyFollowingVisitedUser,
                     estimate: estimate
                 }),
@@ -96,14 +97,17 @@ var TwitterAssistant = React.createClass({
                     tweetMine: tweetMine,
                     users : users,
                     askMissingUsers : askUsers,
-                    showDetails: (details: any) =>{
-                        this.setState({
-                            detailView: state.detailView === details ? undefined : details    
-                        })
+                    showDetails: (fragmentDetails: any) => {
+                        const details = fragmentDetails.details;
+                        const className = fragmentDetails.class;
+                        
+                        console.log('show details', state.details, details);
+                        
+                        this.setState(state.class === className ? {details: undefined, class: undefined} : fragmentDetails);
                     }
                 }),
 
-                state.detailView ? DetailList({details: state.detailView}) : undefined,
+                state.details ? DetailList({details: state.details}) : undefined,
                 
                 /*React.DOM.div({className: "TA-section-title"}, 'Generated Engagement'),
 

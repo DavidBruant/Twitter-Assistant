@@ -14,7 +14,11 @@ interface DetailsProps{
 const totalHeight = 300;
 
 const DetailList = React.createClass({
-
+    
+    getInitialState: function(){
+        return {anim: false};
+    },
+    
     render: function(){
         let details : DetailsData[] = this.props.details;
 
@@ -24,7 +28,13 @@ const DetailList = React.createClass({
         const totalConsideredCount = details
             .reduce( (acc, data) => {return acc+data.amount}, 0 );
 
-        return React.DOM.div({className: 'TA-composition-details TA-active'},
+        if(!this.state.anim) 
+            // hack to trigger the CSS animation. No idea how to do better. rAF doesn't work :-/
+            setTimeout(() => {
+                this.setState({anim: true});
+            }, 20);
+        
+        return React.DOM.div({className: ['TA-composition-details', (this.state.anim ? 'TA-active' : '')].join(' ')},
             React.DOM.ol({className: 'TA-composition-details-inner'}, details.map((detailsData) => {
                 var amount = detailsData.amount, 
                     text = detailsData.text, 
