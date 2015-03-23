@@ -42,8 +42,11 @@ var TwitterAssistant = React.createClass({
             askUsers = data.askUsers;
 
         if(tweetMine.length === 0){
-            return React.DOM.div({className: 'twitter-assistant'}, [
-                React.DOM.h1({}, "Twitter Assistant")
+            return React.DOM.div({className: 'TA WhoToFollow is-visible'}, [
+                React.DOM.header({className: 'TA-header WhoToFollow-header'}, [
+                    React.DOM.h3({className: 'TA-title WhoToFollow-title'}, "Twitter Assistant")
+                ]),
+                React.DOM.p({}, 'No tweets over the last '+data.displayDayCount+' days')
             ]);
         }
         else{
@@ -58,7 +61,7 @@ var TwitterAssistant = React.createClass({
                 };
             }));*/
             
-            const estimate = tweetMine.getTweetsThatWouldBeSeenIfAddonUserFollowedVisitedUser().length/data.displayDayCount;
+            const estimate = tweetMine.getTweetsThatWouldBeSeenIfAddonUserFollowedVisitedUser().length/daysSinceOldestTweet;
 
             return React.DOM.div({className: 'TA WhoToFollow is-visible'}, [
 
@@ -67,7 +70,7 @@ var TwitterAssistant = React.createClass({
                 ]),
 
                 TwitterAssistantTopInfo({
-                    daysSinceOldestTweet: daysSinceOldestTweet,
+                    nbDays: daysSinceOldestTweet,
                     tweetsConsidered: tweetMine.length
                 }),
 

@@ -68,6 +68,15 @@ build is to browserify content-side
 `build` (using `tsify`) has this problem that if there are compilation errors, it'll only show the first one. So run `compile` before `build`
 
 
+## Daily life
+
+```
+npm run watch
+npm run compile
+```
+
+
+
 # Acknowledgements
 
 Thanks to [@clochix](https://twitter.com/clochix), [@davidbgk](https://twitter.com/davidbgk/), [@oncletom](https://twitter.com/oncletom) and a couple of others for the inspiration to make this addon an emancipating purely client-side piece of software.
