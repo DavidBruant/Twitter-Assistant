@@ -16,10 +16,11 @@ declare var self : {
 import TwitterAssistant = require('./components/TwitterAssistant');
 import TweetMine = require('./TweetMine');
 
-var ONE_DAY = 24*60*60*1000; // ms
-var RIGHT_PROFILE_SIDEBAR_SELECTOR = '.ProfileSidebar .ProfileWTFAndTrends';
+const ONE_DAY = 24*60*60*1000; // ms
+// var RIGHT_PROFILE_SIDEBAR_SELECTOR = '.ProfileSidebar .ProfileWTFAndTrends';
+const RIGHT_PROFILE_SIDEBAR_SELECTOR = '.ProfileSidebar .SidebarCommonModules';
 
-var twitterAssistantContainerP : Promise<HTMLElement> = (new Promise<Document>( resolve => {
+const twitterAssistantContainerP : Promise<HTMLElement> = (new Promise<Document>( resolve => {
     document.addEventListener('DOMContentLoaded', function listener(){
         resolve(document);
         document.removeEventListener('DOMContentLoaded', listener);
@@ -33,6 +34,7 @@ var twitterAssistantContainerP : Promise<HTMLElement> = (new Promise<Document>( 
 
     var twitterAssistantContainer = document.createElement('div');
     twitterAssistantContainer.classList.add('twitter-assistant-container');
+    twitterAssistantContainer.classList.add('module'); // from Twitter CSS
     rightProfileSidebar.insertBefore(twitterAssistantContainer, rightProfileSidebar.firstChild);
 
     return twitterAssistantContainer;
