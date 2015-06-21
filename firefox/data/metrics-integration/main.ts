@@ -17,7 +17,7 @@ import TwitterAssistant = require('./components/TwitterAssistant');
 import TweetMine = require('./TweetMine');
 
 const ONE_DAY = 24*60*60*1000; // ms
-// var RIGHT_PROFILE_SIDEBAR_SELECTOR = '.ProfileSidebar .ProfileWTFAndTrends';
+
 const RIGHT_PROFILE_SIDEBAR_SELECTOR = '.ProfileSidebar .SidebarCommonModules';
 
 const twitterAssistantContainerP : Promise<HTMLElement> = (new Promise<Document>( resolve => {
@@ -26,16 +26,22 @@ const twitterAssistantContainerP : Promise<HTMLElement> = (new Promise<Document>
         document.removeEventListener('DOMContentLoaded', listener);
     });
 })).then(document => {
-    var rightProfileSidebar = document.body.querySelector(RIGHT_PROFILE_SIDEBAR_SELECTOR);
-    if(!rightProfileSidebar){
-        var msg = ['No element matching (', RIGHT_PROFILE_SIDEBAR_SELECTOR ,'). No idea where to put the results :-('].join('');
-        throw new Error(msg);
-    }
-
-    var twitterAssistantContainer = document.createElement('div');
+    // container on the twitter.com website
+    let twitterContainer = document.body.querySelector(RIGHT_PROFILE_SIDEBAR_SELECTOR);
+    // container of the addon panel
+    const twitterAssistantContainer = document.createElement('div');
     twitterAssistantContainer.classList.add('twitter-assistant-container');
     twitterAssistantContainer.classList.add('module'); // from Twitter CSS
-    rightProfileSidebar.insertBefore(twitterAssistantContainer, rightProfileSidebar.firstChild);
+
+    if(twitterContainer){
+        twitterContainer.insertBefore(twitterAssistantContainer, twitterContainer.firstChild);
+    }
+    else{
+        // sometimes, Twitter changes its HTML structure. Need to display things somewhere anyway.
+        twitterContainer = document.body;
+        twitterContainer.appendChild(twitterAssistantContainer);
+    }
+
 
     return twitterAssistantContainer;
 });
