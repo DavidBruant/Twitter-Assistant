@@ -45,7 +45,11 @@ var TwitterAssistant = React.createClass({
         if(tweetMine.length === 0){
             return React.DOM.div({className: 'TA WhoToFollow is-visible'}, [
                 React.DOM.header({className: 'TA-header WhoToFollow-header'}, [
-                    React.DOM.h3({className: 'TA-title WhoToFollow-title'}, "Twitter Assistant")
+                    React.DOM.h3({className: 'TA-title WhoToFollow-title'}, "Twitter Assistant"),
+                    React.DOM.a({
+                        href: "mailto:bruant.d+ta@gmail.com",
+                        title: "Ask help to the addon author"
+                    }, 'Help')
                 ]),
                 React.DOM.p({}, 'No tweets over the last '+data.displayDayCount+' days')
             ]);
@@ -67,7 +71,12 @@ var TwitterAssistant = React.createClass({
             return React.DOM.div({className: 'TA WhoToFollow is-visible'}, [
 
                 React.DOM.header({className: 'TA-header WhoToFollow-header'}, [
-                    React.DOM.h3({className: 'TA-title WhoToFollow-title'}, "Twitter Assistant")
+                    React.DOM.h3({className: 'TA-title WhoToFollow-title'}, "Twitter Assistant"),
+                    ' · ',
+                    React.DOM.a({
+                        href: "mailto:bruant.d+ta@gmail.com",
+                        title: "The addon author is here to help out!"
+                    }, 'Help')
                 ]),
 
                 TwitterAssistantTopInfo({

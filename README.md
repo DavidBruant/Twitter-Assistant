@@ -68,7 +68,7 @@ build is to browserify content-side
 `build` (using `tsify`) has this problem that if there are compilation errors, it'll only show the first one. So run `compile` before `build`
 
 
-## Daily life
+## Daily routine
 
 ```
 npm run watch

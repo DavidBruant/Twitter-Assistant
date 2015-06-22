@@ -64,6 +64,11 @@
                     href: 'https://twitter.com/'
                 }, "Please, login to your Twitter account.") );
             }
+            
+            children.push( React.DOM.footer({}, React.DOM.a({
+                href: "mailto:bruant.d+ta@gmail.com",
+                title: "The addon author is here to help out!"
+            }, 'Help')) )
                 
             return React.DOM.div({}, children);
         }
