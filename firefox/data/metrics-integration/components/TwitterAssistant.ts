@@ -48,7 +48,7 @@ var TwitterAssistant = React.createClass({
                     React.DOM.h3({className: 'TA-title WhoToFollow-title'}, "Twitter Assistant"),
                     React.DOM.a({
                         href: "mailto:bruant.d+ta@gmail.com",
-                        title: "Ask help to the addon author"
+                        title: "The addon author is here to help out!"
                     }, 'Help')
                 ]),
                 React.DOM.p({}, 'No tweets over the last '+data.displayDayCount+' days')
