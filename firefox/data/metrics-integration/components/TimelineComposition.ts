@@ -1,8 +1,9 @@
 'use strict';
 
-import Metrics = require('./Metrics');
 import getRetweetOriginalTweet = require('../getRetweetOriginalTweet');
 import getWhosBeingConversedWith = require('../getWhosBeingConversedWith');
+
+import makeTimelineCompositionChildren = require('./makeTimelineCompositionChildren');
 
 function getDomain(url: string){
     var a = document.createElement('a');
@@ -156,6 +157,7 @@ interface TimelineCompositionProps{
     tweetMine: any // TweetMine
     users: Map<TwitterUserId, TwitterAPIUser>
     askMissingUsers : (ids: TwitterUserId[]) => void
+    showDetails: (details?: any) => void
 }
 
 var TimelineComposition = React.createClass({
@@ -219,34 +221,32 @@ var TimelineComposition = React.createClass({
             askMissingUsers(missingUsers);
         }
 
-        return React.DOM.div( {}, [
-            Metrics({
-                values : [{
-                    class: 'retweets',
-                    title: "Retweets",
-                    percent: rtPercent,
-                    details: rtDetails
-                }, {
-                    class: 'conversations',
-                    title: "Conversations",
-                    percent: convPercent,
-                    details: conversationDetails
-                }, {
-                    class: 'media',
-                    title: "Media",
-                    percent: mediaPercent
-                }, {
-                    class: 'links',
-                    title: "Links",
-                    percent: linkPercent,
-                    details: makeLinksDetails(tweetsWithLinks)
-                }, {
-                    class: 'other',
-                    title: "Other",
-                    percent: 100 - (rtPercent + convPercent + mediaPercent + linkPercent)
-                }
-            ]})
-        ]);
+        return React.DOM.div({className: "TA-composition"}, makeTimelineCompositionChildren([
+            {
+                class: 'TA-tweets Icon',
+                title: "other tweets",
+                percent: 100 - (rtPercent + convPercent + mediaPercent + linkPercent)
+            }, {
+                class: 'TA-medias Icon',
+                title: "medias",
+                percent: mediaPercent
+            }, {
+                class: 'TA-links Icon',
+                title: "links",
+                percent: linkPercent,
+                details: makeLinksDetails(tweetsWithLinks)
+            }, {
+                class: 'TA-replies Icon',
+                title: "replies",
+                percent: convPercent,
+                details: conversationDetails
+            }, {
+                class: 'TA-retweets Icon',
+                title: "retweets",
+                percent: rtPercent,
+                details: rtDetails
+            }
+        ], data.showDetails));
     }
 });
         

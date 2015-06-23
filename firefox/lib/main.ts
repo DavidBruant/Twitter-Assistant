@@ -33,6 +33,7 @@ var TWITTER_USER_PAGES = [
     "https://twitter.com/angustweets"*/
 
     // https://twitter.com/BuzzFeed // for an account with LOTS of tweets
+    // https://twitter.com/dupatron has no tweets at this point 
 ];
 
 /*throw 'Apparently retweet details are broken + Need to test whether addon user infos are properly fetched, then propagated to the tweetMine to compute the number nia nia nia + Make sure the "no logged in addon user" case is taken care of + add trim_user everywhere';*/

@@ -1,10 +1,10 @@
 'use strict';
 
-var ONE_DAY = 24*60*60*1000;
+const ONE_DAY = 24*60*60*1000;
 
-var MAX_TWEETS_PER_DAY = 15;
+const MAX_TWEETS_PER_DAY = 15;
     
-var Histogram = React.createClass({
+const Histogram = React.createClass({
 
     render: function(){
         /*
@@ -13,30 +13,30 @@ var Histogram = React.createClass({
                 histogramSize: number
             }
         */
-        var data = this.props; 
+        const data = this.props; 
 
-        var tweetMine = data.tweetMine, 
+        const tweetMine = data.tweetMine, 
             histogramSize = data.histogramSize;
 
-        return React.DOM.div( {className: 'histogram'}, [
-            React.DOM.div({className: "histo-range"}, Array(histogramSize).fill(0).map((e, i) => {
-                var today = (new Date()).getTime();
-                today = today - today%ONE_DAY; // beginning of today
+        return React.DOM.section( {className: 'TA-activity'}, Array(histogramSize).fill(0).map((e, i) => {
+            let today = (new Date()).getTime();
+            today = today - today%ONE_DAY; // beginning of today
 
-                var thisDayTweets = tweetMine.byDateRange(today - i*ONE_DAY, today - (i-1)*ONE_DAY);
+            const thisDayTweets = tweetMine.byDateRange(today - i*ONE_DAY, today - (i-1)*ONE_DAY);
 
-                var height = Math.min(thisDayTweets.length/MAX_TWEETS_PER_DAY , 1)*100;
-                // TODO add a class when > 1
-                return React.DOM.div({
-                    style: {height: height +'%'},
-                    title: thisDayTweets.length
-                });
-            }).reverse()),
-            React.DOM.div({className: "legend"}, [
-                React.DOM.div({}, histogramSize+' days ago'),
-                React.DOM.div({}, 'today'),
-            ])
-        ]);
+            const height = Math.min(thisDayTweets.length/MAX_TWEETS_PER_DAY , 1)*100;
+            // TODO add a class when > 1
+            return React.DOM.div({
+                className: 'TA-bar',
+                "data-value": thisDayTweets.length
+            },  React.DOM.div({
+                    className: "TA-tweets",
+                    style: {
+                        height: height +'%'
+                    }
+                })
+            );
+        }).reverse())
     }
 });
         

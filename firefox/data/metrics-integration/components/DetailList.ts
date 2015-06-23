@@ -11,22 +11,31 @@ interface DetailsProps{
     details: DetailsData[]
 }
 
-var totalHeight = 300;
+const totalHeight = 300;
 
-var DetailList = React.createClass({
-
+const DetailList = React.createClass({
+    
+    getInitialState: function(){
+        return {anim: false};
+    },
+    
     render: function(){
-        var details : DetailsData[] = this.props.details;
+        let details : DetailsData[] = this.props.details;
 
         // only keep 10 top items
         details = details.slice(0, 10);
 
-        var totalConsideredCount = details
+        const totalConsideredCount = details
             .reduce( (acc, data) => {return acc+data.amount}, 0 );
 
-        return React.DOM.ol(
-            {className: 'weighted-user-list'},
-            details.map((detailsData) => {
+        if(!this.state.anim) 
+            // hack to trigger the CSS animation. No idea how to do better. rAF doesn't work :-/
+            setTimeout(() => {
+                this.setState({anim: true});
+            }, 20);
+        
+        return React.DOM.div({className: ['TA-composition-details', (this.state.anim ? 'TA-active' : '')].join(' ')},
+            React.DOM.ol({className: 'TA-composition-details-inner'}, details.map((detailsData) => {
                 var amount = detailsData.amount, 
                     text = detailsData.text, 
                     url = detailsData.url, 
@@ -34,20 +43,38 @@ var DetailList = React.createClass({
                 
 
                 return React.DOM.li({
-                    style: {
-                        height: (totalHeight*amount/totalConsideredCount) + 'px'
-                    }
-                },
-                React.DOM.a({
-                    href: url || '',
-                    target: '_blank'
+                    className: "TA-account account-summary"
                 }, [
-                    image ? React.DOM.img({src: image}) : undefined,
-                    React.DOM.span({}, text),
-                    React.DOM.span({}, ' '+String(amount))
-                ]))
-        }));
+                    React.DOM.div({
+                        className : "TA-account-value",
+                        style: {
+                            width: (amount*100/totalConsideredCount) + '%'
+                        },
+                        'data-value': amount
+                    }),
+                    React.DOM.div({className : "TA-account-inner"}, [
+                        React.DOM.div({className: "TA-account-content content"}, [
+                            React.DOM.a({
+                                className: "TA-account-group account-group",
+                                href: url || '',
+                                target: '_blank'
+                            }, [
+                                image ? React.DOM.img({className: 'TA-avatar avatar', src: image}) : undefined,
+                                React.DOM.span({className: 'TA-account-group-inner account-group-inner'}, [
+                                    React.DOM.b({className: 'TA-fullname fullname'}, text)
+                                    // missing <span class="TA-username username"><s>@</s><span>thibautseguy</span></span>
+                                ])
+                            ])    
+                        ])    
+                    ]),     
+                ]);
+                
+                // missing TA-composition-details-more
+                
+            }))
+        );
     }
+
 });
 
 

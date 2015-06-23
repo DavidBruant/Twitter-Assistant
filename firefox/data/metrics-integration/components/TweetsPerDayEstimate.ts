@@ -1,19 +1,19 @@
 'use strict';
 
-interface TweetsPerDayEstimationProps{
+interface TweetsPerDayEstimateProps{
     addonUserAlreadyFollowingVisitedUser: boolean
     estimate: number
 }
 
-const TweetsPerDayEstimation = React.createClass({
+const TweetsPerDayEstimate = React.createClass({
 
     render: function(){ 
-        const props : TweetsPerDayEstimationProps = this.props;
+        const props : TweetsPerDayEstimateProps = this.props;
         
         console.log('estimate', props.estimate);
 
         return React.DOM.section(
-            {className: 'tweets-per-day-estimation'},
+            {className: 'tweets-per-day-estimate'},
             props.addonUserAlreadyFollowingVisitedUser ?
                 'Following this account contributes ~'+ props.estimate.toFixed(2) + ' tweets per day to your timeline' :
                 'Following this account would add ~'+ props.estimate.toFixed(2) + ' tweets per day to your timeline'
@@ -21,4 +21,4 @@ const TweetsPerDayEstimation = React.createClass({
     }
 });
 
-export = TweetsPerDayEstimation;
+export = TweetsPerDayEstimate;
