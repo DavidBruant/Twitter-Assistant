@@ -2,9 +2,9 @@
     "name": "twitter-assistant",
     "title": "Twitter Assistant",
     "id": "jid1-BbLB1WcU09jwfA@jetpack",
-    "description": "a basic add-on",
-    "author": "",
+    "description": "An addon improving the Twitter web experience",
+    "author": "David Bruant",
     "license": "MIT",
     "main": "lib/main.js",
-    "version": "0.1.0"
+    "version": "0.2.0"
 }
