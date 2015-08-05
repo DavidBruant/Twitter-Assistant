@@ -109,6 +109,7 @@ interface TwitterAPITweet{
     entities: TwitterAPIEntities
     user: TwitterAPIReducedUser // the 'trim_user' parameter will always be used
     text: string
+    lang: string
 
     retweeted_status?: TwitterAPITweet
     retweet_count: number

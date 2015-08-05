@@ -2,9 +2,10 @@
 
 import getRetweetOriginalTweet = require('./getRetweetOriginalTweet');
 import getWhosBeingConversedWith = require('./getWhosBeingConversedWith');
+import stemByLang = require('./stem');
 
 const ONE_DAY = 24*60*60*1000; // ms
-
+const DEFAULT_STEMMER_LANG = 'en';
 
 function isRetweet(t: TwitterAPITweet) : boolean{
     return 'retweeted_status' in t;
@@ -124,6 +125,36 @@ function TweetMine(
                 }
             });
             
+        },
+        
+        getWordMap: function(){
+            const wordToTweets = new Map<string, TwitterAPITweet[]>();
+            
+            tweets.forEach(t => {
+                const originalTweet = getRetweetOriginalTweet(t);
+                const text = originalTweet.text;
+                const lang = originalTweet.lang;
+                
+                const stem = stemByLang.get(lang) || stemByLang.get(DEFAULT_STEMMER_LANG);
+                
+                console.log('getWordMap', lang, typeof stem);
+                
+                const stems = stem(text);
+                
+                stems.forEach(s => {
+                    let tweets = wordToTweets.get(s);
+                    if(!tweets){
+                        tweets = [];
+                    }
+                    
+                    tweets.push(t);
+                    
+                    wordToTweets.set(s, tweets)
+                });
+                
+            });
+            
+            return wordToTweets;
         },
         
         get length(){
