@@ -16,7 +16,7 @@
     "xpi": "cfx xpi --pkgdir firefox",
     "run": "cfx run --pkgdir firefox",
     "build": "browserify firefox/data/metrics-integration/main.ts -p [ tsify --noImplicitAny --sourceMap -t ES6 ] --debug > firefox/data/metrics-integration/twitter-assistant-content.js",
-    "watch": "watchify firefox/data/metrics-integration/main.ts -p [ tsify --noImplicitAny --sourceMap -t ES6 ] --debug -o firefox/data/metrics-integration/twitter-assistant-content.js -v"
+    "watch": "watchify firefox/data/metrics-integration/main.ts -p [ tsify --noImplicitAny --sourceMap -t ES6 ] --debug -o firefox/data/metrics-integration/twitter-assistant-content.js -v --ignore WNdb --ignore lapack"
   },
   "devDependencies": {
     "watchify": "^2.4.0"
@@ -27,7 +27,7 @@
   "dependencies": {
     "browserify": "^8.1.3",
     "natural": "^0.2.1",
-    "tsify": "^0.8.2",
-    "typescript": "^1.4.1"
+    "tsify": "^0.11.9",
+    "typescript": "^1.5.3"
   }
 }
