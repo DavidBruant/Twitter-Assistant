@@ -119,7 +119,7 @@ var TwitterAssistant = React.createClass({
 
                 state.details ? DetailList({details: state.details}) : undefined,
                 
-                
+                WordTweetTreeMap({wordToTweetsMap: tweetMine.getWordMap()}),
                 
                 /*React.DOM.div({className: "TA-section-title"}, 'Generated Engagement'),
 
