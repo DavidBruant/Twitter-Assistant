@@ -1,1 +1,298 @@
-.TA .TA-section-title{margin:1.5em 0 0.5em;font-size:13px;color:#292f33;font-weight:bold}.TA .TA-graduation{font-weight:bold;cursor:ew-resize}.TA .TA-activity{display:-webkit-flex;display:-ms-flexbox;display:flex;height:100px;-webkit-flex-flow:row nowrap;-ms-flex-flow:row nowrap;flex-flow:row nowrap;-webkit-align-items:stretch;-ms-flex-align:stretch;align-items:stretch}.TA .TA-activity .TA-bar{position:relative;display:-webkit-flex;display:-ms-flexbox;display:flex;z-index:0;height:100%;overflow:visible;-webkit-flex:1;-ms-flex:1;flex:1;-webkit-flex-flow:column nowrap;-ms-flex-flow:column nowrap;flex-flow:column nowrap;-webkit-justify-content:flex-end;-ms-flex-pack:end;justify-content:flex-end;-webkit-align-items:stretch;-ms-flex-align:stretch;align-items:stretch}.TA .TA-activity .TA-bar::after{position:absolute;top:calc(100% + .3em);left:50%;padding:0.1em 0.2em;background:#e5eaeb;font-size:10px;color:#292f33;-webkit-transform:translateX(-50%);-ms-transform:translateX(-50%);transform:translateX(-50%);opacity:0;content:attr(data-value)}.TA .TA-activity .TA-bar:hover{z-index:1;box-shadow:0 0 0 1px #292f33}.TA .TA-activity .TA-bar:hover::after{opacity:1}.TA .TA-tweets{background:#e5eaeb}.TA .TA-links{background:#ffb463}.TA .TA-medias{background:#ffed56}.TA .TA-replies{background:#6cefda}.TA .TA-retweets{background:#58a5ce}.TA .TA-period{display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-flex-flow:row nowrap;-ms-flex-flow:row nowrap;flex-flow:row nowrap;-webkit-align-items:stretch;-ms-flex-align:stretch;align-items:stretch}.TA .TA-period-from,.TA .TA-period-to{-webkit-flex:1;-ms-flex:1;flex:1;font-size:13px;color:#8899a6}.TA .TA-period-from{text-align:left}.TA .TA-period-to{text-align:right}.TA .TA-composition{display:-webkit-flex;display:-ms-flexbox;display:flex;width:100%;height:20px;-webkit-flex-flow:row-reverse nowrap;-ms-flex-flow:row-reverse nowrap;flex-flow:row-reverse nowrap;-webkit-align-items:stretch;-ms-flex-align:stretch;align-items:stretch}.TA .TA-composition div{position:relative;display:-webkit-flex;display:-ms-flexbox;display:flex;overflow:hidden}.TA .TA-composition div::before{margin:auto;color:#ffffff}.TA .TA-composition .TA-tweets::before{content:"\f029"}.TA .TA-composition .TA-links::before{content:"\f098"}.TA .TA-composition .TA-medias::before{content:"\f027"}.TA .TA-composition .TA-replies::before{content:"\f151"}.TA .TA-composition .TA-retweets::before{content:"\f152"}.TA .TA-composition-details{max-height:0;margin:0 -15px;overflow:hidden;opacity:0;transition:all 0.3s ease-in-out}.TA .TA-composition-details.TA-active{max-height:530px;padding-top:1em;opacity:1}.TA .TA-composition-details-inner{position:relative;padding:0 15px;border:solid #e1e8ed;border-width:1px 0}.TA .TA-composition-details-inner::before{position:absolute;top:-6px;left:15px;width:10px;height:10px;border:solid #e1e8ed;border-width:1px 0 0 1px;background:#ffffff;content:"";-webkit-transform:rotate(45deg);-ms-transform:rotate(45deg);transform:rotate(45deg)}.TA .TA-account{position:relative;margin:10px 0;min-height:35px}.TA .TA-account .TA-account-value{position:absolute;top:0;bottom:0;right:0;z-index:0;background:#e5eaeb}.TA .TA-account .TA-account-value::before{position:absolute;bottom:0;right:2px;font-size:14px;color:#8899a6;content:attr(data-value)}.TA .TA-account .TA-account-inner{position:relative;z-index:1}.TA .TA-account .TA-account-content{margin-left:45px}.TA .TA-account .TA-avatar{width:35px;height:35px}.TA .TA-account .TA-fullname,.TA .TA-account .TA-username{display:block;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.TA .TA-composition-details-more{margin:1em -15px 0;padding:5px 15px;border-top:1px dashed #e1e8ed}.TA .TA-composition-details-more .TA-account-min{display:inline-block;margin:5px 0;color:#8899a6;text-decoration:none}.TA .TA-composition-details-more .TA-account-min:hover .TA-count,.TA .TA-composition-details-more .TA-account-min:focus .TA-count{text-decoration:underline}.TA .TA-composition-details-more .TA-avatar{width:20px;height:20px;border-radius:5px;text-decoration:none;vertical-align:bottom;-moz-force-broken-image-icon:1}.TA .TA-composition-details-more .TA-count{display:inline-block;width:19px;margin-left:-2px;overflow:hidden;line-height:1;vertical-align:bottom}.TA .TA-engagement{display:-webkit-flex;display:-ms-flexbox;display:flex;width:100%;height:40px;-webkit-flex-flow:column nowrap;-ms-flex-flow:column nowrap;flex-flow:column nowrap;-webkit-align-items:stretch;-ms-flex-align:stretch;align-items:stretch;background:#e5eaeb}.TA .TA-engagement .TA-rt,.TA .TA-engagement .TA-fav{-webkit-flex:1;-ms-flex:1;flex:1;display:-webkit-flex;display:-ms-flexbox;display:flex;overflow:hidden;background:#52e08b}.TA .TA-engagement .TA-rt::before,.TA .TA-engagement .TA-fav::before{margin:auto auto auto 2px;color:#ffffff}.TA .TA-engagement .TA-rt::before{content:"\f152"}.TA .TA-engagement .TA-fav::before{content:"\f147"}.TA .TA-language{display:-webkit-flex;display:-ms-flexbox;display:flex;width:100%;height:20px;-webkit-flex-flow:row nowrap;-ms-flex-flow:row nowrap;flex-flow:row nowrap;-webkit-align-items:stretch;-ms-flex-align:stretch;align-items:stretch;background:#e5eaeb}.TA .TA-language div{padding-left:2px;background:#52e08b;line-height:20px;color:#ffffff;font-weight:bold;text-transform:uppercase}.TA .TA-language div:nth-child(even){background:#1fad58}.TA .TA-reminder{margin:1em -15px 0;padding:15px 15px 0;border-top:1px solid #e1e8ed;color:#8899a6}
+/* ------------------------------------------------------------------
+   Imports
+   ------------------------------------------------------------------ */
+/* ------------------------------------------------------------------
+   Variables
+   ------------------------------------------------------------------ */
+/* ------------------------------------------------------------------
+   Twitter Assistant
+   ------------------------------------------------------------------ */
+.TA-main-container * {
+  box-sizing: border-box;
+}
+.TA-main-container .TA-trigger {
+  cursor: pointer;
+}
+.TA-main-container .TA-section-title {
+  margin: 1.5em 0 .5em;
+  font-size: 13px;
+  color: #292f33;
+  font-weight: bold;
+}
+.TA-main-container .TA-graduation {
+  font-weight: bold;
+  cursor: ew-resize;
+}
+.TA-main-container .TA-histogram {
+  display: flex;
+  height: 100px;
+  flex-flow: row nowrap;
+  align-items: stretch;
+}
+.TA-main-container .TA-histogram .TA-bar {
+  display: flex;
+  height: 100%;
+  overflow: visible;
+  flex: 1;
+  flex-flow: column nowrap;
+  justify-content: flex-end;
+  align-items: stretch;
+}
+.TA-main-container .TA-histogram .TA-bar[data-value] {
+  position: relative;
+  z-index: 0;
+}
+.TA-main-container .TA-histogram .TA-bar[data-value]::after {
+  position: absolute;
+  top: calc(100% + .3em);
+  left: 50%;
+  padding: .1em .2em;
+  transform: translateX(-50%);
+  opacity: 0;
+  content: attr(data-value);
+}
+.TA-main-container .TA-histogram .TA-bar[data-value]:hover {
+  z-index: 1;
+  box-shadow: 0 0 0 1px #292f33;
+}
+.TA-main-container .TA-histogram .TA-bar[data-value]:hover::after {
+  opacity: 1;
+}
+.TA-main-container .TA-activity .TA-bar[data-value]::after {
+  background: #e5eaeb;
+  font-size: 10px;
+  color: #292f33;
+}
+.TA-main-container .TA-tweets {
+  background: #e5eaeb;
+}
+.TA-main-container .TA-links {
+  background: #ffb463;
+}
+.TA-main-container .TA-medias {
+  background: #ffed56;
+}
+.TA-main-container .TA-replies {
+  background: #6cefda;
+}
+.TA-main-container .TA-retweets {
+  background: #58a5ce;
+}
+.TA-main-container .TA-period {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: stretch;
+}
+.TA-main-container .TA-period-from,
+.TA-main-container .TA-period-to {
+  flex: 1;
+  font-size: 13px;
+  color: #8899a6;
+}
+.TA-main-container .TA-period-from {
+  text-align: left;
+}
+.TA-main-container .TA-period-to {
+  text-align: right;
+}
+.TA-main-container .TA-composition {
+  display: flex;
+  width: 100%;
+  height: 20px;
+  flex-flow: row nowrap;
+  align-items: stretch;
+}
+.TA-main-container .TA-composition div {
+  position: relative;
+  display: flex;
+  overflow: hidden;
+}
+.TA-main-container .TA-composition div::before {
+  margin: auto;
+  color: #ffffff;
+}
+.TA-main-container .TA-composition .TA-tweets::before {
+  content: "\f029";
+}
+.TA-main-container .TA-composition .TA-links::before {
+  content: "\f098";
+}
+.TA-main-container .TA-composition .TA-medias::before {
+  content: "\f027";
+}
+.TA-main-container .TA-composition .TA-replies::before {
+  content: "\f151";
+}
+.TA-main-container .TA-composition .TA-retweets::before {
+  content: "\f152";
+}
+.TA-main-container .TA-composition-details {
+  position: relative;
+  max-height: 0;
+  margin: 0 -15px;
+  overflow: hidden;
+  opacity: 0;
+  transition: all .3s ease-in-out;
+}
+.TA-main-container .TA-composition-details.TA-active {
+  max-height: 530px;
+  padding-top: 1em;
+  opacity: 1;
+}
+.TA-main-container .TA-composition-details.TA-active .TA-composition-details-arrow {
+  top: 1em;
+}
+.TA-main-container .TA-composition-details-arrow {
+  position: absolute;
+  top: 0;
+  left: 15px;
+  width: 10px;
+  height: 10px;
+  border: solid #d1dce3;
+  border-width: 1px 0 0 1px;
+  background: #ffffff;
+  transform: rotate(45deg) translate(-50%, -50%);
+  transform-origin: left top;
+  content: "";
+  transition: all .3s ease-in-out;
+}
+.TA-main-container .TA-composition-details-inner {
+  padding: 5px 15px;
+  margin: 0;
+  border: solid #e1e8ed;
+  border-width: 1px 0;
+  list-style: none;
+}
+.TA-main-container .TA-account {
+  position: relative;
+  min-height: 35px;
+  margin: 10px 0;
+}
+.TA-main-container .TA-account .TA-account-count {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  z-index: 0;
+  background: #e5eaeb;
+}
+.TA-main-container .TA-account .TA-account-count::before {
+  position: absolute;
+  bottom: 0;
+  right: 2px;
+  font-size: 14px;
+  color: #8899a6;
+  content: attr(data-count);
+}
+.TA-main-container .TA-account .TA-account-inner {
+  position: relative;
+  z-index: 1;
+}
+.TA-main-container .TA-account .TA-account-content {
+  margin-left: 45px;
+}
+.TA-main-container .TA-account .TA-avatar {
+  width: 35px;
+  height: 35px;
+}
+.TA-main-container .TA-account .TA-fullname,
+.TA-main-container .TA-account .TA-username {
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.TA-main-container .TA-account:nth-child(n + 5) {
+  display: inline-block;
+  min-height: initial;
+  margin: 5px 2px 5px 0;
+  color: #8899a6;
+  text-decoration: none;
+  vertical-align: top;
+}
+.TA-main-container .TA-account:nth-child(n + 5):hover .TA-account-count, .TA-main-container .TA-account:nth-child(n + 5):focus .TA-account-count {
+  text-decoration: underline;
+}
+.TA-main-container .TA-account:nth-child(n + 5) .TA-account-count {
+  top: auto;
+  left: 0;
+  width: auto !important;
+  overflow: hidden;
+  background: none;
+  line-height: 1;
+  text-align: right;
+}
+.TA-main-container .TA-account:nth-child(n + 5) .TA-account-count::before {
+  position: static;
+}
+.TA-main-container .TA-account:nth-child(n + 5) .TA-account-content {
+  margin: 0;
+}
+.TA-main-container .TA-account:nth-child(n + 5) .TA-account-group {
+  padding-right: 18px;
+}
+.TA-main-container .TA-account:nth-child(n + 5) .TA-avatar {
+  position: static;
+  display: block;
+  width: 20px;
+  height: 20px;
+}
+.TA-main-container .TA-account:nth-child(n + 5) .TA-account-group-inner {
+  display: none;
+}
+.TA-main-container .TA-account:last-child {
+  margin-bottom: 10px;
+}
+.TA-main-container .TA-engagement {
+  display: flex;
+  width: 100%;
+  height: 40px;
+  flex-flow: column nowrap;
+  align-items: stretch;
+  background: #e5eaeb;
+}
+.TA-main-container .TA-engagement .TA-rt,
+.TA-main-container .TA-engagement .TA-fav {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+  background: #52e08b;
+}
+.TA-main-container .TA-engagement .TA-rt::before,
+.TA-main-container .TA-engagement .TA-fav::before {
+  margin: auto auto auto 2px;
+  color: #ffffff;
+}
+.TA-main-container .TA-engagement .TA-rt::before {
+  content: "\f152";
+}
+.TA-main-container .TA-engagement .TA-fav::before {
+  content: "\f147";
+}
+.TA-main-container .TA-language {
+  display: flex;
+  width: 100%;
+  height: 20px;
+  flex-flow: row nowrap;
+  align-items: stretch;
+  background: #e5eaeb;
+}
+.TA-main-container .TA-language div {
+  padding-left: 2px;
+  background: #52e08b;
+  line-height: 20px;
+  color: #ffffff;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+.TA-main-container .TA-language div:nth-child(even) {
+  background: #1fad58;
+}
+.TA-main-container .TA-reminder {
+  margin: 1em -15px 0;
+  padding: 15px 15px 0;
+  border-top: 1px solid #e1e8ed;
+  color: #8899a6;
+}
+
+/*# sourceMappingURL=main.css.map */

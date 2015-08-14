@@ -13,115 +13,269 @@
 
 
 		<!-- Begin here -->
-		<div class="TA WhoToFollow is-visible">
-			<div class="TA-header WhoToFollow-header">
+		<section class="TA-main-container WhoToFollow is-visible">
+			<header class="TA-header WhoToFollow-header">
 				<h3 class="TA-title WhoToFollow-title">Twitter Assistant</h3>
 				·
 				<a href="#" title="Need help about this panel?">Help</a>
 				·
 				<a href="#" title="See who are the awesome guys who made this panel">About</a>
-			</div>
-			<div class="TA-section-title">
-				Last <button class="TA-graduation btn-link">40</button> days activity: 1337 tweets
-			</div>
-			<div class="TA-activity">
-				<!--
-				<div class="TA-bar" data-value="42">
-					<div class="TA-tweets" style="height: 20%;"></div>
-					<div class="TA-links" style="height: 18%;"></div>
-					<div class="TA-medias" style="height: 3%;"></div>
-					<div class="TA-replies" style="height: 15%;"></div>
-					<div class="TA-retweets" style="height: 15%;"></div>
+			</header>
+			<section>
+				<header class="TA-section-title">
+					<h4>Last <button class="TA-graduation btn-link">40</button> days activity: 1337 tweets</h4>
+				</header>
+				<div class="TA-histogram TA-activity">
+					<!--
+					<div class="TA-bar" data-value="42">
+						<div class="TA-tweets" style="height: 20%;"></div>
+						<div class="TA-links" style="height: 18%;"></div>
+						<div class="TA-medias" style="height: 3%;"></div>
+						<div class="TA-replies" style="height: 15%;"></div>
+						<div class="TA-retweets" style="height: 15%;"></div>
+					</div>
+					-->
 				</div>
-				-->
-			</div>
-			<div class="TA-period">
-				<div class="TA-period-from">30 days ago</div>
-				<div class="TA-period-to">today</div>
-			</div>
-			<div class="TA-section-title">
-				Average timeline composition
-			</div>
-			<div class="TA-composition">
-				<div class="TA-tweets Icon" style="width:35%;" title="tweets"></div>
-				<div class="TA-links Icon" style="width:20%;" title="links"></div>
-				<div class="TA-medias Icon" style="width:5%;" title="medias"></div>
-				<div class="TA-replies Icon" style="width:30%;" title="replies"></div>
-				<div class="TA-retweets Icon" style="width:10%;" title="retweets"></div>
-			</div>
-			<div class="TA-composition-details">
-				<div class="TA-composition-details-inner">
-
-					<div class="TA-account account-summary">
-						<div class="TA-account-value" data-value="25" style="width:80%;"></div>
-						<div class="TA-account-inner">
-							<div class="TA-account-content content">
-								<a class="TA-account-group account-group" href="#">
-									<img class="TA-avatar avatar" src="https://pbs.twimg.com/profile_images/504278327067045889/rGGiSVtU_normal.jpeg" alt="">
-									<span class="TA-account-group-inner account-group-inner">
-										<b class="TA-fullname fullname">Thibaut Séguy</b>
-										<span class="TA-username username"><s>@</s><span>thibautseguy</span></span>
-									</span>
-								</a>
-							</div>
-						</div>
-					</div>
-					<div class="TA-account account-summary">
-						<div class="TA-account-value" data-value="14" style="width:45%;"></div>
-						<div class="TA-account-inner">
-							<div class="TA-account-content content">
-								<a class="TA-account-group account-group" href="#">
-									<img class="TA-avatar avatar" src="https://pbs.twimg.com/profile_images/504278327067045889/rGGiSVtU_normal.jpeg" alt="">
-									<span class="TA-account-group-inner account-group-inner">
-										<b class="TA-fullname fullname">Lorem ipsum dolor sit amet consectetur adipiscing elit</b>
-										<span class="TA-username username"><s>@</s><span>LoremIpsum</span></span>
-									</span>
-								</a>
-							</div>
-						</div>
-					</div>
-
-					<div class="TA-composition-details-more">
-						<a class="TA-account-min" href="#">
-							<img class="TA-avatar" src="https://pbs.twimg.com/profile_images/504278327067045889/rGGiSVtU_normal.jpeg" alt="">
-							<span class="TA-count">12</span>
-						</a>
-						<a class="TA-account-min" href="#">
-							<img class="TA-avatar" src="https://pbs.twimg.com/profile_images/504278327067045889/rGGiSVtU_normal.jpeg" alt="">
-							<span class="TA-count">12</span>
-						</a>
-					</div>
-
+				<div class="TA-period">
+					<div class="TA-period-from">30 days ago</div>
+					<div class="TA-period-to">today</div>
 				</div>
-			</div>
-			<div class="TA-section-title">
-				Generated engagement
-			</div>
-			<div class="TA-engagement">
-				<div class="TA-rt Icon" style="width:35%;" title="Retweets generated"></div>
-				<div class="TA-fav Icon" style="width:70%;" title="Favorites generated"></div>
-			</div>
-			<div class="TA-section-title">
-				Average timeline language composition
-			</div>
-			<div class="TA-language">
-				<div class="" style="width:35%;">fr</div>
-				<div class="" style="width:50%;">en</div>
-				<div class="" style="width:15%;">es</div>
-			</div>
-			<div class="TA-section-title">
-				Will expend your timeline about 42 <abbr title="Tweets per Day">t/d</abbr>.
-			</div>
-			<div class="TA-reminder">
+			</section>
+			<section>
+				<header class="TA-section-title">
+					<h4>Average timeline composition</h4>
+				</header>
+				<div class="TA-composition">
+					<div class="TA-retweets Icon TA-trigger" style="width:10%;" title="retweets"></div>
+					<div class="TA-replies Icon TA-trigger" style="width:30%;" title="replies"></div>
+					<div class="TA-medias Icon" style="width:5%;" title="medias"></div>
+					<div class="TA-links Icon TA-trigger" style="width:20%;" title="links"></div>
+					<div class="TA-tweets Icon" style="width:35%;" title="tweets"></div>
+				</div>
+				<div class="TA-composition-details">
+					<span class="TA-composition-details-arrow"></span>
+					<ol class="TA-composition-details-inner">
+
+						<li class="TA-account account-summary">
+							<div class="TA-account-count" data-count="25" style="width:80%;"></div>
+							<div class="TA-account-inner">
+								<div class="TA-account-content content">
+									<a class="TA-account-group account-group" href="#">
+										<img class="TA-avatar avatar" src="https://pbs.twimg.com/profile_images/468495248696414208/k3SkUbo4_normal.jpeg" alt="">
+										<span class="TA-account-group-inner account-group-inner">
+											<b class="TA-fullname fullname">Thibaut Séguy</b>
+											<span class="TA-username username"><s>@</s><span>thibautseguy</span></span>
+										</span>
+									</a>
+								</div>
+							</div>
+						</li>
+						<li class="TA-account account-summary">
+							<div class="TA-account-count" data-count="14" style="width:45%;"></div>
+							<div class="TA-account-inner">
+								<div class="TA-account-content content">
+									<a class="TA-account-group account-group" href="#">
+										<img class="TA-avatar avatar" src="https://pbs.twimg.com/profile_images/468495248696414208/k3SkUbo4_normal.jpeg" alt="">
+										<span class="TA-account-group-inner account-group-inner">
+											<b class="TA-fullname fullname">Lorem ipsum dolor sit amet consectetur adipiscing elit</b>
+											<span class="TA-username username"><s>@</s><span>LoremIpsum</span></span>
+										</span>
+									</a>
+								</div>
+							</div>
+						</li>
+						<li class="TA-account account-summary">
+							<div class="TA-account-count" data-count="25" style="width:80%;"></div>
+							<div class="TA-account-inner">
+								<div class="TA-account-content content">
+									<a class="TA-account-group account-group" href="#">
+										<img class="TA-avatar avatar" src="https://pbs.twimg.com/profile_images/468495248696414208/k3SkUbo4_normal.jpeg" alt="">
+										<span class="TA-account-group-inner account-group-inner">
+											<b class="TA-fullname fullname">Thibaut Séguy</b>
+											<span class="TA-username username"><s>@</s><span>thibautseguy</span></span>
+										</span>
+									</a>
+								</div>
+							</div>
+						</li>
+						<li class="TA-account account-summary">
+							<div class="TA-account-count" data-count="14" style="width:45%;"></div>
+							<div class="TA-account-inner">
+								<div class="TA-account-content content">
+									<a class="TA-account-group account-group" href="#">
+										<img class="TA-avatar avatar" src="https://pbs.twimg.com/profile_images/468495248696414208/k3SkUbo4_normal.jpeg" alt="">
+										<span class="TA-account-group-inner account-group-inner">
+											<b class="TA-fullname fullname">Lorem ipsum dolor sit amet consectetur adipiscing elit</b>
+											<span class="TA-username username"><s>@</s><span>LoremIpsum</span></span>
+										</span>
+									</a>
+								</div>
+							</div>
+						</li>
+						<li class="TA-account account-summary">
+							<div class="TA-account-count" data-count="25" style="width:10%;"></div>
+							<div class="TA-account-inner">
+								<div class="TA-account-content content">
+									<a class="TA-account-group account-group" href="#">
+										<img class="TA-avatar avatar" src="https://pbs.twimg.com/profile_images/468495248696414208/k3SkUbo4_normal.jpeg" alt="">
+										<span class="TA-account-group-inner account-group-inner">
+											<b class="TA-fullname fullname">Thibaut Séguy</b>
+											<span class="TA-username username"><s>@</s><span>thibautseguy</span></span>
+										</span>
+									</a>
+								</div>
+							</div>
+						</li>
+						<li class="TA-account account-summary">
+							<div class="TA-account-count" data-count="14" style="width:45%;"></div>
+							<div class="TA-account-inner">
+								<div class="TA-account-content content">
+									<a class="TA-account-group account-group" href="#">
+										<img class="TA-avatar avatar" src="https://pbs.twimg.com/profile_images/468495248696414208/k3SkUbo4_normal.jpeg" alt="">
+										<span class="TA-account-group-inner account-group-inner">
+											<b class="TA-fullname fullname">Lorem ipsum dolor sit amet consectetur adipiscing elit</b>
+											<span class="TA-username username"><s>@</s><span>LoremIpsum</span></span>
+										</span>
+									</a>
+								</div>
+							</div>
+						</li>
+						<li class="TA-account account-summary">
+							<div class="TA-account-count" data-count="14" style="width:45%;"></div>
+							<div class="TA-account-inner">
+								<div class="TA-account-content content">
+									<a class="TA-account-group account-group" href="#">
+										<img class="TA-avatar avatar" src="https://pbs.twimg.com/profile_images/468495248696414208/k3SkUbo4_normal.jpeg" alt="">
+										<span class="TA-account-group-inner account-group-inner">
+											<b class="TA-fullname fullname">Lorem ipsum dolor sit amet consectetur adipiscing elit</b>
+											<span class="TA-username username"><s>@</s><span>LoremIpsum</span></span>
+										</span>
+									</a>
+								</div>
+							</div>
+						</li>
+						<li class="TA-account account-summary">
+							<div class="TA-account-count" data-count="25" style="width:10%;"></div>
+							<div class="TA-account-inner">
+								<div class="TA-account-content content">
+									<a class="TA-account-group account-group" href="#">
+										<img class="TA-avatar avatar" src="https://pbs.twimg.com/profile_images/468495248696414208/k3SkUbo4_normal.jpeg" alt="">
+										<span class="TA-account-group-inner account-group-inner">
+											<b class="TA-fullname fullname">Thibaut Séguy</b>
+											<span class="TA-username username"><s>@</s><span>thibautseguy</span></span>
+										</span>
+									</a>
+								</div>
+							</div>
+						</li>
+						<li class="TA-account account-summary">
+							<div class="TA-account-count" data-count="14" style="width:45%;"></div>
+							<div class="TA-account-inner">
+								<div class="TA-account-content content">
+									<a class="TA-account-group account-group" href="#">
+										<img class="TA-avatar avatar" src="https://pbs.twimg.com/profile_images/468495248696414208/k3SkUbo4_normal.jpeg" alt="">
+										<span class="TA-account-group-inner account-group-inner">
+											<b class="TA-fullname fullname">Lorem ipsum dolor sit amet consectetur adipiscing elit</b>
+											<span class="TA-username username"><s>@</s><span>LoremIpsum</span></span>
+										</span>
+									</a>
+								</div>
+							</div>
+						</li>
+						<li class="TA-account account-summary">
+							<div class="TA-account-count" data-count="14" style="width:45%;"></div>
+							<div class="TA-account-inner">
+								<div class="TA-account-content content">
+									<a class="TA-account-group account-group" href="#">
+										<img class="TA-avatar avatar" src="https://pbs.twimg.com/profile_images/468495248696414208/k3SkUbo4_normal.jpeg" alt="">
+										<span class="TA-account-group-inner account-group-inner">
+											<b class="TA-fullname fullname">Lorem ipsum dolor sit amet consectetur adipiscing elit</b>
+											<span class="TA-username username"><s>@</s><span>LoremIpsum</span></span>
+										</span>
+									</a>
+								</div>
+							</div>
+						</li>
+						<li class="TA-account account-summary">
+							<div class="TA-account-count" data-count="14" style="width:45%;"></div>
+							<div class="TA-account-inner">
+								<div class="TA-account-content content">
+									<a class="TA-account-group account-group" href="#">
+										<img class="TA-avatar avatar" src="https://pbs.twimg.com/profile_images/468495248696414208/k3SkUbo4_normal.jpeg" alt="">
+										<span class="TA-account-group-inner account-group-inner">
+											<b class="TA-fullname fullname">Lorem ipsum dolor sit amet consectetur adipiscing elit</b>
+											<span class="TA-username username"><s>@</s><span>LoremIpsum</span></span>
+										</span>
+									</a>
+								</div>
+							</div>
+						</li>
+						<li class="TA-account account-summary">
+							<div class="TA-account-count" data-count="25" style="width:10%;"></div>
+							<div class="TA-account-inner">
+								<div class="TA-account-content content">
+									<a class="TA-account-group account-group" href="#">
+										<img class="TA-avatar avatar" src="https://pbs.twimg.com/profile_images/468495248696414208/k3SkUbo4_normal.jpeg" alt="">
+										<span class="TA-account-group-inner account-group-inner">
+											<b class="TA-fullname fullname">Thibaut Séguy</b>
+											<span class="TA-username username"><s>@</s><span>thibautseguy</span></span>
+										</span>
+									</a>
+								</div>
+							</div>
+						</li>
+						<li class="TA-account account-summary">
+							<div class="TA-account-count" data-count="14" style="width:45%;"></div>
+							<div class="TA-account-inner">
+								<div class="TA-account-content content">
+									<a class="TA-account-group account-group" href="#">
+										<img class="TA-avatar avatar" src="https://pbs.twimg.com/profile_images/468495248696414208/k3SkUbo4_normal.jpeg" alt="">
+										<span class="TA-account-group-inner account-group-inner">
+											<b class="TA-fullname fullname">Lorem ipsum dolor sit amet consectetur adipiscing elit</b>
+											<span class="TA-username username"><s>@</s><span>LoremIpsum</span></span>
+										</span>
+									</a>
+								</div>
+							</div>
+						</li>
+
+					</ol>
+				</div>
+			</section>
+			<section>
+				<header class="TA-section-title">
+					<h4>Generated engagement</h4>
+				</header>
+				<div class="TA-engagement">
+					<div class="TA-rt Icon" style="width:35%;" title="Retweets generated"></div>
+					<div class="TA-fav Icon" style="width:70%;" title="Favorites generated"></div>
+				</div>
+			</section>
+			<section>
+				<header class="TA-section-title">
+					<h4>Average timeline language composition</h4>
+				</header>
+				<div class="TA-language">
+					<div class="" style="width:35%;">fr</div>
+					<div class="" style="width:50%;">en</div>
+					<div class="" style="width:15%;">es</div>
+				</div>
+			</section>
+			<section>
+				<header class="TA-section-title">
+					<h4>Will expend your timeline about 42 <abbr title="Tweets per Day">t/d</abbr>.</h4>
+				</header>
+			</section>
+			<footer class="TA-reminder">
 				Reminder: A human being is more than the few metrics you see above.
 				<a href="#" title="Tell us what You think of this">Give a feedback</a>.
-			</div>
-		</div>
+			</footer>
+		</section>
 		<!-- End here -->
 
 
 	</div>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-	<script src="js/main.js"></script>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<script src="js/main.min.js"></script>
 </body>
 </html>
