@@ -75,11 +75,13 @@ interface TwitterAPIEntities{
     urls: TwitterAPIURLEntity[]
     user_mentions: TwitterAPIUserMentionEntity[]
     media: TwitterAPIMediaEntity[]
+    hashtags: TwitterAPIHashtagEntity[]
 }
 
 interface TwitterAPIUserMentionEntity{
     id_str: TwitterUserId
     indices: number[]
+    screen_name: string
 }
 
 interface TwitterAPIURLEntity{
@@ -89,7 +91,11 @@ interface TwitterAPIURLEntity{
 }
 
 interface TwitterAPIMediaEntity{
+    url: string
+}
 
+interface TwitterAPIHashtagEntity{
+    text: string
 }
 
 

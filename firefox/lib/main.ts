@@ -45,10 +45,11 @@ export var main = function(){
         SETUP
     */
     
-    // browser toolbox for debugging
-    if(staticArgs['browser-toolbox']){
+    // development mode
+    if(staticArgs['dev-env']){
         lowLevelPrefs.set("devtools.chrome.enabled", true);
         lowLevelPrefs.set("devtools.debugger.remote-enabled", true);
+        lowLevelPrefs.set("xpinstall.signatures.required", false);
     }
     
     prefs["sdk.console.logLevel"] = 'all';

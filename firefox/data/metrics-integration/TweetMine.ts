@@ -11,6 +11,47 @@ function isRetweet(t: TwitterAPITweet) : boolean{
     return 'retweeted_status' in t;
 }
 
+// https://stackoverflow.com/questions/1144783/replacing-all-occurrences-of-a-string-in-javascript
+function escapeRegExp(string: string) {
+    return string.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
+}
+function replaceAll(string: string, find: string, replace: string) {
+    return string.replace(new RegExp(escapeRegExp(find), 'g'), replace);
+}
+
+function removeEntitiesFromTweetText(text: string, entities: TwitterAPIEntities){
+    let result = text;
+    
+    result = replaceAll(result, '@', '');
+    result = replaceAll(result, '#', '');
+    
+    if(entities.hashtags){
+        entities.hashtags.forEach(hashtag => {
+            result = replaceAll(result, hashtag.text, '');
+        });
+    }
+    
+    if(entities.media){
+        entities.media.forEach(media => {
+            result = replaceAll(result, media.url, '');
+        });
+    }
+    
+    if(entities.urls){
+        entities.urls.forEach(url => {
+            result = replaceAll(result, url.url, '');
+        });
+    }
+    
+    if(entities.user_mentions){
+        entities.user_mentions.forEach(user_mention => {
+            result = replaceAll(result, user_mention.screen_name, '');
+        });
+    }
+    
+    return result;
+}
+
 
 /*
  @args 
@@ -132,12 +173,14 @@ function TweetMine(
             
             tweets.forEach(t => {
                 const originalTweet = getRetweetOriginalTweet(t);
-                const text = originalTweet.text;
+                const text = removeEntitiesFromTweetText(originalTweet.text, t.entities);
                 const lang = originalTweet.lang;
+                
+                
                 
                 const stem = stemByLang.get(lang) || stemByLang.get(DEFAULT_STEMMER_LANG);
                 
-                console.log('getWordMap', lang, typeof stem);
+                //console.log('getWordMap', lang, typeof stem);
                 
                 const stems = stem(text);
                 
@@ -152,7 +195,28 @@ function TweetMine(
                     wordToTweets.set(s, tweets)
                 });
                 
+                if(t.entities.hashtags){
+                    t.entities.hashtags.forEach(hashtag => {
+                        const s = '#'+hashtag.text;
+                        
+                        let tweets = wordToTweets.get(s);
+                        if(!tweets){
+                            tweets = [];
+                        }
+
+                        tweets.push(t);
+
+                        wordToTweets.set(s, tweets);
+                    });
+                }
+                
+                
             });
+            
+            
+            
+            // sometimes, the 0-length string gets in the map
+            wordToTweets.delete('')
             
             return wordToTweets;
         },

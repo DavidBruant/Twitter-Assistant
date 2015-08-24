@@ -9,7 +9,7 @@ import TwitterAssistantTopInfo = require('./TwitterAssistantTopInfo');
 import HumansAreNotMetricsReminder = require('./HumansAreNotMetricsReminder');
 import TweetsPerDayEstimate = require('./TweetsPerDayEstimate');
 import DetailList = require('./DetailList');
-import WordTweetTreeMap = require('./WordTweetTreeMap');
+import WordMass = require('./WordMass');
 import GeneratedEngagement = require('./GeneratedEngagement');
 
 import TweetMine = require('../TweetMine');
@@ -119,7 +119,7 @@ var TwitterAssistant = React.createClass({
 
                 state.details ? DetailList({details: state.details}) : undefined,
                 
-                WordTweetTreeMap({wordToTweetsMap: tweetMine.getWordMap()}),
+                WordMass({wordToTweetsMap: tweetMine.getWordMap()}),
                 
                 /*React.DOM.div({className: "TA-section-title"}, 'Generated Engagement'),
 
