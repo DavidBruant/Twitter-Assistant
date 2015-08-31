@@ -4,4 +4,5 @@ declare module "sdk/simple-prefs" {
 
 interface Prefs{
     "sdk.console.logLevel" : string
+    "dev-env": boolean
 }

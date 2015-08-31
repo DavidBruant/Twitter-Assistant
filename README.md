@@ -44,11 +44,11 @@ Twitter Assistant takes advantage of a Twitter app credentials you create. As su
 
 # Contributing
 
-* Install the [addon SDK](https://developer.mozilla.org/en-US/Add-ons/SDK/Tutorials/Installation) including [cfx](https://developer.mozilla.org/en-US/Add-ons/SDK/Tools/cfx).
+* Install the [addon SDK](https://developer.mozilla.org/en-US/Add-ons/SDK/Tutorials/Installation) including [jpm](https://developer.mozilla.org/en-US/Add-ons/SDK/Tools/jpm).
 
-`cfx xpi ; cfx -b /home/david/Logiciel/aurora/firefox run --static-args="{\"dev-env\": true, \"CONSUMER_KEY\":\"<YOUR CONSUMER KEY>\", \"CONSUMER_SECRET\":\"<YOUR CONSUMER SECRET>\"}"`
+* Create a Twitter app
+* Create a `prefs.json` file based on the template and fill in the key and secret with your app's
 
-(sorry for this line. Will explain in more details later, hang tight :-) )
 
 * Install [Node.js](http://nodejs.org/)
 

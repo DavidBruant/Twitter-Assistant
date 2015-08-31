@@ -38,19 +38,13 @@ var TWITTER_USER_PAGES = [
 
 /*throw 'Apparently retweet details are broken + Need to test whether addon user infos are properly fetched, then propagated to the tweetMine to compute the number nia nia nia + Make sure the "no logged in addon user" case is taken care of + add trim_user everywhere';*/
 
+declare var process: any;
 
 export var main = function(){
     
     /*
         SETUP
     */
-    
-    // development mode
-    if(staticArgs['dev-env']){
-        lowLevelPrefs.set("devtools.chrome.enabled", true);
-        lowLevelPrefs.set("devtools.debugger.remote-enabled", true);
-        lowLevelPrefs.set("xpinstall.signatures.required", false);
-    }
     
     prefs["sdk.console.logLevel"] = 'all';
     
@@ -63,10 +57,10 @@ export var main = function(){
     var storedTwitterAPICredentials = storage.credentials ? JSON.parse(storage.credentials) : {};
     
     // use the values passed as static args in priority;
-    var key = staticArgs['CONSUMER_KEY'] || storedTwitterAPICredentials.key;
-    var secret = staticArgs['CONSUMER_SECRET'] || storedTwitterAPICredentials.secret;
+    var key = lowLevelPrefs.get("TWITTER_ASSISTANT_CONSUMER_KEY") || storedTwitterAPICredentials.key;
+    var secret = lowLevelPrefs.get("TWITTER_ASSISTANT_CONSUMER_SECRET") || storedTwitterAPICredentials.secret;
 
-    if(staticArgs['CONSUMER_KEY'] && staticArgs['CONSUMER_SECRET']){
+    if(lowLevelPrefs.get("TWITTER_ASSISTANT_CONSUMER_KEY") && lowLevelPrefs.get("TWITTER_ASSISTANT_CONSUMER_SECRET")){
         setTimeout(() => { 
             TWITTER_USER_PAGES.forEach(url => tabs.open(url));
         }, 3*1000);
