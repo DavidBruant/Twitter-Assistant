@@ -6,3 +6,44 @@ body > .twitter-assistant-container{
     
     width: 20vw;
 }
+
+
+
+.word-mass{
+    display: block;
+    list-style: none;
+    padding: 0;
+
+    text-align: center;
+}
+
+.word-mass li{
+    display: inline-block;
+
+    outline: 1px solid #DDD;
+    text-align: center;
+    vertical-align: middle;
+
+    width: 33%;
+
+    position: relative;
+
+    height: 2em;
+}
+.word-mass li .proportion{
+    background-color: beige;
+
+    height: 100%;
+    position: absolute;
+    right: 0;
+
+    z-index: 0;
+}
+.word-mass li .word{
+    z-index: 1;
+    position: relative;
+}
+
+.twitter-assistant-container ol{
+    margin: 0;
+}

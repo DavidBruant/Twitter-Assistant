@@ -32,6 +32,12 @@ interface TwitterAPI_I {
         endpoint : https://api.twitter.com/1.1/friends/ids.json
     */
     getFriends: (id: TwitterUserId) => Promise<{ids: TwitterUserId[]}>
+    
+    /*
+        https://dev.twitter.com/rest/reference/get/help/languages
+        endpoint : https://api.twitter.com/1.1/help/languages.jsonavril
+    */
+    getLanguages: () => Promise<{code: string, name: string}[]>
 }
 
 
@@ -75,11 +81,13 @@ interface TwitterAPIEntities{
     urls: TwitterAPIURLEntity[]
     user_mentions: TwitterAPIUserMentionEntity[]
     media: TwitterAPIMediaEntity[]
+    hashtags: TwitterAPIHashtagEntity[]
 }
 
 interface TwitterAPIUserMentionEntity{
     id_str: TwitterUserId
     indices: number[]
+    screen_name: string
 }
 
 interface TwitterAPIURLEntity{
@@ -89,7 +97,11 @@ interface TwitterAPIURLEntity{
 }
 
 interface TwitterAPIMediaEntity{
+    url: string
+}
 
+interface TwitterAPIHashtagEntity{
+    text: string
 }
 
 
@@ -109,6 +121,7 @@ interface TwitterAPITweet{
     entities: TwitterAPIEntities
     user: TwitterAPIReducedUser // the 'trim_user' parameter will always be used
     text: string
+    lang: string
 
     retweeted_status?: TwitterAPITweet
     retweet_count: number

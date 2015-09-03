@@ -1,0 +1,7 @@
+{
+    "devtools.chrome.enabled": true,
+    "devtools.debugger.remote-enabled": true,
+    "xpinstall.signatures.required": false,
+    "TWITTER_ASSISTANT_CONSUMER_KEY": "", 
+    "TWITTER_ASSISTANT_CONSUMER_SECRET": ""
+}

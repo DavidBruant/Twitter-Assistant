@@ -2,12 +2,54 @@
 
 import getRetweetOriginalTweet = require('./getRetweetOriginalTweet');
 import getWhosBeingConversedWith = require('./getWhosBeingConversedWith');
+import stemByLang = require('./stem');
 
 const ONE_DAY = 24*60*60*1000; // ms
-
+const DEFAULT_STEMMER_LANG = 'en';
 
 function isRetweet(t: TwitterAPITweet) : boolean{
     return 'retweeted_status' in t;
+}
+
+// https://stackoverflow.com/questions/1144783/replacing-all-occurrences-of-a-string-in-javascript
+function escapeRegExp(string: string) {
+    return string.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
+}
+function replaceAll(string: string, find: string, replace: string) {
+    return string.replace(new RegExp(escapeRegExp(find), 'g'), replace);
+}
+
+function removeEntitiesFromTweetText(text: string, entities: TwitterAPIEntities){
+    let result = text;
+    
+    result = replaceAll(result, '@', '');
+    result = replaceAll(result, '#', '');
+    
+    if(entities.hashtags){
+        entities.hashtags.forEach(hashtag => {
+            result = replaceAll(result, hashtag.text, '');
+        });
+    }
+    
+    if(entities.media){
+        entities.media.forEach(media => {
+            result = replaceAll(result, media.url, '');
+        });
+    }
+    
+    if(entities.urls){
+        entities.urls.forEach(url => {
+            result = replaceAll(result, url.url, '');
+        });
+    }
+    
+    if(entities.user_mentions){
+        entities.user_mentions.forEach(user_mention => {
+            result = replaceAll(result, user_mention.screen_name, '');
+        });
+    }
+    
+    return result;
 }
 
 
@@ -21,7 +63,8 @@ function TweetMine(
     nbDays: number,
     visitedUserId: TwitterUserId, 
     addonUser: TwitterUserId, 
-    addonUserFriendIds: Set<TwitterUserId>
+    addonUserFriendIds: Set<TwitterUserId>,
+    languages?: Map<string, {code: string, name: string}>
     ){
     
     function isConversation(tweet: TwitterAPITweet) : boolean{
@@ -124,6 +167,71 @@ function TweetMine(
                 }
             });
             
+        },
+        
+        getTweetsByLang: function(){
+            const tweetsByLang = new Map<string, TwitterAPITweet[]>()
+            
+            tweets.forEach(t => {
+                const originalTweet = getRetweetOriginalTweet(t);
+                const text = removeEntitiesFromTweetText(originalTweet.text, t.entities);
+                const lang = originalTweet.lang;
+                
+                const tweets = tweetsByLang.get(lang) || [];
+
+                tweets.push(t);
+
+                tweetsByLang.set(lang, tweets)
+            })
+            
+        },
+        
+        getWordMap: function(){
+            const wordToTweets = new Map<string, TwitterAPITweet[]>();
+            
+            tweets.forEach(t => {
+                const originalTweet = getRetweetOriginalTweet(t);
+                const text = removeEntitiesFromTweetText(originalTweet.text, t.entities);
+                const lang = originalTweet.lang;
+                
+                const stem = stemByLang.get(lang) || stemByLang.get(DEFAULT_STEMMER_LANG);
+                
+                //console.log('getWordMap', lang, typeof stem);
+                
+                const stems = stem(text);
+                
+                stems.forEach(s => {
+                    const tweets = wordToTweets.get(s) || [];
+                    
+                    tweets.push(t);
+                    
+                    wordToTweets.set(s, tweets)
+                });
+                
+                if(t.entities.hashtags){
+                    t.entities.hashtags.forEach(hashtag => {
+                        const s = '#'+hashtag.text;
+                        
+                        let tweets = wordToTweets.get(s);
+                        if(!tweets){
+                            tweets = [];
+                        }
+
+                        tweets.push(t);
+
+                        wordToTweets.set(s, tweets);
+                    });
+                }
+                
+                
+            });
+            
+            
+            
+            // sometimes, the 0-length string gets in the map
+            wordToTweets.delete('')
+            
+            return wordToTweets;
         },
         
         get length(){

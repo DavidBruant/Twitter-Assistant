@@ -12,3 +12,5 @@ node_modules
 npm-debug.log
 
 notes.md
+prefs.json
+prefs-no-cred.json

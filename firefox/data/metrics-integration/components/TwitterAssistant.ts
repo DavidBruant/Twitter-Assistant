@@ -6,10 +6,11 @@
 import Histogram = require('./Histogram');
 import TimelineComposition = require('./TimelineComposition');
 import TwitterAssistantTopInfo = require('./TwitterAssistantTopInfo');
-import GeneratedEngagement = require('./GeneratedEngagement');
 import HumansAreNotMetricsReminder = require('./HumansAreNotMetricsReminder');
 import TweetsPerDayEstimate = require('./TweetsPerDayEstimate');
 import DetailList = require('./DetailList');
+import WordMass = require('./WordMass');
+import GeneratedEngagement = require('./GeneratedEngagement');
 
 import TweetMine = require('../TweetMine');
 
@@ -117,6 +118,8 @@ var TwitterAssistant = React.createClass({
                 }),
 
                 state.details ? DetailList({details: state.details}) : undefined,
+                
+                WordMass({wordToTweetsMap: tweetMine.getWordMap()}),
                 
                 /*React.DOM.div({className: "TA-section-title"}, 'Generated Engagement'),
 
