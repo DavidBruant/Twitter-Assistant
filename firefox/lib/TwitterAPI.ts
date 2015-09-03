@@ -233,6 +233,33 @@ function TwitterAPI(accessToken: AccessToken) : TwitterAPI_I{
                 }).get();
 
             });
+        },
+        
+        // https://dev.twitter.com/rest/reference/get/help/languages
+        getLanguages: function(){
+            
+            return new Promise((resolve, reject) => {
+                var reqStart = Date.now();
+
+                Request({
+                    url: 'https://api.twitter.com/1.1/help/languages.json',
+                    headers: {
+                        'Authorization': 'Bearer '+accessToken
+                    },
+                    onComplete: function (response) {
+                        console.log(
+                            '/1.1/help/languages.json',
+                            response.status, 
+                            ((Date.now() - reqStart)/1000).toFixed(1)+'s',
+                            response
+                        );
+
+                        resolve(response.json);
+                    },
+                    onError: reject
+                }).get();
+
+            });
         }
     
     };

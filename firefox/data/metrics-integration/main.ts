@@ -15,6 +15,8 @@ declare var self : {
 
 import TwitterAssistant = require('./components/TwitterAssistant');
 import TweetMine = require('./TweetMine');
+import stemByLang = require('./stem');
+
 
 const ONE_DAY = 24*60*60*1000; // ms
 
@@ -58,6 +60,7 @@ let addonUserAndFriends : {
     friendIds: Set<TwitterUserId>
 };
 let displayDayCount = 30; // give a value by default to get started
+let languages: Map<string, {code: string, name: string}>; // give a value by default to get started
 
 function updateTwitterAssistant(){
     let addonUserAlreadyFollowingVisitedUser: boolean;
@@ -74,7 +77,8 @@ function updateTwitterAssistant(){
                 displayDayCount,
                 visitedUser ? visitedUser.id_str : undefined,
                 addonUserAndFriends ? addonUserAndFriends.user.id_str : undefined,
-                addonUserAndFriends ? addonUserAndFriends.friendIds : undefined
+                addonUserAndFriends ? addonUserAndFriends.friendIds : undefined,
+                languages
             ),
             displayDayCount : displayDayCount,
             users: users,
@@ -125,6 +129,27 @@ self.port.on('display-days-count', _displayDayCount => {
     
     updateTwitterAssistant();
 });
+
+function matchTwitterLanguagesAndSupportedLanguages(languages: {code: string, name: string}[]){
+    languages.forEach(({code, name}) => {
+        if(!stemByLang.has(code)){
+            console.warn('language', code, name, 'not supported by Twitter Assistant');
+        }
+    });
+}
+
+/*self.port.on('languages', (_languages: {code: string, name: string}[]) => {
+    console.log('content-side languages', languages);
+    languages = new Map<string, {code: string, name: string}>();
+    
+    _languages.forEach(l => languages.set(l.code, l)); 
+    
+    updateTwitterAssistant();
+    
+    // do the matching in the content process because of build-time constraints. 
+    // TODO move this at the addon level and do it only once (not once per tab)
+    matchTwitterLanguagesAndSupportedLanguages(_languages); 
+});*/
 
 // Initial "empty" rendering ASAP so the user knows Twitter Assistant exists
 updateTwitterAssistant();

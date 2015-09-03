@@ -36,6 +36,7 @@ declare module "natural" {
   interface Stemmer {
     stem(token: string): string;
   }
+    
   var PorterStemmer: {
     stem(token: string): string;
   }
@@ -184,7 +185,37 @@ declare module "natural" {
 }
 
 
+// David Bruant's additions :
+
 declare module 'natural/lib/natural/util/stopwords_fr.js' {
+    var words: String[];
+}
+declare module 'natural/lib/natural/util/stopwords_es.js' {
+    var words: String[];
+}
+declare module 'natural/lib/natural/util/stopwords_ja.js' {
+    var words: String[];
+    export = words;
+}
+declare module 'natural/lib/natural/util/stopwords_it.js' {
+    var words: String[];
+}
+declare module 'natural/lib/natural/util/stopwords_ru.js' {
+    var words: String[];
+}
+declare module 'natural/lib/natural/util/stopwords_pt.js' {
+    var words: String[];
+}
+declare module 'natural/lib/natural/util/stopwords_nl.js' {
+    var words: String[];
+}
+declare module 'natural/lib/natural/util/stopwords_no.js' {
+    var words: String[];
+}
+declare module 'natural/lib/natural/util/stopwords_fa.js' {
+    var words: String[];
+}
+declare module 'natural/lib/natural/util/stopwords_pl.js' {
     var words: String[];
 }
 
@@ -198,9 +229,106 @@ declare module 'natural/lib/natural/tokenizers/aggressive_tokenizer_fr.js' {
     
     export = TokenizerFrStatic;
 }
+declare module 'natural/lib/natural/tokenizers/aggressive_tokenizer_es.js' {
+    class TokenizerEsStatic {
+        new(): TokenizerEs;
+        tokenize(str: string) : string[]
+    }
+    class TokenizerEs{}
     
+    export = TokenizerEsStatic;
+}
+declare module 'natural/lib/natural/tokenizers/tokenizer_ja.js' {
+    class TokenizerJaStatic {
+        new(): TokenizerJa;
+        tokenize(str: string) : string[]
+    }
+    class TokenizerJa{}
     
+    export = TokenizerJaStatic;
+}
+declare module 'natural/lib/natural/tokenizers/aggressive_tokenizer_it.js' {
+    class TokenizerItStatic {
+        new(): TokenizerIt;
+        tokenize(str: string) : string[]
+    }
+    class TokenizerIt{}
     
+    export = TokenizerItStatic;
+}
+declare module 'natural/lib/natural/tokenizers/aggressive_tokenizer_ru.js' {
+    class TokenizerRuStatic {
+        new(): TokenizerRu;
+        tokenize(str: string) : string[]
+    }
+    class TokenizerRu{}
     
+    export = TokenizerRuStatic;
+}
+declare module 'natural/lib/natural/tokenizers/aggressive_tokenizer_pt.js' {
+    class TokenizerPtStatic {
+        new(): TokenizerPt;
+        tokenize(str: string) : string[]
+    }
+    class TokenizerPt{}
+    
+    export = TokenizerPtStatic;
+}
+declare module 'natural/lib/natural/tokenizers/aggressive_tokenizer_nl.js' {
+    class TokenizerNlStatic {
+        new(): TokenizerNl;
+        tokenize(str: string) : string[]
+    }
+    class TokenizerNl{}
+    
+    export = TokenizerNlStatic;
+}
+declare module 'natural/lib/natural/tokenizers/aggressive_tokenizer_no.js' {
+    class TokenizerNoStatic {
+        new(): TokenizerNo;
+        tokenize(str: string) : string[]
+    }
+    class TokenizerNo{}
+    
+    export = TokenizerNoStatic;
+}
+declare module 'natural/lib/natural/tokenizers/aggressive_tokenizer_fa.js' {
+    class TokenizerFaStatic {
+        new(): TokenizerFa;
+        tokenize(str: string) : string[]
+    }
+    class TokenizerFa{}
+    
+    export = TokenizerFaStatic;
+}
+declare module 'natural/lib/natural/tokenizers/aggressive_tokenizer_pl.js' {
+    class TokenizerPlStatic {
+        new(): TokenizerPl;
+        tokenize(str: string) : string[]
+    }
+    class TokenizerPl{}
+    
+    export = TokenizerPlStatic;
+}
+
+
+    
+declare module 'natural/lib/natural/stemmers/stemmer_ja.js'{
+    class StemmerJa{
+        stem(token: string): string
+    }
+    
+    export = StemmerJa;
+}    
+declare module 'natural/lib/natural/stemmers/stemmer_pl.js'{
+    function stem(str: string): string
+    
+    export = stem;
+}  
+declare module 'natural/lib/natural/stemmers/porter_stemmer_pt.js'{
+    function stem(str: string): string
+    
+    export = {stem: stem};
+}    
     
     

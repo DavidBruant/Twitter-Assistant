@@ -32,6 +32,12 @@ interface TwitterAPI_I {
         endpoint : https://api.twitter.com/1.1/friends/ids.json
     */
     getFriends: (id: TwitterUserId) => Promise<{ids: TwitterUserId[]}>
+    
+    /*
+        https://dev.twitter.com/rest/reference/get/help/languages
+        endpoint : https://api.twitter.com/1.1/help/languages.jsonavril
+    */
+    getLanguages: () => Promise<{code: string, name: string}[]>
 }
 
 

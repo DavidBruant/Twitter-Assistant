@@ -63,7 +63,8 @@ function TweetMine(
     nbDays: number,
     visitedUserId: TwitterUserId, 
     addonUser: TwitterUserId, 
-    addonUserFriendIds: Set<TwitterUserId>
+    addonUserFriendIds: Set<TwitterUserId>,
+    languages?: Map<string, {code: string, name: string}>
     ){
     
     function isConversation(tweet: TwitterAPITweet) : boolean{
@@ -168,6 +169,23 @@ function TweetMine(
             
         },
         
+        getTweetsByLang: function(){
+            const tweetsByLang = new Map<string, TwitterAPITweet[]>()
+            
+            tweets.forEach(t => {
+                const originalTweet = getRetweetOriginalTweet(t);
+                const text = removeEntitiesFromTweetText(originalTweet.text, t.entities);
+                const lang = originalTweet.lang;
+                
+                const tweets = tweetsByLang.get(lang) || [];
+
+                tweets.push(t);
+
+                tweetsByLang.set(lang, tweets)
+            })
+            
+        },
+        
         getWordMap: function(){
             const wordToTweets = new Map<string, TwitterAPITweet[]>();
             
@@ -176,8 +194,6 @@ function TweetMine(
                 const text = removeEntitiesFromTweetText(originalTweet.text, t.entities);
                 const lang = originalTweet.lang;
                 
-                
-                
                 const stem = stemByLang.get(lang) || stemByLang.get(DEFAULT_STEMMER_LANG);
                 
                 //console.log('getWordMap', lang, typeof stem);
@@ -185,10 +201,7 @@ function TweetMine(
                 const stems = stem(text);
                 
                 stems.forEach(s => {
-                    let tweets = wordToTweets.get(s);
-                    if(!tweets){
-                        tweets = [];
-                    }
+                    const tweets = wordToTweets.get(s) || [];
                     
                     tweets.push(t);
                     

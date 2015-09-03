@@ -18,17 +18,20 @@ const WordMass = React.createClass({
 
         const CONSIDERED_WORDS = 30;
 
-        console.log('wordToTweetsMap', wordToTweetsMap);
+        //console.log('wordToTweetsMap', wordToTweetsMap);
         
         const wordToTweetsEntries: Array<{word: string, tweets: TwitterAPITweet[]}> = [];
-        wordToTweetsMap.forEach((tweets:TwitterAPITweet[], word: string) => wordToTweetsEntries.push({tweets, word}))
+        wordToTweetsMap.forEach((tweets:TwitterAPITweet[], word: string) => {
+            if(tweets.length >= 2)
+                wordToTweetsEntries.push({tweets, word})
+        })
  
         const sortedEntries: Array<{word: string, tweets:TwitterAPITweet[]}> = wordToTweetsEntries
         .sort(({word: w1, tweets: tweets1}, {word: w2, tweets: tweets2}) => tweets2.length - tweets1.length);
         const limitedEntries = sortedEntries.slice(0, CONSIDERED_WORDS);
 
         //const lengthSum = limitedEntries.reduce((acc, [w, tweets]) => {return acc + tweets.length}, 0); 
-        console.log("limitedEntries", limitedEntries.map(({tweets}) => tweets.length))
+        //console.log("limitedEntries", limitedEntries.map(({tweets}) => tweets.length))
 
         const widthAdjustment = 80/(limitedEntries[0].tweets.length);
 

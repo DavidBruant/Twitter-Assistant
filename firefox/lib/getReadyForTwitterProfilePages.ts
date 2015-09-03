@@ -16,8 +16,13 @@ import TwitterAPI = require('./TwitterAPI');
 import guessAddonUserTwitterName = require('./guessAddonUserTwitterName');
 import getAddonUserInfoAndFriends = require('./getAddonUserInfoAndFriends');
 
+//import stemByLang = require('../data/metrics-integration/stem');
+
+
 const PageMod = pagemodModule.PageMod;
 const data = selfModule.data;
+
+
 
 const ONE_DAY = 24*60*60*1000;
 const DISPLAY_DAY_COUNT = 40;
@@ -32,6 +37,8 @@ var addonUserAndFriendsP : Promise<{
     user: TwitterAPIUser
     friendIds: TwitterUserId[]
 }>;
+
+let languages: {code: string, name: string}[];
 
 
 // create the pageMod inconditionally
@@ -72,6 +79,7 @@ twitterProfilePageMod.on('attach', function onAttach(worker){
         worker.port.emit('addon-user-and-friends', result);
     });
     
+    
     worker.port.emit('display-days-count', DISPLAY_DAY_COUNT);
     
     if(!lastAccessToken){
@@ -95,6 +103,18 @@ twitterProfilePageMod.on('attach', function onAttach(worker){
             // TODO consider invalidating lastAccessToken here
             console.error('error while getting the user timeline', visitedUser, err);
         });
+        
+        /*if(languages){
+            worker.port.emit('languages', languages);
+        }
+        else{
+            twitterAPI.getLanguages()
+                .then(l => {
+                    languages = l;
+                    worker.port.emit('languages', languages);
+                })
+                .catch(err => console.error('Twitter languages error', err));
+        }*/
     }
     
     function sendTimelineToContent(partialTimeline: TwitterAPITweet[]){

@@ -43,3 +43,7 @@ body > .twitter-assistant-container{
     z-index: 1;
     position: relative;
 }
+
+.twitter-assistant-container ol{
+    margin: 0;
+}
