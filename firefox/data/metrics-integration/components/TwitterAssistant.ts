@@ -44,7 +44,7 @@ var TwitterAssistant = React.createClass({
             askUsers = data.askUsers;
 
         if(tweetMine.length === 0){
-            return React.DOM.div({className: 'TA WhoToFollow is-visible'}, [
+            return React.DOM.div({className: 'TA-main-container WhoToFollow is-visible'}, [
                 React.DOM.header({className: 'TA-header WhoToFollow-header'}, [
                     React.DOM.h3({className: 'TA-title WhoToFollow-title'}, "Twitter Assistant"),
                     React.DOM.a({

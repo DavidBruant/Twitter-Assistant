@@ -1,5 +1,7 @@
 'use strict';
 
+import showTweetList = require('../showTweetList');
+
 interface WordMassProps{
     wordToTweetsMap: Map<string, TwitterAPITweet[]>
 }
@@ -40,16 +42,26 @@ const WordMass = React.createClass({
 
             var width = tweets.length*widthAdjustment;
 
-            return /*height < 1.1*EM ? undefined : */React.DOM.li({
-                    title: word,
+            return React.DOM.li(
+                {
+                    title: word
                 },
-                React.DOM.span({
-                    className: "proportion",
-                    style: {
-                        width: width+'%',                            
-                    }
-                }),
-                React.DOM.span({className: 'word'}, word)
+                React.DOM.div(
+                    {
+                        onClick: e => {
+                            showTweetList(tweets, "Tweets with the word '"+word+"'")
+                        }
+                    }, 
+                    React.DOM.span({
+                        className: "proportion",
+                        style: {
+                            width: width+'%',                            
+                        }
+                    }),
+                    React.DOM.span({className: 'word'}, word)
+                )    
+                
+                
             );
 
 
