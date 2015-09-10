@@ -223,28 +223,32 @@ var TimelineComposition = React.createClass({
 
         return React.DOM.div({className: "TA-composition"}, makeTimelineCompositionChildren([
             {
-                class: 'TA-tweets Icon',
-                title: "other tweets",
-                percent: 100 - (rtPercent + convPercent + mediaPercent + linkPercent)
-            }, {
-                class: 'TA-medias Icon',
-                title: "medias",
-                percent: mediaPercent
-            }, {
-                class: 'TA-links Icon',
-                title: "links",
-                percent: linkPercent,
-                details: makeLinksDetails(tweetsWithLinks)
-            }, {
-                class: 'TA-replies Icon',
-                title: "replies",
-                percent: convPercent,
-                details: conversationDetails
-            }, {
                 class: 'TA-retweets Icon',
                 title: "retweets",
                 percent: rtPercent,
                 details: rtDetails
+            }, 
+            {
+                class: 'TA-replies Icon',
+                title: "replies",
+                percent: convPercent,
+                details: conversationDetails
+            }, 
+            {
+                class: 'TA-links Icon',
+                title: "links",
+                percent: linkPercent,
+                details: makeLinksDetails(tweetsWithLinks)
+            }, 
+            {
+                class: 'TA-medias Icon',
+                title: "medias",
+                percent: mediaPercent
+            },
+            {
+                class: 'TA-tweets Icon',
+                title: "other tweets",
+                percent: 100 - (rtPercent + convPercent + mediaPercent + linkPercent)
             }
         ], data.showDetails));
     }

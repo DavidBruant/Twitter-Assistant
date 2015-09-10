@@ -56,7 +56,7 @@ var twitterProfilePageMod = new PageMod({
 
     contentStyleFile: [
         data.url("metrics-integration/main.css"),
-        data.url("metrics-integration/additional.css")
+        data.url("metrics-integration/additional.css") 
     ]
 });
 

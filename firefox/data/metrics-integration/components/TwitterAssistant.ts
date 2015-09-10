@@ -20,10 +20,11 @@ const ONE_DAY = 24*60*60*1000; // ms
 interface TwitterAssistantProps{
     tweetMine: any //for now. TODO create TweetMine interface
     displayDayCount: number
-    users: TwitterAPIUser[];
+    users: Map<TwitterUserId, TwitterAPIUser>
     askUsers: (userIds: TwitterUserId[]) => void;
     addonUserAlreadyFollowingVisitedUser: boolean
-    visitedUserIsAddonUser: boolean
+    visitedUserIsAddonUser: boolean,
+    showTweetList: (tweets: TwitterAPITweet[], title: string) => void
 }
 
 
@@ -36,12 +37,12 @@ var TwitterAssistant = React.createClass({
     },
     
     render: function(){
-        const data: TwitterAssistantProps = this.props,
+        const props: TwitterAssistantProps = this.props,
             state = this.state;
 
-        const tweetMine = data.tweetMine,
-            users = data.users,
-            askUsers = data.askUsers;
+        const tweetMine = props.tweetMine,
+            users = props.users,
+            askUsers = props.askUsers;
 
         if(tweetMine.length === 0){
             return React.DOM.div({className: 'TA-main-container WhoToFollow is-visible'}, [
@@ -52,7 +53,7 @@ var TwitterAssistant = React.createClass({
                         title: "The addon author is here to help out!"
                     }, 'Help')
                 ]),
-                React.DOM.p({}, 'No tweets over the last '+data.displayDayCount+' days')
+                React.DOM.p({}, 'No tweets over the last '+props.displayDayCount+' days')
             ]);
         }
         else{
@@ -69,7 +70,7 @@ var TwitterAssistant = React.createClass({
             
             const estimate = tweetMine.getTweetsThatWouldBeSeenIfAddonUserFollowedVisitedUser().length/daysSinceOldestTweet;
 
-            return React.DOM.div({className: 'TA WhoToFollow is-visible'}, [
+            return React.DOM.div({className: 'TA-main-container WhoToFollow is-visible'}, [
 
                 React.DOM.header({className: 'TA-header WhoToFollow-header'}, [
                     React.DOM.h3({className: 'TA-title WhoToFollow-title'}, "Twitter Assistant"),
@@ -85,19 +86,19 @@ var TwitterAssistant = React.createClass({
                     tweetsConsidered: tweetMine.length
                 }),
 
-                data.visitedUserIsAddonUser ? undefined : TweetsPerDayEstimate({
-                    addonUserAlreadyFollowingVisitedUser: data.addonUserAlreadyFollowingVisitedUser,
+                props.visitedUserIsAddonUser ? undefined : TweetsPerDayEstimate({
+                    addonUserAlreadyFollowingVisitedUser: props.addonUserAlreadyFollowingVisitedUser,
                     estimate: estimate
                 }),
                 
                 Histogram({
                     tweetMine: tweetMine,
-                    histogramSize: data.displayDayCount
+                    histogramSize: props.displayDayCount
                 }),
 
                 
                 React.DOM.div({className: "TA-period"}, [
-                    React.DOM.div({className: "TA-period-from"}, data.displayDayCount+' days ago'),
+                    React.DOM.div({className: "TA-period-from"}, props.displayDayCount+' days ago'),
                     React.DOM.div({className: "TA-period-to"}, 'today'),
                 ]),
                 
@@ -114,12 +115,16 @@ var TwitterAssistant = React.createClass({
                         console.log('show details', state.details, details);
                         
                         this.setState(state.class === className ? {details: undefined, class: undefined} : fragmentDetails);
-                    }
+                    },
+                    showTweetList: props.showTweetList
                 }),
 
                 state.details ? DetailList({details: state.details}) : undefined,
                 
-                WordMass({wordToTweetsMap: tweetMine.getWordMap()}),
+                WordMass({
+                    wordToTweetsMap: tweetMine.getWordMap(),
+                    showTweetList: props.showTweetList
+                }),
                 
                 /*React.DOM.div({className: "TA-section-title"}, 'Generated Engagement'),
 
