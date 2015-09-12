@@ -1,16 +1,14 @@
 'use strict';
 
+
 interface WordMassProps{
     wordToTweetsMap: Map<string, TwitterAPITweet[]>
+    showTweetList: (tweets: TwitterAPITweet[], title: string) => void
 }
 
 console.log('WordTweetTreeMap');
 
 const WordMass = React.createClass({
-
-    getInitialState: function(){
-        return {};
-    },
 
     render: function(){
         const props = this.props;
@@ -19,7 +17,6 @@ const WordMass = React.createClass({
         const CONSIDERED_WORDS = 30;
 
         //console.log('wordToTweetsMap', wordToTweetsMap);
-        
         const wordToTweetsEntries: Array<{word: string, tweets: TwitterAPITweet[]}> = [];
         wordToTweetsMap.forEach((tweets:TwitterAPITweet[], word: string) => {
             if(tweets.length >= 2)
@@ -40,16 +37,26 @@ const WordMass = React.createClass({
 
             var width = tweets.length*widthAdjustment;
 
-            return /*height < 1.1*EM ? undefined : */React.DOM.li({
-                    title: word,
+            return React.DOM.li(
+                {
+                    title: word
                 },
-                React.DOM.span({
-                    className: "proportion",
-                    style: {
-                        width: width+'%',                            
-                    }
-                }),
-                React.DOM.span({className: 'word'}, word)
+                React.DOM.div(
+                    {
+                        onClick: e => {
+                            props.showTweetList(tweets, "Tweets with the word '"+word+"'");       
+                        }
+                    }, 
+                    React.DOM.span({
+                        className: "proportion",
+                        style: {
+                            width: width+'%',                            
+                        }
+                    }),
+                    React.DOM.span({className: 'word'}, word)
+                )    
+                
+                
             );
 
 

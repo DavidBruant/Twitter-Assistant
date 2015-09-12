@@ -198,7 +198,7 @@ function TweetMine(
                 
                 //console.log('getWordMap', lang, typeof stem);
                 
-                const stems = stem(text);
+                const stems = new Set(stem(text));
                 
                 stems.forEach(s => {
                     const tweets = wordToTweets.get(s) || [];
@@ -222,10 +222,8 @@ function TweetMine(
                         wordToTweets.set(s, tweets);
                     });
                 }
-                
-                
+                 
             });
-            
             
             
             // sometimes, the 0-length string gets in the map

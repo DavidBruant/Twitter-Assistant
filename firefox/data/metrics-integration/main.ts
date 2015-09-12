@@ -14,9 +14,9 @@ declare var self : {
 
 
 import TwitterAssistant = require('./components/TwitterAssistant');
+import TweetList = require('./components/TweetList');
 import TweetMine = require('./TweetMine');
 import stemByLang = require('./stem');
-
 
 const ONE_DAY = 24*60*60*1000; // ms
 
@@ -33,6 +33,7 @@ const twitterAssistantContainerP : Promise<HTMLElement> = (new Promise<Document>
     // container of the addon panel
     const twitterAssistantContainer = document.createElement('div');
     twitterAssistantContainer.classList.add('twitter-assistant-container');
+    twitterAssistantContainer.classList.add('TA-main-container');
     twitterAssistantContainer.classList.add('module'); // from Twitter CSS
 
     if(twitterContainer){
@@ -52,7 +53,17 @@ const twitterAssistantContainerP : Promise<HTMLElement> = (new Promise<Document>
     console.error('twitterAssistantContainerP error', String(err));
 });
 
-let users = new Map<TwitterUserId, TwitterAPIUser>();
+
+
+/*
+    various pieces of state
+*/
+
+function askUsers(userIds : TwitterUserId[]){
+    self.port.emit('ask-users', userIds);
+}
+
+let users = new Map<TwitterUserId, TwitterAPIUser>(); 
 let timeline : TwitterAPITweet[] = [];
 let visitedUser : TwitterAPIUser;
 let addonUserAndFriends : {
@@ -61,6 +72,35 @@ let addonUserAndFriends : {
 };
 let displayDayCount = 30; // give a value by default to get started
 let languages: Map<string, {code: string, name: string}>; // give a value by default to get started
+
+/* tweets list*/
+const tweetListContainer: HTMLElement = document.createElement('div');
+tweetListContainer.classList.add('TA-tweets-list');
+
+let tweetListState: {
+    title: string
+    tweets: TwitterAPITweet[]
+};
+
+tweetListContainer.addEventListener('click', e => {
+    if(!(<any>e.target).matches('.TA-tweets-list .timeline *')){
+        tweetListContainer.remove();
+        tweetListState = undefined;
+    }
+});
+
+function renderTweetList(){ 
+    if(!tweetListState)
+        return;
+    
+    document.body.appendChild(tweetListContainer);
+    React.renderComponent(
+        TweetList(Object.assign({askUsers: askUsers, users: users}, tweetListState)), 
+        tweetListContainer
+    )
+}
+
+
 
 function updateTwitterAssistant(){
     let addonUserAlreadyFollowingVisitedUser: boolean;
@@ -71,6 +111,7 @@ function updateTwitterAssistant(){
     }
     
     return twitterAssistantContainerP.then(twitterAssistantContainer => {
+                
         React.renderComponent(TwitterAssistant({
             tweetMine: TweetMine(
                 timeline,
@@ -82,13 +123,20 @@ function updateTwitterAssistant(){
             ),
             displayDayCount : displayDayCount,
             users: users,
-            visitedUser: visitedUser,
-            askUsers: function askUsers(userIds : TwitterUserId[]){
-                self.port.emit('ask-users', userIds);
-            },
+            askUsers: askUsers,
             addonUserAlreadyFollowingVisitedUser: addonUserAlreadyFollowingVisitedUser,
-            visitedUserIsAddonUser: visitedUserIsAddonUser
+            visitedUserIsAddonUser: visitedUserIsAddonUser,
+            showTweetList: function(tweets: TwitterAPITweet[], title: string){
+                tweetListState = {
+                    tweets: tweets,
+                    title: title
+                };
+                renderTweetList();
+            }
         }), twitterAssistantContainer);
+        
+        renderTweetList();
+        
     }).catch(function(err){
         console.error('metrics integration error', String(err));
         throw err;
@@ -103,6 +151,7 @@ self.port.on('answer-users', (receivedUsers: TwitterAPIUser[]) => {
 
 self.port.on('visited-user-details', u => {
     visitedUser = u;
+    users.set(visitedUser.id_str, visitedUser);
 
     updateTwitterAssistant();
 });

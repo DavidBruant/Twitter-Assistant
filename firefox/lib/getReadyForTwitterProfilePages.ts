@@ -55,8 +55,8 @@ var twitterProfilePageMod = new PageMod({
     contentScriptWhen: "start", // mostly so the 'attach' event happens as soon as possible
 
     contentStyleFile: [
-        data.url("metrics-integration/main-from-sass.css"),
-        data.url("metrics-integration/additional.css")
+        data.url("metrics-integration/main.css"),
+        data.url("metrics-integration/additional.css") 
     ]
 });
 

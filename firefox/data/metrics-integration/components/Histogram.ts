@@ -18,7 +18,7 @@ const Histogram = React.createClass({
         const tweetMine = data.tweetMine, 
             histogramSize = data.histogramSize;
 
-        return React.DOM.section( {className: 'TA-activity'}, Array(histogramSize).fill(0).map((e, i) => {
+        return React.DOM.section( {className: 'TA-histogram TA-activity'}, Array(histogramSize).fill(0).map((e, i) => {
             let today = (new Date()).getTime();
             today = today - today%ONE_DAY; // beginning of today
 
