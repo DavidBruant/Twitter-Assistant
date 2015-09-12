@@ -9,7 +9,7 @@
   "bugs": {
     "url": "https://github.com/DavidBruant/Twitter-Assistant/issues"
   },
-  "version": "1.0.0",
+  "version": "1.0.1",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "compile": "tsc --sourceMap --noImplicitAny -m commonjs --target ES5 firefox/**/*.ts firefox/**/**/*.ts",
