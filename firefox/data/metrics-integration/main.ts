@@ -1,8 +1,9 @@
-/// <reference path="../../../node_modules/typescript/bin/lib.es6.d.ts" />
+/// <reference path="../../../node_modules/typescript/lib/lib.es6.d.ts" />
 /// <reference path="../../defs/ES6.d.ts" />
 /// <reference path="../../defs/react-0.11.d.ts" />
 /// <reference path="../../defs/TwitterAPI.d.ts" />
 /// <reference path="../../defs/jetpack/jetpack-port.d.ts" />
+/// <reference path="../../defs/TA-extensions.d.ts" />
 
 // declare var React : React.Exports;
 'use strict';
