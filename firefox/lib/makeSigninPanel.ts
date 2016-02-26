@@ -10,52 +10,52 @@ import guessAddonUserTwitterName = require('./guessAddonUserTwitterName');
 import getAccessToken = require('./getAccessToken');
 import getReadyForTwitterProfilePages = require('./getReadyForTwitterProfilePages');
 
-var Panel = panelModule.Panel;
-var data = selfModule.data;
-var storage = storageModule.storage;
+const Panel = panelModule.Panel;
+const data = selfModule.data;
+const storage = storageModule.storage;
 
 
-function makeCredentialsPanel(){
+function makeSigninPanel(){
 
-    var credentialsPanel = new Panel({
+    const signinPanel = new Panel({
         width: 650,
         height: 400, 
         contentURL: data.url('panel/mainPanel.html')
     });
     
-    credentialsPanel.on('show', e => {
-        console.log("credentialsPanel.on 'show'")
+    signinPanel.on('show', e => {
+        console.log("signinPanel.on 'show'")
         
         guessAddonUserTwitterName()
             .then(username => {
                 console.log('guessed user', username);
-                credentialsPanel.port.emit('update-logged-user', username);
+                signinPanel.port.emit('update-logged-user', username);
             })
             .catch(err => {
                 console.log('err guessed user', err);
-                credentialsPanel.port.emit('update-logged-user', undefined);
+                signinPanel.port.emit('update-logged-user', undefined);
             });
     })
     
-    credentialsPanel.port.on('test-credentials', credentials => {
+    signinPanel.port.on('test-credentials', credentials => {
         console.log('test-credentials', credentials);
         
         getAccessToken(credentials.key, credentials.secret)
             .then(token => {
-                credentialsPanel.port.emit('working-app-credentials', credentials);
+                signinPanel.port.emit('working-app-credentials', credentials);
             
                 storage.credentials = JSON.stringify(credentials);
-                setTimeout(() => credentialsPanel.hide(), 5*1000);
+                setTimeout(() => signinPanel.hide(), 5*1000);
         
                 getReadyForTwitterProfilePages(credentials);
             })
             .catch(err => {
-                credentialsPanel.port.emit('non-working-app-credentials', {error: err, credentials: credentials});
+                signinPanel.port.emit('non-working-app-credentials', {error: err, credentials: credentials});
             });
     });
     
     
-    credentialsPanel.port.on('automate-twitter-app-creation', () => {
+    signinPanel.port.on('automate-twitter-app-creation', () => {
         
         console.time('app creation');
         
@@ -67,7 +67,7 @@ function makeCredentialsPanel(){
 
                         console.log('twitterAppCredentials', twitterAppCredentials);
                     
-                        credentialsPanel.port.emit('working-app-credentials', twitterAppCredentials);
+                        signinPanel.port.emit('working-app-credentials', twitterAppCredentials);
                     
                         return getReadyForTwitterProfilePages(twitterAppCredentials).then(function(){
                             tabs.open('https://twitter.com/'+username);
@@ -83,7 +83,7 @@ function makeCredentialsPanel(){
     
     });
     
-    return credentialsPanel;
+    return signinPanel;
 }
 
-export = makeCredentialsPanel;
+export = makeSigninPanel;

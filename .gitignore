@@ -6,6 +6,8 @@ firefox/data/metrics-integration/*.js
 firefox/data/metrics-integration/*/*.js
 firefox/data/metrics-integration/components/*.js
 twitter-assistant-content.js
+server/*.js
+server/*.json
 
 node_modules
 

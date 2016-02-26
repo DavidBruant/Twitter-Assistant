@@ -12,9 +12,9 @@
   "version": "1.0.1",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "compile": "tsc --sourceMap --noImplicitAny -m commonjs --target ES5 firefox/**/*.ts firefox/**/**/*.ts",
-    "xpi": "cd ./firefox; jpm xpi; cd -",
-    "run": "cd ./firefox; jpm run -b $(which firefox) --prefs ../prefs.json --debug; cd -",
+    "compile": "tsc --sourceMap --noImplicitAny -m commonjs --target ES5 firefox/**/*.ts firefox/**/**/*.ts server/index.ts",
+    "xpi": "jpm xpi --addon-dir firefox",
+    "run": "jpm run -b $(which firefox) --prefs prefs.json --debug --addon-dir firefox",
     "build": "browserify firefox/data/metrics-integration/main.ts -p [ tsify --noImplicitAny --sourceMap --target ES5 ] --debug > firefox/data/metrics-integration/twitter-assistant-content.js",
     "watch": "watchify firefox/data/metrics-integration/main.ts -p [ tsify --noImplicitAny --sourceMap --target ES5 ] --debug -o firefox/data/metrics-integration/twitter-assistant-content.js -v --ignore WNdb --ignore lapack"
   },
@@ -25,9 +25,16 @@
   "id": "jid1-BptUkbczEocdyg",
   "description": "Twitter Assistant ==============",
   "dependencies": {
+    "body-parser": "^1.15.0",
     "browserify": "^11.0.1",
-    "jpm": "^1.0.1",
+    "compression": "^1.6.1",
+    "express": "^4.13.4",
+    "jpm": "^1.0.6",
     "natural": "^0.2.1",
+    "passport": "^0.3.0",
+    "passport-twitter": "^1.0.3",
+    "querystring": "^0.2.0",
+    "request": "^2.69.0",
     "tsify": "^0.11.9",
     "typescript": "^1.5.3"
   }

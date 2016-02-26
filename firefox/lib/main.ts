@@ -10,10 +10,10 @@ import prefModule = require('sdk/simple-prefs');
 import lowLevelPrefs = require('sdk/preferences/service');
 import storageModule = require("sdk/simple-storage");
 
-import getAccessToken = require('./getAccessToken');
+import requestToken = require('./requestToken');
 import guessAddonUserTwitterName = require('./guessAddonUserTwitterName');
 import getReadyForTwitterProfilePages = require('./getReadyForTwitterProfilePages');
-import makeCredentialsPanel = require('./makeCredentialsPanel');
+import makeSigninPanel = require('./makeSigninPanel');
 
 
 var data = selfModule.data;
@@ -38,63 +38,35 @@ var TWITTER_USER_PAGES = [
 
 /*throw 'Apparently retweet details are broken + Need to test whether addon user infos are properly fetched, then propagated to the tweetMine to compute the number nia nia nia + Make sure the "no logged in addon user" case is taken care of + add trim_user everywhere';*/
 
+/*
+setTimeout(() => { 
+    TWITTER_USER_PAGES.forEach(url => tabs.open(url));
+}, 3*1000);
+*/
+
 declare var process: any;
 
 export var main = function(){
     
-    /*
-        SETUP
-    */
-    
     prefs["sdk.console.logLevel"] = 'all';
-    
-    
-    
-    /*
-        ACTUAL MAIN
-    */
-    
-    var storedTwitterAPICredentials = storage.credentials ? JSON.parse(storage.credentials) : {};
-    
-    // use the values passed as static args in priority;
-    var key = lowLevelPrefs.get("TWITTER_ASSISTANT_CONSUMER_KEY") || storedTwitterAPICredentials.key;
-    var secret = lowLevelPrefs.get("TWITTER_ASSISTANT_CONSUMER_SECRET") || storedTwitterAPICredentials.secret;
 
-    if(lowLevelPrefs.get("TWITTER_ASSISTANT_CONSUMER_KEY") && lowLevelPrefs.get("TWITTER_ASSISTANT_CONSUMER_SECRET")){
-        setTimeout(() => { 
-            TWITTER_USER_PAGES.forEach(url => tabs.open(url));
-        }, 3*1000);
-    }
+    const signinPanel = makeSigninPanel();
     
-    var credentialsPanel = makeCredentialsPanel();
-    
-    // button
-    var twitterAssistantButton = new ui.ActionButton({
-        id: "twitter-assistant-credentials-panel-button",
+    const twitterAssistantButton = new ui.ActionButton({
+        id: "twitter-assistant-signin-panel-button",
         label: "Twitter Assistant panel",
         icon: data.url('images/Twitter_logo_blue.png'),
         onClick: state => {
-            credentialsPanel.show({position: twitterAssistantButton});
+            signinPanel.show({position: twitterAssistantButton});
         }
     });
     
-    
-    if(key && secret){
-        getReadyForTwitterProfilePages({key:key, secret:secret});
-        
-        credentialsPanel.port.emit('working-app-credentials', {key: key, secret: secret});
-    }
-    else{ // no credentials stored. Ask some to the user
-        console.time('guess');
-        guessAddonUserTwitterName().then(username => {
-            console.timeEnd('guess');
-            
-            credentialsPanel.port.emit('update-logged-user', username);
-        });
-        
-        credentialsPanel.show({position: twitterAssistantButton});
-    }
-    
+    guessAddonUserTwitterName()
+    .then(username => {
+        signinPanel.port.emit('update-logged-user', username);
+    });
+
+    signinPanel.show({position: twitterAssistantButton});
+
+    requestToken('http://localhost:3737', 'http://localhost:3737/abcde')
 };
-
-
