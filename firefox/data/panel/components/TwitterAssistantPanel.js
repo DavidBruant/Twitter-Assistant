@@ -31,7 +31,8 @@ const DEFAULT_TWITTER_ASSISTANT_SERVER_ORIGIN = 'http://localhost:3737/';
                 React.DOM.h2({}, 'Hello' + (props.loggedUser ? ' @'+props.loggedUser : '') + '!'),
                 !props.loggedUser ? React.DOM.button({
                     onClick(e){
-                        props.attemptLogin();
+                        console.log('ckucj')
+                        props.signinWithTwitter();
                     }
                 }, 'Sign in with Twitter') : undefined,
                                  

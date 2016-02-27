@@ -5,6 +5,7 @@ import selfModule =  require("sdk/self");
 import tabs = require("sdk/tabs");
 import system = require("sdk/system");
 import timersModule = require("sdk/timers");
+import windowsModule = require('sdk/windows');
 
 import prefModule = require('sdk/simple-prefs');
 import lowLevelPrefs = require('sdk/preferences/service');
@@ -16,16 +17,15 @@ import getReadyForTwitterProfilePages = require('./getReadyForTwitterProfilePage
 import makeSigninPanel = require('./makeSigninPanel');
 
 
-var data = selfModule.data;
-var setTimeout = timersModule.setTimeout;
-var staticArgs = system.staticArgs;
-var prefs = prefModule.prefs;
-var storage = storageModule.storage;
-    
-    
+const data = selfModule.data;
+const setTimeout = timersModule.setTimeout;
+const staticArgs = system.staticArgs;
+const prefs = prefModule.prefs;
+const storage = storageModule.storage;
+const windows = windowsModule.browserWindows;
 
-var TWITTER_MAIN_PAGE = "https://twitter.com";
-var TWITTER_USER_PAGES = [
+const TWITTER_MAIN_PAGE = "https://twitter.com";
+const TWITTER_USER_PAGES = [
     "https://twitter.com/DavidBruant"/*,
     "https://twitter.com/rauschma",
     "https://twitter.com/nitot",
@@ -37,6 +37,16 @@ var TWITTER_USER_PAGES = [
 ];
 
 /*throw 'Apparently retweet details are broken + Need to test whether addon user infos are properly fetched, then propagated to the tweetMine to compute the number nia nia nia + Make sure the "no logged in addon user" case is taken care of + add trim_user everywhere';*/
+
+/*
+    When the user clicks on the button in the panel:
+    * panel asks addon
+    * addon reaches server
+    * server returns redirectURL
+    * panel does window.open(redirectURL);
+
+*/
+
 
 /*
 setTimeout(() => { 
@@ -62,11 +72,20 @@ export var main = function(){
     });
     
     guessAddonUserTwitterName()
-    .then(username => {
-        signinPanel.port.emit('update-logged-user', username);
-    });
+    .then(username => { signinPanel.port.emit('update-logged-user', username); });
 
     signinPanel.show({position: twitterAssistantButton});
 
-    requestToken('http://localhost:3737', 'http://localhost:3737/abcde')
+    signinPanel.port.on('sign-in-with-twitter', () => {
+        console.log('receiving sign-in-with-twitter');
+        requestToken('http://localhost:3737', 'http://127.0.0.1:3737/twitter/callback')
+        .then(twitterPermissionURL => {
+            signinPanel.port.emit('sign-in-with-twitter-redirect-url', twitterPermissionURL);
+        })
+        .catch(e => console.error('requestToken', e));
+    })
+
+
+
+    
 };

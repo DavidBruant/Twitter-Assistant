@@ -6,19 +6,19 @@ import xhrModule = require("sdk/net/xhr");
 const XMLHttpRequest = xhrModule.XMLHttpRequest
 
 function requestToken(twitterAssistantServerOrigin: string, callbackURL: string){
+    console.log('requestToken', twitterAssistantServerOrigin, callbackURL);
+    
     return new Promise<AccessToken>((resolve, reject) => {
         const xhr = new XMLHttpRequest({mozAnon: true});
-        const url = twitterAssistantServerOrigin + '/oauth/request_token'
+        const url = twitterAssistantServerOrigin + '/twitter/oauth/request_token'
         
         xhr.open('POST', url);
-        xhr.responseType = "json";
 
         xhr.addEventListener('load', e => {
             console.log('/oauth2/token status', xhr.status);
 
             if(xhr.status < 400){
-                throw 'redirect user';
-                resolve();
+                resolve(xhr.response);
             }
             else{
                 reject(url +' HTTP error '+ xhr.status);
@@ -28,8 +28,9 @@ function requestToken(twitterAssistantServerOrigin: string, callbackURL: string)
 
         xhr.addEventListener('error', e => {
             reject(url +' error '+ String(e));
-        })
-
+        });
+        
+        xhr.setRequestHeader('Content-Type', 'application/json');
         xhr.send(JSON.stringify({callbackURL: callbackURL}));
     });
 }

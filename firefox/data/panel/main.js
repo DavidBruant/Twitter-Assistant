@@ -1,21 +1,12 @@
 'use strict';
 
-// bare minimum "polyfill" so this code doesn't crash when tested in a browser
-if(!self.addon){
-    self.addon = {
-        port: {
-            on: function(){},
-            emit: function(ev, data){
-                console.log("emitting", ev, data);
-            }
-        }
-    }
-}
-
-
 const data = {
-    automateTwitterAppCreation: e => self.addon.port.emit('automate-twitter-app-creation'),
-    testCredentials: credentials => self.addon.port.emit('test-credentials', credentials)
+    //automateTwitterAppCreation: e => self.addon.port.emit('automate-twitter-app-creation'),
+    //testCredentials: credentials => self.addon.port.emit('test-credentials', credentials)
+    signinWithTwitter(){
+        console.log('nczoecn');
+        self.addon.port.emit('sign-in-with-twitter')
+    }
 };
 
 function updatePanel(){
@@ -23,7 +14,7 @@ function updatePanel(){
 }
 
 
-self.addon.port.on('update-logged-user', username => {
+/*self.addon.port.on('update-logged-user', username => {
     data.loggedUser = username;
     updatePanel();
 });
@@ -31,14 +22,13 @@ self.addon.port.on('update-logged-user', username => {
 self.addon.port.on('working-app-credentials', credentials => {
     data.credentials = credentials;
     updatePanel();
+});*/
+
+
+self.addon.port.on('sign-in-with-twitter-redirect-url', twitterPermissionURL => {
+    window.open(twitterPermissionURL)
 });
 
-/*
-    1) Make sure automated case works
-    2) Write code for "I want to make the app manually" & "I already have an app"
-    3) think about "I want to change my credentials"
-*/
-//throw 'TODO: see above comment';
 
 updatePanel();
 

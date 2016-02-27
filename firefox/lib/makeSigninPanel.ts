@@ -23,7 +23,7 @@ function makeSigninPanel(){
         contentURL: data.url('panel/mainPanel.html')
     });
     
-    signinPanel.on('show', e => {
+    /*signinPanel.on('show', e => {
         console.log("signinPanel.on 'show'")
         
         guessAddonUserTwitterName()
@@ -35,7 +35,7 @@ function makeSigninPanel(){
                 console.log('err guessed user', err);
                 signinPanel.port.emit('update-logged-user', undefined);
             });
-    })
+    })*/
     
     signinPanel.port.on('test-credentials', credentials => {
         console.log('test-credentials', credentials);
