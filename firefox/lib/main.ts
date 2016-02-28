@@ -106,11 +106,8 @@ export var main = function(){
         })
         .then(user => {
             signinPanel.port.emit('logged-in-user', user);
-        })
-        
-        // verify user via API
-        // greet user in panel
-        // open tab with user account
+            tabs.open('https://twitter.com/'+user.screen_name);
+        });
         
     });
 

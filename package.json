@@ -31,8 +31,6 @@
     "express": "^4.13.4",
     "jpm": "^1.0.6",
     "natural": "^0.2.1",
-    "passport": "^0.3.0",
-    "passport-twitter": "^1.0.3",
     "querystring": "^0.2.0",
     "request": "^2.69.0",
     "tsify": "^0.11.9",
