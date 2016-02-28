@@ -85,8 +85,6 @@ app.get('/twitter/callback', function(req, res){
     
     const oauthData = oauthTokenToOauthData.get(token);
     
-    console.log('callback', token, verifier, oauthData);
-    
     oauthData.token = token; // "useless" because it should be the same value
     oauthData.verifier = verifier; // "useless" because it should be the same value
     
@@ -128,6 +126,9 @@ app.post('/twitter/api', (req, res) => {
     const token = body.token;
     
     const oauth = oauthTokenToOauthData.get(token);
+    
+    console.log('/twitter/api', url, parameters, oauth);
+
     if(!oauth){
         res.status(403);
         res.send('Unknown token: '+token);

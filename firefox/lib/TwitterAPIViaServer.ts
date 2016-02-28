@@ -31,7 +31,7 @@ function TwitterAPIViaServer(oauthToken: string, serverOrigin: string) : Twitter
     
     const twitterAssistantServerAPIURL = serverOrigin + '/twitter/api';
     
-function request(url: string, parameters?: any){
+    function request(url: string, parameters?: any){
         return new Promise((resolve, reject) => {
             const reqStart = Date.now();
 
@@ -172,10 +172,11 @@ function request(url: string, parameters?: any){
         
         // https://dev.twitter.com/rest/reference/get/help/languages
         getLanguages: function(){
-            
-            return request(
-                'https://api.twitter.com/1.1/help/languages.json'
-            );
+            return request('https://api.twitter.com/1.1/help/languages.json');
+        },
+        
+        verifyCredentials: function(){
+            return request('https://api.twitter.com/1.1/account/verify_credentials.json');
         }
     
     };

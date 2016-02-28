@@ -1,15 +1,12 @@
 'use strict';
 
-import TwitterAPI = require('./TwitterAPI');
-
 interface getTimelineOverATimePeriodQuery{
     username:string
     timestampFrom: number // timestamp
     timestampTo?: number // timestamp
 }
 
-function getTimelineOverATimePeriod(accessToken: AccessToken){
-    var twitterAPI = TwitterAPI(accessToken);
+function getTimelineOverATimePeriod(getUserTimeline: (twittername: string, maxId?: TwitterTweetId) => Promise<TwitterAPITweet[]>){
     
     // should be one of these Stream+Promise hybrid when that's ready
     return function(query: getTimelineOverATimePeriodQuery, progress : (tweets : TwitterAPITweet[]) => void){
@@ -33,7 +30,7 @@ function getTimelineOverATimePeriod(accessToken: AccessToken){
             return toAccumulate;
         }
         
-        return twitterAPI.getUserTimeline(username).then(function processTweets(timeline: TwitterAPITweet[]) : Promise<TwitterAPITweet[]>{
+        return getUserTimeline(username).then(function processTweets(timeline: TwitterAPITweet[]) : Promise<TwitterAPITweet[]>{
             //console.log("processTweets", accumulatedTweets.length, timeline.length);
             
             // max_id dance may lead to re-feching one same tweet.
@@ -45,10 +42,10 @@ function getTimelineOverATimePeriod(accessToken: AccessToken){
             
             progress(accumulated);
             
-            // if tweets don't go back far enough, get max_id of last tweet and call twitterAPI.getUserTimeline again
+            // if tweets don't go back far enough, get max_id of last tweet and call getUserTimeline again
             if(timeline.length === accumulated.length){
                 var maxId = accumulatedTweets[accumulatedTweets.length - 1].id_str;
-                return twitterAPI.getUserTimeline(username, maxId).then(processTweets);
+                return getUserTimeline(username, maxId).then(processTweets);
             }
             else{
                 // Promise.resolve added to calm TypeScript. Union types in TS1.4 might allow removing it

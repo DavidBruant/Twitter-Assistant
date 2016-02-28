@@ -13,12 +13,12 @@ function updatePanel(){
 }
 
 
-/*self.addon.port.on('update-logged-user', username => {
-    data.loggedUser = username;
+self.addon.port.on('logged-in-user', user => {
+    data.loggedUser = user;
     updatePanel();
 });
 
-self.addon.port.on('working-app-credentials', credentials => {
+/*self.addon.port.on('working-app-credentials', credentials => {
     data.credentials = credentials;
     updatePanel();
 });*/
