@@ -75,6 +75,11 @@ npm run watch
 npm run compile
 ```
 
+### server
+
+Needs Node.js v5+
+
+`node server/index.js`
 
 
 # Acknowledgements

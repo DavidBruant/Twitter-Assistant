@@ -71,16 +71,24 @@ export var main = function(){
         }
     });
     
-    guessAddonUserTwitterName()
+    /*guessAddonUserTwitterName()
     .then(username => { signinPanel.port.emit('update-logged-user', username); });
-
+    */
     signinPanel.show({position: twitterAssistantButton});
 
     signinPanel.port.on('sign-in-with-twitter', () => {
         console.log('receiving sign-in-with-twitter');
         requestToken('http://localhost:3737', 'http://127.0.0.1:3737/twitter/callback')
         .then(twitterPermissionURL => {
-            signinPanel.port.emit('sign-in-with-twitter-redirect-url', twitterPermissionURL);
+            const twitterSigninWindow = windows.open(twitterPermissionURL);
+            
+            twitterSigninWindow.on('open', w => {
+                const tab = w.tabs.activeTab;
+                tab.on('ready', t => {
+                    console.log('t', t, t.url);
+                });
+            })
+            
         })
         .catch(e => console.error('requestToken', e));
     })

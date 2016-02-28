@@ -4,7 +4,6 @@ const data = {
     //automateTwitterAppCreation: e => self.addon.port.emit('automate-twitter-app-creation'),
     //testCredentials: credentials => self.addon.port.emit('test-credentials', credentials)
     signinWithTwitter(){
-        console.log('nczoecn');
         self.addon.port.emit('sign-in-with-twitter')
     }
 };
@@ -24,10 +23,6 @@ self.addon.port.on('working-app-credentials', credentials => {
     updatePanel();
 });*/
 
-
-self.addon.port.on('sign-in-with-twitter-redirect-url', twitterPermissionURL => {
-    window.open(twitterPermissionURL)
-});
 
 
 updatePanel();

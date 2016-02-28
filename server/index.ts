@@ -32,7 +32,6 @@ app.use(compression());
 
 app.post('/twitter/oauth/request_token', function(req, res){
     const callbackURL = req.body.callbackURL;
-    console.log('body', req.body);
     console.log('callbackURL', callbackURL)
     // fresh object at each request
     const oauth = Object.assign({callback_url: encodeURIComponent(callbackURL)}, oauthCredentials);
@@ -45,11 +44,11 @@ app.post('/twitter/oauth/request_token', function(req, res){
         function(err, response, body){
             if(err){
                 res.status(502);
-                res.send('Error discussing with Twitter: '+String(err));
+                res.send('Error discussing with Twitter (request_token): '+String(err));
                 return;
             }
 
-            console.log('status from Twitter', response.statusCode, body);
+            console.log('status from Twitter request_token', response.statusCode, body);
 
             // Ideally, you would take the body in the response
             // and construct a URL that a user clicks on (like a sign in button).
@@ -80,8 +79,54 @@ app.post('/twitter/oauth/request_token', function(req, res){
 
 
 app.get('/twitter/callback', function(req, res){
-    res.send('<script>console.log("ouiiiiiiiii", location, location.query)</script>')
-})
+    const query = req.query;
+    const token = query.oauth_token;
+    const verifier = query.oauth_verifier;
+    
+    const oauthData = oauthTokenToOauthData.get(token);
+    
+    console.log('callback', token, verifier, oauthData);
+    
+    oauthData.token = token; // "useless" because it should be the same value
+    oauthData.verifier = verifier; // "useless" because it should be the same value
+    
+    request.post(
+        {
+            url: 'https://api.twitter.com/oauth/access_token',
+            oauth: oauthData
+        },
+        function(err, response, body){
+            if(err){
+                res.status(502);
+                res.send('Error discussing with Twitter (access_token): '+String(err));
+                return;
+            }
+
+            console.log('status from Twitter access_token', response.statusCode, body);
+
+            const finalOauthData = qs.parse(body);
+            
+            delete oauthData.verifier; // not necessary any longer
+            oauthData.token = finalOauthData.oauth_token;
+            oauthData.token_secret = finalOauthData.oauth_token_secret;
+            
+            res.status(200);
+            res.send('');
+            
+            
+            request.get(
+                {
+                    url: 'https://api.twitter.com/1.1/account/verify_credentials.json',
+                    oauth: oauthData,
+                    json: true
+                },
+                function (e, r, user) {
+                    console.log('user', user);
+                }
+            )
+        }
+    );
+});
 
 /*
     // step 3
