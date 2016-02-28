@@ -2,7 +2,6 @@
 
 import RequestModule = require("sdk/request");
 
-import getAccessToken = require('./getAccessToken');
 import makeSearchString = require('./makeSearchString');
 
 var Request = RequestModule.Request;

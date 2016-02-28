@@ -112,20 +112,30 @@ app.get('/twitter/callback', function(req, res){
             
             res.status(200);
             res.send('');
-            
-            
-            request.get(
-                {
-                    url: 'https://api.twitter.com/1.1/account/verify_credentials.json',
-                    oauth: oauthData,
-                    json: true
-                },
-                function (e, r, user) {
-                    console.log('user', user);
-                }
-            )
         }
     );
+});
+
+
+/*
+    Generic route that forwards to the Twitter API and back
+*/
+app.post('/twitter/api', (req, res) => {
+    const body = req.body;
+    
+    const url = body.url;
+    const parameters = body.parameters;
+    const token = body.token;
+    
+    const oauth = oauthTokenToOauthData.get(token);
+    if(!oauth){
+        res.status(403);
+        res.send('Unknown token: '+token);
+        return;
+    }
+        
+    // sending request to Twitter and forwarding back to addon directly
+    request.get({ url: url, oauth: oauth, qs: parameters, json: true }).pipe(res);
 });
 
 /*
