@@ -17,14 +17,8 @@ const DEFAULT_TWITTER_ASSISTANT_SERVER_ORIGIN = 'http://localhost:3737/';
         render: function(){
             const props = this.props;
             
-            // "You're all set :-) Look at someone's profile on Twitter!"
-                    
-            /*
-            React.DOM.a(
-                { target: '_blank', href: 'https://twitter.com/' },
-                "Please, login to your Twitter account."
-            );
-            */
+            if(props.errorMessage)
+                console.error(props.errorMessage);
             
             return React.DOM.div({},
                 React.DOM.h1({}, 'Twitter Assistant'),
@@ -34,7 +28,9 @@ const DEFAULT_TWITTER_ASSISTANT_SERVER_ORIGIN = 'http://localhost:3737/';
                         console.log('ckucj')
                         props.signinWithTwitter();
                     }
-                }, 'Sign in with Twitter') : undefined,
+                }, 'Sign in with Twitter') : "You're all set :-) Look at someone's profile on Twitter!",
+                
+                props.errorMessage ? React.DOM.section({className: 'error'}, props.errorMessage) : undefined,
                                  
                 React.DOM.footer({},
                     React.DOM.a(

@@ -92,11 +92,17 @@ export var main = function(){
                     });
                 })
             })
-        })
-        .catch(e => console.error('requestToken', e));
+        });
         
-        oauthTokenP
-        .then(oauthToken => getReadyForTwitterProfilePages(oauthToken, twitterAssistantServerOrigin))
+        oauthTokenP.catch(e => {
+            console.error('oauthTokenP.catch', e)
+            signinPanel.port.emit(
+                'error-request-token',
+                {twitterAssistantServerOrigin: twitterAssistantServerOrigin, message: String(e)}
+            );
+        });
+        
+        oauthTokenP.then(oauthToken => getReadyForTwitterProfilePages(oauthToken, twitterAssistantServerOrigin))
         
         oauthTokenP
         .then(oauthToken => {
