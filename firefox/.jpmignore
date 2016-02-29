@@ -1,0 +1,11 @@
+.jpmignore # https://github.com/mozilla-jetpack/jpm/issues/320
+
+defs
+test
+doc
+
+*.d.ts
+*.ts
+*.js.map
+
+*.xpi
