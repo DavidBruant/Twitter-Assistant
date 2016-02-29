@@ -7,7 +7,9 @@ declare module "sdk/request" {
     
     interface RequestDescription{
         url: string
-        headers: Object // a finer-grain description of header could be good
+        headers?: Object // a finer-grain description of header could be good
+        content?: string
+        contentType?: string
         onComplete: (response: SDKRequestResponse) => void
         onError: (error: Error) => void
     }

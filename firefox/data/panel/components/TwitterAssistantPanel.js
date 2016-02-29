@@ -1,77 +1,47 @@
-(function(exports){
-    'use strict';
+'use strict';
 
-    
-    exports.TwitterAssistantPanel = React.createClass({
-        
-        getInitialState: function(){
-            return {
-                effort: 'automated'
-            };
-        },
+/*
+    {
+        loggedUser: string
+        attemptLogin: () => {}
+        changeTwitterAssistantServerDomain:
+    }
+*/
+
+const DEFAULT_TWITTER_ASSISTANT_SERVER_ORIGIN = 'http://localhost:3737/';
+
+(function(global){
+    global.TwitterAssistantPanel = React.createClass({
+        displayName: 'TwitterAssistantPanel',
         
         render: function(){
-            /*
-                {
-                    loggedUser: string ('DavidBruant'),
-                    credentials : {
-                        key: 'blablba',
-                        secret: 'blibli'
-                    },
-                    
-                    automateTwitterAppCreation: () => void,
-                    testCredentials: {key, secret} => void
-                }
-            */
-            const data = this.props;
-            const state = this.state;
+            const props = this.props;
             
-            const children = [
-                React.DOM.h1({}, "Twitter Assistant"),   
-                React.DOM.h2({}, "Hello" + (data.loggedUser?' @'+data.loggedUser : '') + '!')
-            ];
+            if(props.errorMessage)
+                console.error(props.errorMessage);
             
-            if(data.loggedUser){
-                if(data.credentials){
-                    children.push(
-                        "You're all set :-) Look at someone's profile on Twitter!"
-                    )
-                }
-                else{
-                    
-                    if(state.effort === 'automated'){
-                        children.push(AutomatedAppCreation({
-                            automateTwitterAppCreation: data.automateTwitterAppCreation,
-                            switchToManual: () => {
-                                this.setState({effort: 'manual'});
-                            }
-                        }));
+            return React.DOM.div({},
+                React.DOM.h1({}, 'Twitter Assistant'),
+                React.DOM.h2({}, 'Hello' + (props.loggedUser ? ' @'+props.loggedUser.screen_name : '') + '!'),
+                !props.loggedUser ? React.DOM.button({
+                    onClick(e){
+                        console.log('ckucj')
+                        props.signinWithTwitter();
                     }
-                    else{
-                        children.push(ManualAppCreation({
-                            testCredentials: data.testCredentials,
-                            switchToAutomated: () => {
-                                this.setState({effort: 'automated'});
-                            },
-                            credentials: data.credentials
-                        }));
-                    }
-                }
-            }
-            else{
-                children.push( React.DOM.a({
-                    target: '_blank',
-                    href: 'https://twitter.com/'
-                }, "Please, login to your Twitter account.") );
-            }
-            
-            children.push( React.DOM.footer({}, React.DOM.a({
-                href: "mailto:bruant.d+ta@gmail.com",
-                title: "The addon author is here to help out!"
-            }, 'Help')) )
+                }, 'Sign in with Twitter') : "You're all set :-) Look at someone's profile on Twitter!",
                 
-            return React.DOM.div({}, children);
+                props.errorMessage ? React.DOM.section({className: 'error'}, props.errorMessage) : undefined,
+                                 
+                React.DOM.footer({},
+                    React.DOM.a(
+                        { 
+                            href: "mailto:bruant.d+ta@gmail.com",
+                            title: "The addon author is here to help out!"
+                        },
+                        'Help'
+                    )
+                )
+            );
         }
-    });
-        
+    });  
 })(this);

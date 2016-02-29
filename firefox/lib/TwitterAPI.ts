@@ -2,12 +2,11 @@
 
 import RequestModule = require("sdk/request");
 
-import getAccessToken = require('./getAccessToken');
 import makeSearchString = require('./makeSearchString');
 
 var Request = RequestModule.Request;
 
-var str = Function.prototype.call.bind( Object.prototype.toString );
+var str = Function.prototype.call.bind( Object.prototype.toString ); 
 
 function stringifyTwitterSearchQuery(obj: any){
     var queryParts: string[] = [];
