@@ -79,7 +79,11 @@ npm run compile
 
 Needs Node.js v5+
 
-`node server/index.js`
+````
+npm i forever -g
+npm run compile
+forever start server/index.js
+````
 
 
 # Acknowledgements

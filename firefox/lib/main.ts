@@ -57,7 +57,7 @@ export var main = function(){
         }
     });
     
-    let twitterAssistantServerOrigin = 'http://127.0.0.1:3737';
+    let twitterAssistantServerOrigin = 'http://92.243.26.40:3737';
     let twitterCallbackURL = twitterAssistantServerOrigin+'/twitter/callback';
 
     // In Server Phase I, always show the panel at startup since the addon has no memory
