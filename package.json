@@ -15,7 +15,7 @@
     "compile": "tsc --sourceMap --noImplicitAny -m commonjs --target ES5 firefox/**/*.ts firefox/**/**/*.ts server/index.ts",
     "xpi": "jpm xpi --addon-dir firefox",
     "run": "jpm run -b $(which firefox) --prefs prefs.json --debug --addon-dir firefox",
-    "build": "browserify firefox/data/metrics-integration/main.ts -p [ tsify --noImplicitAny --sourceMap --target ES5 ] --debug > firefox/data/metrics-integration/twitter-assistant-content.js",
+    "build": "browserify firefox/data/metrics-integration/main.ts -p [ tsify --noImplicitAny --sourceMap --target ES5 ] --debug -o firefox/data/metrics-integration/twitter-assistant-content.js --ignore WNdb --ignore lapack",
     "watch": "watchify firefox/data/metrics-integration/main.ts -p [ tsify --noImplicitAny --sourceMap --target ES5 ] --debug -o firefox/data/metrics-integration/twitter-assistant-content.js -v --ignore WNdb --ignore lapack"
   },
   "devDependencies": {
