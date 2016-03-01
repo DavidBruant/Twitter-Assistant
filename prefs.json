@@ -1,0 +1,5 @@
+{
+    "devtools.chrome.enabled": true,
+    "devtools.debugger.remote-enabled": true,
+    "xpinstall.signatures.required": false
+}
