@@ -98,13 +98,13 @@ Thanks to [@pascalc](https://twitter.com/pascalchevrel), [@guillaumemasson](http
 
 Thanks to [@amarlakel](https://twitter.com/amarlakel) for making me understand that there is more to social networks than what we do with them.
 
-Thanks to the [Région Aquitaine](http://aquitaine.fr/) for [awarding a 10.000€ grant](http://numerique.aquitaine.fr/Laureats-de-l-appel-a-projets-2014) to support the project at the occasion of the "appel à projet « Usages innovants des données numériques : partage, exploitation et valorisation »".
+Thanks to the [Aquitaine-Limousin-Poitou-Charentes region](http://laregion-alpc.fr/) for [awarding a 10,000€ grant](http://numerique.aquitaine.fr/Laureats-de-l-appel-a-projets-2014) to support the project at the occasion of the "appel à projet « Usages innovants des données numériques : partage, exploitation et valorisation »".
 
-![Aquitaine Région logo](http://www.aquitaine.fr/var/ezdemo_site/storage/images/media/images/region/logo-couleurs-jpg/46638-1-fre-FR/logo-couleurs-jpg_large.jpg).
+![ALPC logo](logo-alpc.jpg).
 
-This grant is being shared among David Bruant (5000€) and Matthieu Bué (5000€) to get the project to a robust, easy-to-use, well-designed and featurefull 1.0 version.
+This grant is being shared among David Bruant (5,000€) and Matthieu Bué (5,000€) to get the project to a robust, easy-to-use, well-designed and featurefull 1.0 version.
 
 
-# Licence
+# License
 
 MIT
