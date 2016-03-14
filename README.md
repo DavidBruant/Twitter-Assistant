@@ -4,6 +4,8 @@ Twitter Assistant
 Twitter Assistant is an addon for Firefox aiming at improving the Twitter web experience.
 Among other things, it provides insights about Twitter users when you're visiting their profile page.
 
+![Firefox screenshot of Twitter Assistant](screenshot-firefox.png)
+
 
 ## Features
 
