@@ -64,13 +64,13 @@ function askUsers(userIds : TwitterUserId[]){
 }
 
 let users = new Map<TwitterUserId, TwitterAPIUser>(); 
-let timeline : TwitterAPITweet[] = [];
+let timeline : TwitterAPITweet[];
 let visitedUser : TwitterAPIUser;
 let addonUserAndFriends : {
     user: TwitterAPIUser
     friendIds: Set<TwitterUserId>
 };
-let displayDayCount = 30; // give a value by default to get started
+let displayDayCount;
 let languages: Map<string, {code: string, name: string}>; // give a value by default to get started
 
 /* tweets list*/
@@ -113,20 +113,20 @@ function updateTwitterAssistant(){
     return twitterAssistantContainerP.then(twitterAssistantContainer => {
                 
         React.renderComponent(TwitterAssistant({
-            tweetMine: TweetMine(
+            tweetMine: timeline ? TweetMine(
                 timeline,
                 displayDayCount,
                 visitedUser ? visitedUser.id_str : undefined,
                 addonUserAndFriends ? addonUserAndFriends.user.id_str : undefined,
                 addonUserAndFriends ? addonUserAndFriends.friendIds : undefined,
                 languages
-            ),
+            ) : undefined,
             displayDayCount : displayDayCount,
             users: users,
             askUsers: askUsers,
             addonUserAlreadyFollowingVisitedUser: addonUserAlreadyFollowingVisitedUser,
             visitedUserIsAddonUser: visitedUserIsAddonUser,
-            showTweetList: function(tweets: TwitterAPITweet[], title: string){
+            showTweetList: (tweets: TwitterAPITweet[], title: string) => {
                 tweetListState = {
                     tweets: tweets,
                     title: title
@@ -137,7 +137,7 @@ function updateTwitterAssistant(){
         
         renderTweetList();
         
-    }).catch(function(err){
+    }).catch(err => {
         console.error('metrics integration error', String(err));
         throw err;
     });
@@ -168,7 +168,7 @@ self.port.on('addon-user-and-friends', _addonUserAndFriends => {
 });
 
 self.port.on('twitter-user-data', partialTimeline => {
-    timeline = timeline.concat(partialTimeline);
+    timeline = timeline ? timeline.concat(partialTimeline) : partialTimeline;
 
     updateTwitterAssistant();
 });
