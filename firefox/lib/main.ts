@@ -10,7 +10,6 @@ import urlModule = require('sdk/url');
 
 import prefModule = require('sdk/simple-prefs');
 import lowLevelPrefs = require('sdk/preferences/service');
-import storageModule = require("sdk/simple-storage");
 
 import requestToken = require('./requestToken');
 import guessAddonUserTwitterName = require('./guessAddonUserTwitterName');
@@ -23,7 +22,6 @@ const data = selfModule.data;
 const setTimeout = timersModule.setTimeout;
 const staticArgs = system.staticArgs;
 const prefs = prefModule.prefs;
-const storage = storageModule.storage;
 const windows = windowsModule.browserWindows;
 const URL = urlModule.URL;
 
@@ -60,14 +58,26 @@ export var main = function(){
     let twitterAssistantServerOrigin = 'http://92.243.26.40:3737';
     let twitterCallbackURL = twitterAssistantServerOrigin+'/twitter/callback';
 
-    // In Server Phase I, always show the panel at startup since the addon has no memory
-    signinPanel.show({position: twitterAssistantButton});
+    function validateOauthToken(oauthToken){
+        console.log('oauthToken', oauthToken)
+        const twitterAPI = TwitterAPIViaServer(oauthToken, twitterAssistantServerOrigin);
 
-    let oauthTokenP: Promise<string>;
+        return twitterAPI.verifyCredentials()
+        .then(user => {
+            signinPanel.port.emit('logged-in-user', user);
+            tabs.open('https://twitter.com/'+user.screen_name);
+
+            throw new Error('TODO Save token');
+        })
+        .then( () => oauthToken )
+        .catch(err => throw new Error('removing this token from storage if invalid'));
+    }
+
 
     signinPanel.port.on('sign-in-with-twitter', () => {
         console.log('receiving sign-in-with-twitter');
-        oauthTokenP = requestToken(twitterAssistantServerOrigin, twitterCallbackURL)
+        
+        const oauthTokenP = requestToken(twitterAssistantServerOrigin, twitterCallbackURL)
         .then(twitterPermissionURL => {
             const twitterSigninWindow = windows.open(twitterPermissionURL);
             
@@ -85,8 +95,8 @@ export var main = function(){
                                     const x = p.split('=');
                                     query.set(x[0], x[1]);
                                 });
-                            resolve(query.get('oauth_token'));
                             w.close();
+                            resolve(query.get('oauth_token'));
                         }
 
                     });
@@ -94,7 +104,8 @@ export var main = function(){
             })
         });
         
-        oauthTokenP.catch(e => {
+        oauthTokenP
+        .catch(e => {
             console.error('oauthTokenP.catch', e)
             signinPanel.port.emit(
                 'error-request-token',
@@ -102,19 +113,15 @@ export var main = function(){
             );
         });
         
-        oauthTokenP.then(oauthToken => getReadyForTwitterProfilePages(oauthToken, twitterAssistantServerOrigin))
-        
         oauthTokenP
-        .then(oauthToken => {
-            console.log('oauthToken', oauthToken)
-            const twitterAPI = TwitterAPIViaServer(oauthToken, twitterAssistantServerOrigin);
-            return twitterAPI.verifyCredentials();
-        })
-        .then(user => {
-            signinPanel.port.emit('logged-in-user', user);
-            tabs.open('https://twitter.com/'+user.screen_name);
-        });
-        
+        .then(validateOauthToken)
+        .then(oauthToken => getReadyForTwitterProfilePages(oauthToken, twitterAssistantServerOrigin))
+        .catch(err => console.error('error verifying the token', err));
     });
+
+    throw new Error('TODO get token from storage, test it. show panel if none or invalid ')
+    // In Server Phase I, always show the panel at startup since the addon has no memory
+    signinPanel.show({position: twitterAssistantButton});
+    throw 'TODO';
 
 };
