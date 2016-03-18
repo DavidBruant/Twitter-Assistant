@@ -1,10 +1,10 @@
 "use strict";
 
-import ui =  require("sdk/ui");
-import selfModule =  require("sdk/self");
-import tabs = require("sdk/tabs");
-import system = require("sdk/system");
-import timersModule = require("sdk/timers");
+import ui =  require('sdk/ui');
+import selfModule =  require('sdk/self');
+import tabs = require('sdk/tabs');
+import system = require('sdk/system');
+import timersModule = require('sdk/timers');
 import windowsModule = require('sdk/windows');
 import urlModule = require('sdk/url');
 
@@ -21,7 +21,7 @@ import TwitterAPIViaServer = require('./TwitterAPIViaServer');
 const data = selfModule.data;
 const setTimeout = timersModule.setTimeout;
 const staticArgs = system.staticArgs;
-const prefs = prefModule.prefs;
+const prefs : any = prefModule.prefs;
 const windows = windowsModule.browserWindows;
 const URL = urlModule.URL;
 
@@ -36,6 +36,8 @@ const TWITTER_USER_PAGES = [
     // https://twitter.com/BuzzFeed // for an account with LOTS of tweets
     // https://twitter.com/dupatron has no tweets at this point 
 ];
+
+const OAUTH_TOKEN_PREF = "oauthtoken";
 
 
 declare var process: any;
@@ -58,19 +60,20 @@ export var main = function(){
     let twitterAssistantServerOrigin = 'http://92.243.26.40:3737';
     let twitterCallbackURL = twitterAssistantServerOrigin+'/twitter/callback';
 
-    function validateOauthToken(oauthToken){
+    function validateOauthToken(oauthToken: string){
         console.log('oauthToken', oauthToken)
         const twitterAPI = TwitterAPIViaServer(oauthToken, twitterAssistantServerOrigin);
 
         return twitterAPI.verifyCredentials()
         .then(user => {
-            signinPanel.port.emit('logged-in-user', user);
-            tabs.open('https://twitter.com/'+user.screen_name);
-
-            throw new Error('TODO Save token');
+            if(!user)
+                throw new Error('Invalid token');
+            
+            return {
+                oauthToken: oauthToken, 
+                user: user
+            };
         })
-        .then( () => oauthToken )
-        .catch(err => throw new Error('removing this token from storage if invalid'));
     }
 
 
@@ -113,15 +116,36 @@ export var main = function(){
             );
         });
         
-        oauthTokenP
-        .then(validateOauthToken)
-        .then(oauthToken => getReadyForTwitterProfilePages(oauthToken, twitterAssistantServerOrigin))
+        
+        const tokenAndUserP = oauthTokenP.then(validateOauthToken);
+        
+        tokenAndUserP
+        .then(tokenAndUser => getReadyForTwitterProfilePages(tokenAndUser.oauthToken, twitterAssistantServerOrigin))
+        
+        tokenAndUserP
+        .then(tokenAndUser => {
+            prefs[OAUTH_TOKEN_PREF] = tokenAndUser.oauthToken;
+            signinPanel.port.emit('logged-in-user', tokenAndUser.user);
+            tabs.open('https://twitter.com/'+tokenAndUser.user.screen_name);
+        })
         .catch(err => console.error('error verifying the token', err));
     });
 
-    throw new Error('TODO get token from storage, test it. show panel if none or invalid ')
-    // In Server Phase I, always show the panel at startup since the addon has no memory
-    signinPanel.show({position: twitterAssistantButton});
-    throw 'TODO';
+    /*
+        init
+    */
+    const savedToken = prefs[OAUTH_TOKEN_PREF];
+    
+    if(savedToken){
+        validateOauthToken(savedToken)
+        .catch(() => {
+            // pref contains an invalid token
+            prefs[OAUTH_TOKEN_PREF] = '';
+            signinPanel.show({position: twitterAssistantButton})
+        })
+    }
+    else{
+        signinPanel.show({position: twitterAssistantButton})
+    }
 
 };

@@ -70,7 +70,7 @@ let addonUserAndFriends : {
     user: TwitterAPIUser
     friendIds: Set<TwitterUserId>
 };
-let displayDayCount;
+let displayDayCount: number;
 let languages: Map<string, {code: string, name: string}>; // give a value by default to get started
 
 /* tweets list*/

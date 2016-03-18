@@ -53,7 +53,7 @@ var TwitterAssistant = React.createClass({
                         title: "The addon author is here to help out!"
                     }, 'Help')
                 ]),
-                React.DOM.p({}, 'Patience is your best ally against network latency...')
+                React.DOM.p({}, 'Patience is your best ally against network latency... ⟳')
             ]);
         }
         else{

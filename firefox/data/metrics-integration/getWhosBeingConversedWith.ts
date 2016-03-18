@@ -19,7 +19,8 @@ function getWhosBeingConversedWith(t: TwitterAPITweet){
 
         if(Array.isArray(t.entities.user_mentions) && t.entities.user_mentions.length >= 1){
             // <= 1 because sometimes people do ".@DavidBruant blabla bla" to make the reply public
-            userId = t.entities.user_mentions.find(um => um.indices[0] <= 1).id_str;
+            const mentionedUser = t.entities.user_mentions.find(um => um.indices[0] <= 1);
+            userId = mentionedUser && mentionedUser.id_str;
         }
     }
     else{
