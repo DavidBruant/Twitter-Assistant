@@ -137,11 +137,17 @@ export var main = function(){
     const savedToken = prefs[OAUTH_TOKEN_PREF];
     
     if(savedToken){
+        
         validateOauthToken(savedToken)
-        .catch(() => {
+        .catch(err => {
             // pref contains an invalid token
             prefs[OAUTH_TOKEN_PREF] = '';
             signinPanel.show({position: twitterAssistantButton})
+            throw err;
+        })
+        .then(tokenAndUser => {
+            getReadyForTwitterProfilePages(tokenAndUser.oauthToken, twitterAssistantServerOrigin);
+            signinPanel.port.emit('logged-in-user', tokenAndUser.user);
         })
     }
     else{
