@@ -236,7 +236,7 @@ stemmersByLang.set('fa', function toStemsFa(str: string){
 
 
 // Polish
-var plTok = new TokenizerPl();
+/*var plTok = new TokenizerPl();
 var tokenizePl = plTok.tokenize.bind(plTok);
 var stopwordsPl = stopwordsPlModule.words;
 var stemPl = stemmerPl; 
@@ -249,7 +249,7 @@ function filterStopWordsPl(tokens: string[]){
 
 stemmersByLang.set('pl', function toStemsPl(str: string){
     return stemPl( filterStopWordsPl( tokenizePl(str) ).join(' ') ).split(' ')
-});
+});*/
 
 
 
