@@ -30,7 +30,7 @@ const WordMass = React.createClass({
         //const lengthSum = limitedEntries.reduce((acc, [w, tweets]) => {return acc + tweets.length}, 0); 
         //console.log("limitedEntries", limitedEntries.map(({tweets}) => tweets.length))
 
-        const widthAdjustment = 80/(limitedEntries[0].tweets.length);
+        const widthAdjustment = 80/(limitedEntries[0] && limitedEntries[0].tweets.length || 1);
 
 
         return React.DOM.ol({className: 'word-mass'}, limitedEntries.map(({word, tweets}) => {                    
