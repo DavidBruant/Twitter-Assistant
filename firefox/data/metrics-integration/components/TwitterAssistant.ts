@@ -44,7 +44,7 @@ var TwitterAssistant = React.createClass({
             users = props.users,
             askUsers = props.askUsers;
 
-        if(tweetMine.length === 0){
+        if(!tweetMine){
             return React.DOM.div({className: 'TA-main-container WhoToFollow is-visible'}, [
                 React.DOM.header({className: 'TA-header WhoToFollow-header'}, [
                     React.DOM.h3({className: 'TA-title WhoToFollow-title'}, "Twitter Assistant"),
@@ -53,7 +53,7 @@ var TwitterAssistant = React.createClass({
                         title: "The addon author is here to help out!"
                     }, 'Help')
                 ]),
-                React.DOM.p({}, 'No tweets over the last '+props.displayDayCount+' days')
+                React.DOM.p({}, 'Patience is your best ally against network latency... ⟳')
             ]);
         }
         else{
