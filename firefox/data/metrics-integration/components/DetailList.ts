@@ -46,11 +46,11 @@ const DetailList = React.createClass({
                     className: "TA-account account-summary"
                 }, [
                     React.DOM.div({
-                        className : "TA-account-value",
+                        className : "TA-account-count",
                         style: {
                             width: (amount*100/totalConsideredCount) + '%'
                         },
-                        'data-value': amount
+                        'data-count': amount
                     }),
                     React.DOM.div({className : "TA-account-inner"}, [
                         React.DOM.div({className: "TA-account-content content"}, [
