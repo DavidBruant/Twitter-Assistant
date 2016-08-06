@@ -30,6 +30,8 @@
     "compression": "^1.6.1",
     "express": "^4.13.4",
     "jpm": "^1.0.6",
+    "node-uuid": "~1.4.7",
+    "oauth-sign": "~0.8.0",
     "natural": "^0.2.1",
     "querystring": "^0.2.0",
     "request": "^2.69.0",

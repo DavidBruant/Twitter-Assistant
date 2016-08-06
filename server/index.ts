@@ -8,6 +8,8 @@ import qs = require('querystring');
 import express = require('express');
 import compression = require('compression');
 import bodyParser = require('body-parser');
+import uuid = require('node-uuid');
+import oauthSign = require('oauth-sign');
 
 import oauthCredentials = require('./oauthCredentials.json');
 
@@ -21,6 +23,7 @@ interface OauthData{
     verifier: string
 }
 
+// TODO remove when all clients have moved to the signing version 
 const oauthTokenToOauthData = new Map<string, OauthData>();
 
 const app = express();
@@ -30,6 +33,11 @@ app.disable("etag");
 app.use(bodyParser.json({limit: "1mb"})); // for parsing application/json
 app.use(compression());
 
+
+/** 
+ * TODO remove when all clients have moved to /twitter/oauth/request_token/direct
+ * 
+ */
 app.post('/twitter/oauth/request_token', function(req, res){
     const callbackURL = req.body.callbackURL;
     console.log('callbackURL', callbackURL)
@@ -77,6 +85,26 @@ app.post('/twitter/oauth/request_token', function(req, res){
     )
 });
 
+/**
+ * New request token that returns the https://api.twitter.com/oauth/request_token response directly
+ *
+ */
+app.post('/twitter/oauth/request_token/direct', function(req, res){
+    
+    request.post({
+        url: 'https://api.twitter.com/oauth/request_token',
+        oauth: Object.assign(
+            { callback_url: encodeURIComponent(req.body.callbackURL) },
+            oauthCredentials
+        )
+    })
+    .pipe(res);
+
+});
+
+
+
+
 
 app.get('/twitter/callback', function(req, res){
     const query = req.query;
@@ -117,6 +145,8 @@ app.get('/twitter/callback', function(req, res){
 
 /*
     Generic route that forwards to the Twitter API and back
+
+    TODO remove this route when every TA user has moved to a version that uses the signing endpoint
 */
 app.post('/twitter/api', (req, res) => {
     const body = req.body;
@@ -138,6 +168,48 @@ app.post('/twitter/api', (req, res) => {
     // sending request to Twitter and forwarding back to addon directly
     request.get({ url: url, oauth: oauth, qs: parameters, json: true }).pipe(res);
 });
+
+
+/*
+    Generic route that oauth-signs Twitter API call
+*/
+app.post('/oauth/sign', (req, res) => {
+    const body = req.body;
+
+    const method = body.method || 'GET';
+    const url = body.url;
+    const query = body.query || {};
+    const oauth = body.oauth;
+
+    console.log('/oauth/sign', method, url, query, oauth);
+
+    const signatureOauthParams = {  
+        oauth_version:          oauth.oauth_version          || '1.0',
+        oauth_signature_method: oauth.oauth_signature_method || 'HMAC-SHA1',
+        oauth_nonce:            oauth.oauth_nonce            || uuid().replace(/-/g, ''),
+        oauth_timestamp:        oauth.oauth_timestamp        || Math.ceil( Date.now() / 1000 ).toString(),
+        oauth_token:            oauth.oauth_token,
+        oauth_consumer_key:     oauthCredentials.consumer_key
+    }
+    
+
+    // sending back signature
+    res.header('Content-Type', 'text/plain');
+    res.send(oauthSign.sign(
+        signatureOauthParams.oauth_signature_method,
+        method,
+        url,
+        Object.assign(
+            {},
+            signatureOauthParams,
+            query
+        ),
+        oauthCredentials.consumer_secret,
+        oauth.oauth_token_secret
+    ))
+});
+
+
 
 
 app.listen('3737', function(){
