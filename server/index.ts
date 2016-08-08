@@ -215,3 +215,5 @@ app.post('/oauth/sign', (req, res) => {
 app.listen('3737', function(){
     console.log('listening', 'http://localhost:3737/')
 });
+
+process.on('uncaughtException', e => console.error('Uncaught', e));

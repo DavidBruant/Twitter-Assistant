@@ -1,6 +1,8 @@
 'use strict';
 
 import RequestModule = require("sdk/request");
+import makeQueryString = require('./makeSearchString');
+
 
 const Request = RequestModule.Request;
 
@@ -27,31 +29,54 @@ function stringifyTwitterSearchQuery(obj: any){
     return queryParts.join('+');
 }
 
-function TwitterAPIViaServer(oauthToken: string, serverOrigin: string) : TwitterAPI_I{
+function TwitterAPIViaServer(oauth: {oauth_token: string, oauth_token_secret: string}, serverOrigin: string) : TwitterAPI_I{
     
-    const twitterAssistantServerAPIURL = serverOrigin + '/twitter/api';
+    const twitterAssistantSigningServerAPIURL = serverOrigin + '/oauth/sign';
     
-    function request(url: string, parameters?: any){
+    function twitterAPIRequestDance(method: string, url: string, query?: any){
         return new Promise((resolve, reject) => {
+            throw 'Handle rejection cases';
             const reqStart = Date.now();
 
+            // Get the signature
             Request({
-                url: twitterAssistantServerAPIURL,
+                url: twitterAssistantSigningServerAPIURL,
                 contentType: 'application/json',
                 content: JSON.stringify({
+                    method: method,
                     url: url,
-                    parameters: parameters,
-                    token: oauthToken
+                    query: query,
+                    oauth: oauth
                 }),
                 anonymous: true,
                 onComplete: response => {
                     console.log(
-                        url,
+                        'signature',
                         response.status, 
                         ((Date.now() - reqStart)/1000).toFixed(1)+'s'
                     );
 
-                    resolve(response.json);
+                    // Signature!
+                    const signature = response.text;
+
+                    // Send the signed request to Twitter
+                    Request({
+                        url: url + '?' + makeQueryString(query),
+                        headers: {
+                            'Authorization': makeOauthAuthorizationHeader({ signature: signature }) 
+                        },
+                        anonymous: true,
+                        onComplete: response => {
+                            console.log(
+                                'url',
+                                response.status, 
+                                ((Date.now() - reqStart)/1000).toFixed(1)+'s'
+                            );
+
+                            resolve(response.json);
+                        }
+                    }).get();
+
                 },
                 onError: reject
             }).post();
@@ -79,7 +104,8 @@ function TwitterAPIViaServer(oauthToken: string, serverOrigin: string) : Twitter
                 searchObj['max_id'] = maxId;
             }
 
-            return request(
+            return twitterAPIRequestDance(
+                'GET',
                 'https://api.twitter.com/1.1/statuses/user_timeline.json',
                 searchObj
             )
@@ -127,7 +153,8 @@ function TwitterAPIViaServer(oauthToken: string, serverOrigin: string) : Twitter
                 {q: q}
             );
             
-            return request(
+            return twitterAPIRequestDance(
+                'GET',
                 'https://api.twitter.com/1.1/search/tweets.json',
                 parameters
             );
@@ -139,7 +166,8 @@ function TwitterAPIViaServer(oauthToken: string, serverOrigin: string) : Twitter
                 include_entities : false
             };
             
-            return request(
+            return twitterAPIRequestDance(
+                'GET',
                 'https://api.twitter.com/1.1/users/lookup.json',
                 parameters
             );
@@ -151,7 +179,8 @@ function TwitterAPIViaServer(oauthToken: string, serverOrigin: string) : Twitter
                 include_entities : false
             };
             
-            return request(
+            return twitterAPIRequestDance(
+                'GET',
                 'https://api.twitter.com/1.1/users/lookup.json',
                 parameters
             );
@@ -164,7 +193,8 @@ function TwitterAPIViaServer(oauthToken: string, serverOrigin: string) : Twitter
                 count: 5000
             };
             
-            return request(
+            return twitterAPIRequestDance(
+                'GET',
                 'https://api.twitter.com/1.1/friends/ids.json',
                 parameters
             );
@@ -172,11 +202,11 @@ function TwitterAPIViaServer(oauthToken: string, serverOrigin: string) : Twitter
         
         // https://dev.twitter.com/rest/reference/get/help/languages
         getLanguages: function(){
-            return request('https://api.twitter.com/1.1/help/languages.json');
+            return twitterAPIRequestDance('GET', 'https://api.twitter.com/1.1/help/languages.json');
         },
         
         verifyCredentials: function(){
-            return request('https://api.twitter.com/1.1/account/verify_credentials.json');
+            return twitterAPIRequestDance('GET', 'https://api.twitter.com/1.1/account/verify_credentials.json');
         }
     
     };
