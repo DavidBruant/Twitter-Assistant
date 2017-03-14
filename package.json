@@ -19,21 +19,21 @@
     "watch": "watchify firefox/data/metrics-integration/main.ts -p [ tsify --noImplicitAny --sourceMap --target ES5 ] --debug -o firefox/data/metrics-integration/twitter-assistant-content.js -v --ignore WNdb --ignore lapack"
   },
   "devDependencies": {
+    "browserify": "11.0.1",
+    "jpm": "1.0.6",
+    "tsify": "0.11.9",
+    "typescript": "1.5.3",
     "watchify": "^3.3.1"
   },
   "main": "index.js",
   "id": "jid1-BptUkbczEocdyg",
   "description": "Twitter Assistant ==============",
   "dependencies": {
-    "body-parser": "^1.15.0",
-    "browserify": "^11.0.1",
-    "compression": "^1.6.1",
-    "express": "^4.13.4",
-    "jpm": "^1.0.6",
-    "natural": "^0.2.1",
-    "querystring": "^0.2.0",
-    "request": "^2.69.0",
-    "tsify": "^0.11.9",
-    "typescript": "1.5.3"
+    "body-parser": "1.15.0",
+    "compression": "1.6.1",
+    "express": "4.13.4",
+    "natural": "0.2.1",
+    "querystring": "0.2.0",
+    "request": "2.69.0"
   }
 }
