@@ -1,18 +1,9 @@
 'use strict';
 
-/*
-    if access to Twitter API, have a pagemod
-    if no access to Twitter API, no need for a pagemod
-
-*/
-
 import pagemodModule = require("sdk/page-mod");
 import selfModule =  require("sdk/self");
 
-
-import getAccessToken = require('./getAccessToken');
 import getTimelineOverATimePeriod = require('./getTimelineOverATimePeriod'); 
-import TwitterAPIViaServer = require('./TwitterAPIViaServer');
 import guessAddonUserTwitterName = require('./guessAddonUserTwitterName');
 import getAddonUserInfoAndFriends = require('./getAddonUserInfoAndFriends');
 
@@ -111,9 +102,8 @@ twitterProfilePageMod.on('attach', function onAttach(worker){
     
 });
 
-function getReady(oauthToken: string, serverOrigin: string) : Promise<any>{
-    twitterAPI = TwitterAPIViaServer(oauthToken, serverOrigin);
-    return Promise.resolve(); // so TS shut up
+function getReady(_twitterAPI : TwitterAPI_I) : void{
+    twitterAPI = _twitterAPI;
 }
 
 export = getReady;

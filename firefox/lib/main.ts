@@ -11,12 +11,11 @@ import urlModule = require('sdk/url');
 import prefModule = require('sdk/simple-prefs');
 import lowLevelPrefs = require('sdk/preferences/service');
 
-import requestToken = require('./requestToken');
 import guessAddonUserTwitterName = require('./guessAddonUserTwitterName');
 import getReadyForTwitterProfilePages = require('./getReadyForTwitterProfilePages');
 import makeSigninPanel = require('./makeSigninPanel');
 import TwitterAPIViaServer = require('./TwitterAPIViaServer');
-
+import askUserTwitterPermissions = require('./askUserTwitterPermissions')
 
 const data = selfModule.data;
 const setTimeout = timersModule.setTimeout;
@@ -39,6 +38,24 @@ const TWITTER_USER_PAGES = [
 
 const OAUTH_TOKEN_PREF = "oauthtoken";
 
+function rememberOauth(value?){
+    if(value ===  undefined){
+        return prefs[OAUTH_TOKEN_PREF];
+    }
+    
+    if(Object(value) === value){
+        prefs[OAUTH_TOKEN_PREF] = JSON.stringify(value);
+        return;
+    }
+
+    if(typeof value === 'string'){
+        prefs[OAUTH_TOKEN_PREF] = value;
+        return;
+    }
+
+    throw new TypeError('No idea what to do with a '+typeof value+' value');
+}
+
 
 declare var process: any;
 
@@ -58,83 +75,61 @@ export var main = function(){
     });
     
     let twitterAssistantServerOrigin = 'http://92.243.26.40:3737';
-    let twitterCallbackURL = twitterAssistantServerOrigin+'/twitter/callback';
+    
 
-    function validateOauthToken(oauthToken: string){
-        console.log('oauthToken', oauthToken)
-        const twitterAPI = TwitterAPIViaServer(oauthToken, twitterAssistantServerOrigin);
+    function requestUserForTwitterSignin(getTwitterAuthenticateAndCallbackURLs){
+        return new Promise(resolve => {
+            signinPanel.show({position: twitterAssistantButton});
 
-        return twitterAPI.verifyCredentials()
-        .then(user => {
-            if(!user)
-                throw new Error('Invalid token');
-            
-            return {
-                oauthToken: oauthToken, 
-                user: user
-            };
+            signinPanel.port.once('sign-in-with-twitter', () => {
+                console.log('receiving sign-in-with-twitter');
+
+                return getTwitterAuthenticateAndCallbackURLs()
+                .then(askUserTwitterPermissions);
+                
+                
+                /*
+                const oauthP = 
+                
+                userLoggedInToTwitterAPIP
+                .catch(e => {
+                    console.error('twitterAuthenticateURLP.catch', e)
+                    signinPanel.port.emit(
+                        'error-request-token',
+                        {twitterAssistantServerOrigin: twitterAssistantServerOrigin, message: String(e)}
+                    );
+                });
+                
+                userLoggedInToTwitterAPIP.then(
+
+
+                )
+                const userP = twitterAPI.verifyCredentials()
+                .then(user => {
+                    signinPanel.port.emit('logged-in-user', user);
+                    tabs.open('https://twitter.com/'+user.screen_name);
+                })
+                .catch(err => console.error('error verifying the token', err));
+                */
+            }); 
         })
+        
+        
+
     }
 
-
+    let twitterAPI = TwitterAPIViaServer(rememberOauth, requestUserForTwitterSignin, twitterAssistantServerOrigin);
+            
     signinPanel.port.on('sign-in-with-twitter', () => {
         console.log('receiving sign-in-with-twitter');
-        
-        const oauthTokenP = requestToken(twitterAssistantServerOrigin, twitterCallbackURL)
-        .then(twitterPermissionURL => {
-            const twitterSigninWindow = windows.open(twitterPermissionURL);
-            
-            return new Promise(resolve => {
-                twitterSigninWindow.on('open', w => {
-                    const tab = w.tabs.activeTab;
-                    tab.on('ready', t => {
-                        if(t.url.startsWith(twitterCallbackURL)){
-                            const parsedURL = URL(t.url);
-                            const search = parsedURL.search;
-                            const query = new Map<string, string>();
 
-                            search.slice(1).split('&')
-                                .forEach(p => {
-                                    const x = p.split('=');
-                                    query.set(x[0], x[1]);
-                                });
-                            w.close();
-                            resolve(query.get('oauth_token'));
-                        }
-
-                    });
-                })
-            })
-        });
-        
-        oauthTokenP
-        .catch(e => {
-            console.error('oauthTokenP.catch', e)
-            signinPanel.port.emit(
-                'error-request-token',
-                {twitterAssistantServerOrigin: twitterAssistantServerOrigin, message: String(e)}
-            );
-        });
-        
-        
-        const tokenAndUserP = oauthTokenP.then(validateOauthToken);
-        
-        tokenAndUserP
-        .then(tokenAndUser => getReadyForTwitterProfilePages(tokenAndUser.oauthToken, twitterAssistantServerOrigin))
-        
-        tokenAndUserP
-        .then(tokenAndUser => {
-            prefs[OAUTH_TOKEN_PREF] = tokenAndUser.oauthToken;
-            signinPanel.port.emit('logged-in-user', tokenAndUser.user);
-            tabs.open('https://twitter.com/'+tokenAndUser.user.screen_name);
-        })
-        .catch(err => console.error('error verifying the token', err));
+        throw 'TODO - reinit the existing twitterAPI';
     });
 
     /*
         init
     */
-    const savedToken = prefs[OAUTH_TOKEN_PREF];
+    const savedToken = rememberOauth(); 
     
     if(savedToken){
         

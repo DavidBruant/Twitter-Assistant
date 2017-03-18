@@ -74,7 +74,7 @@ request.post(
             callbackURL: 'http://localhost:3737/twitter/callback'
         }
     },
-    function(err, response, body){
+    function(err, response, oauth){
         if(err){
             console.error('Been received with an error', 'http://localhost:3737/twitter/oauth/request_token/direct', err)
             return;
@@ -85,9 +85,7 @@ request.post(
             return;
         }
 
-        console.log('body', body);
-
-        var oauth = JSON.parse(body);
+        console.log('body', oauth);
 
         //delete oauth.callback_confirmed;
 

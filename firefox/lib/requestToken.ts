@@ -10,15 +10,22 @@ function requestToken(twitterAssistantServerOrigin: string, callbackURL: string)
     
     return new Promise<AccessToken>((resolve, reject) => {
         const xhr = new XMLHttpRequest({mozAnon: true});
-        const url = twitterAssistantServerOrigin + '/twitter/oauth/request_token'
+        const url = twitterAssistantServerOrigin + '/twitter/oauth/request_token/direct'
         
         xhr.open('POST', url);
 
         xhr.addEventListener('load', e => {
-            console.log('/oauth2/token status', xhr.status);
+            console.log('/oauth/request_token status', xhr.status);
 
             if(xhr.status < 400){
-                resolve(xhr.response);
+                try{
+                    const resp = JSON.parse(xhr.response);
+                    throw 'delete callbackConfirmed';
+                    resolve(resp);
+                }
+                catch(e){
+                    reject(e);
+                }
             }
             else{
                 reject(url +' HTTP error '+ xhr.status);

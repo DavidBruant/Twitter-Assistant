@@ -104,8 +104,10 @@ app.post('/twitter/oauth/request_token/direct', function(req, res){
 
 
 
-
-
+/**
+ * Now that we're not using the application-only oauth, this is certainly useless
+ * Change to only do res.send(''); when everyone has moved to a signing server
+ */
 app.get('/twitter/callback', function(req, res){
     const query = req.query;
     const token = query.oauth_token;
